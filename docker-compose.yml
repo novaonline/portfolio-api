@@ -1,0 +1,12 @@
+version: '2.1'
+
+services:
+  portfolio-api:
+    image: portfolio-api
+    environment:
+      - ASPNETCORE_URLS=http://+:80
+      - DefaultConnection
+      - TokenAuthentication_SecretKey
+    build: .
+    ports:
+      - 5000:80
