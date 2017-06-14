@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using Swashbuckle.AspNetCore.Swagger;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace portfolio_api.Helpers.Swashbuckle.Filters
+namespace PortfolioApi.Helpers.Swashbuckle.Filters
 {
     public class AuthorizationHeaderOperationFilter : IOperationFilter
     {

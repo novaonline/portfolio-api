@@ -1,4 +1,4 @@
-namespace portfolio_api.Models.Phones
+namespace PortfolioApi.Models.Phones
 {
     public enum PhoneType
     {

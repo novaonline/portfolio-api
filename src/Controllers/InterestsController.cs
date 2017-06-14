@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using portfolio_api.Services;
-using Model = portfolio_api.Models.Interest;
+using PortfolioApi.Services;
+using Model = PortfolioApi.Models.Interest;
 
-namespace portfolio_api.Controllers
+namespace PortfolioApi.Controllers
 {
     [Route("api/[controller]")]
     public class InterestsController : PortfolioController

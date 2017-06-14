@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace portfolio_api.Models
+namespace PortfolioApi.Models
 {
     public class Content
     {

@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using portfolio_api.Models.Addresses;
-using portfolio_api.Models.Phones;
+using PortfolioApi.Models.Addresses;
+using PortfolioApi.Models.Phones;
 
-namespace portfolio_api.Models
+namespace PortfolioApi.Models
 {
     /// <summary>
     /// Contact Information

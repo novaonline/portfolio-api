@@ -1,8 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.EntityFrameworkCore;
 
-namespace portfolio_api.Models
+namespace PortfolioApi.Models
 {
     public class RankableItem
     {

@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace portfolio_api.Models.Addresses
+namespace PortfolioApi.Models.Addresses
 {
     public class Address
     {

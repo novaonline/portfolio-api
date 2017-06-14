@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Model = portfolio_api.Models.Profile;
-using portfolio_api.Services;
+using Model = PortfolioApi.Models.Profile;
+using PortfolioApi.Services;
 using Microsoft.AspNetCore.Authorization;
 
-namespace portfolio_api.Controllers
+namespace PortfolioApi.Controllers
 {
     [Route("api/[controller]")]
     public class ProfileController : PortfolioController
@@ -22,7 +22,11 @@ namespace portfolio_api.Controllers
         [HttpGet, AllowAnonymous]
         public Model Get()
         {
-            return _context.Profiles.First();
+            if (_context.Profiles.Any())
+            {
+                return _context.Profiles.First();
+            }
+            return null;
         }
     }
 }

@@ -4,10 +4,10 @@ using System.Linq;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using portfolio_api.Services;
-using Model = portfolio_api.Models.Language;
+using PortfolioApi.Services;
+using Model = PortfolioApi.Models.Language;
 
-namespace portfolio_api.Controllers
+namespace PortfolioApi.Controllers
 {
     [Route("api/[controller]")]
     public class LanguagesController : PortfolioController

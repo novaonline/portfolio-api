@@ -1,4 +1,4 @@
-namespace portfolio_api.Models.Addresses
+namespace PortfolioApi.Models.Addresses
 {
     public enum AddressType
     {

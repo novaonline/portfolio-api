@@ -4,10 +4,10 @@ using System.Linq;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using portfolio_api.Services;
-using Model = portfolio_api.Models.FrameworksAndLibs;
+using PortfolioApi.Services;
+using Model = PortfolioApi.Models.FrameworksAndLibs;
 
-namespace portfolio_api.Controllers
+namespace PortfolioApi.Controllers
 {
     [Route("api/[controller]")]
     public class FrameworksAndLibsController : PortfolioController

@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
-using portfolio_api.Models;
+using PortfolioApi.Models;
 
-namespace portfolio_api.Services
+namespace PortfolioApi.Services
 {
     // https://docs.microsoft.com/en-us/aspnet/core/data/ef-mvc/migrations
     // https://stackoverflow.com/questions/175415/how-do-i-get-list-of-all-tables-in-a-database-using-tsql

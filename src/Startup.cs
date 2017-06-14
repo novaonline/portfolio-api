@@ -9,15 +9,16 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Swashbuckle.AspNetCore.Swagger;
-using portfolio_api.Services;
+using PortfolioApi.Services;
 using Microsoft.EntityFrameworkCore;
-using portfolio_api.Helpers.Swashbuckle.Filters;
+using PortfolioApi.Helpers.Swashbuckle.Filters;
 
 namespace portfolio_api
 {
     public partial class Startup
     {
-        public Startup(IHostingEnvironment env)
+        ILogger _logger;
+        public Startup(IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
@@ -25,6 +26,7 @@ namespace portfolio_api
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
                 .AddEnvironmentVariables();
             Configuration = builder.Build();
+            _logger = loggerFactory.CreateLogger<Startup>();
         }
 
         public IConfigurationRoot Configuration { get; }
@@ -61,7 +63,7 @@ namespace portfolio_api
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
-            
+
             ConfigureAuth(app);
 
             // Enable middleware to serve generated Swagger as a JSON endpoint.
@@ -75,7 +77,26 @@ namespace portfolio_api
 
 
             app.UseMvc();
-            
+
+            // Migrate and seed the database during startup. Must be synchronous.
+            try
+            {
+                //http://benjii.me/2017/05/enable-entity-framework-core-migrations-visual-studio-2017/
+                using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>()
+                    .CreateScope())
+                {
+                    serviceScope.ServiceProvider.GetService<PortfolioContext>().Database.Migrate();
+                    _logger.LogInformation("Database Migration passed");
+
+                    //serviceScope.ServiceProvider.GetService<ISeedService>().SeedDatabase().Wait();
+                }
+            }
+            catch (Exception ex)
+            {
+                //http://ardalis.com/logging-and-using-services-in-startup-in-aspnet-core-apps
+                _logger.LogError(0, ex, "Failed to migrate or seed database");
+            }
+
             //Helpers.PortfolioInitializer.Init(context); -- used to seed. This file is ignored in git
         }
     }

@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using portfolio_api.Services;
+using PortfolioApi.Services;
 
 namespace portfolio_api
 {
@@ -63,7 +63,7 @@ namespace portfolio_api
         {
             var optionsBuilder = new DbContextOptionsBuilder<PortfolioContext>();
             optionsBuilder.UseSqlServer(Environment.GetEnvironmentVariable("DefaultConnection") ?? Configuration.GetConnectionString("DefaultConnection"));
-            Models.Client client;
+            PortfolioApi.Models.Client client;
             using (var contenxt = new PortfolioContext(optionsBuilder.Options))
             {
                 client = contenxt.Clients.Where(c => c.Secret == secret && c.Name == name).First();

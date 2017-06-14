@@ -1,4 +1,4 @@
-namespace portfolio_api.Models
+namespace PortfolioApi.Models
 {
     public class Language : RankableItem
     {

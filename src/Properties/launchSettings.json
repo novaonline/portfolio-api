@@ -19,7 +19,8 @@
       "commandName": "Project",
       "environmentVariables": {
         "DefaultConnection": "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=Portfolio-api;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=True;ApplicationIntent=ReadWrite;MultiSubnetFailover=False",
-        "TokenAuthentication_SecretKey": "secret123"
+        "TokenAuthentication_SecretKey": "secret123",
+        "ASPNETCORE_ENVIRONMENT": "Development"
       },
       "applicationUrl": "http://localhost:5000"
     }

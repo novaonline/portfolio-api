@@ -10,8 +10,8 @@ using PortfolioApi.Models.Phones;
 namespace portfolioapi.Migrations
 {
     [DbContext(typeof(PortfolioContext))]
-    [Migration("20170612075146_added_content2")]
-    partial class added_content2
+    [Migration("20170614181126_ModelIndependance")]
+    partial class ModelIndependance
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -42,7 +42,7 @@ namespace portfolioapi.Migrations
 
                     b.HasIndex("ContactId");
 
-                    b.ToTable("portfolio_api_models_addresses_address");
+                    b.ToTable("portfolioapi_models_addresses_address");
                 });
 
             modelBuilder.Entity("PortfolioApi.Models.Client", b =>
@@ -60,7 +60,7 @@ namespace portfolioapi.Migrations
 
                     b.HasIndex("Name", "Secret");
 
-                    b.ToTable("portfolio_api_models_client");
+                    b.ToTable("portfolioapi_models_client");
                 });
 
             modelBuilder.Entity("PortfolioApi.Models.Contact", b =>
@@ -72,7 +72,7 @@ namespace portfolioapi.Migrations
 
                     b.HasKey("ContactId");
 
-                    b.ToTable("portfolio_api_models_contact");
+                    b.ToTable("portfolioapi_models_contact");
                 });
 
             modelBuilder.Entity("PortfolioApi.Models.Content", b =>
@@ -90,7 +90,7 @@ namespace portfolioapi.Migrations
 
                     b.HasKey("ContentId");
 
-                    b.ToTable("portfolio_api_models_content");
+                    b.ToTable("portfolioapi_models_content");
                 });
 
             modelBuilder.Entity("PortfolioApi.Models.FrameworksAndLibs", b =>
@@ -114,7 +114,7 @@ namespace portfolioapi.Migrations
 
                     b.HasIndex("Title");
 
-                    b.ToTable("portfolio_api_models_frameworksandlibs");
+                    b.ToTable("portfolioapi_models_frameworksandlibs");
                 });
 
             modelBuilder.Entity("PortfolioApi.Models.Interest", b =>
@@ -132,7 +132,7 @@ namespace portfolioapi.Migrations
 
                     b.HasIndex("Description");
 
-                    b.ToTable("portfolio_api_models_interest");
+                    b.ToTable("portfolioapi_models_interest");
                 });
 
             modelBuilder.Entity("PortfolioApi.Models.Language", b =>
@@ -156,7 +156,7 @@ namespace portfolioapi.Migrations
 
                     b.HasIndex("Title");
 
-                    b.ToTable("portfolio_api_models_language");
+                    b.ToTable("portfolioapi_models_language");
                 });
 
             modelBuilder.Entity("PortfolioApi.Models.Phones.PhoneNumber", b =>
@@ -174,7 +174,7 @@ namespace portfolioapi.Migrations
 
                     b.HasIndex("ContactId");
 
-                    b.ToTable("portfolio_api_models_phones_phonenumber");
+                    b.ToTable("portfolioapi_models_phones_phonenumber");
                 });
 
             modelBuilder.Entity("PortfolioApi.Models.Profile", b =>
@@ -194,7 +194,7 @@ namespace portfolioapi.Migrations
 
                     b.HasKey("ProfileId");
 
-                    b.ToTable("portfolio_api_models_profile");
+                    b.ToTable("portfolioapi_models_profile");
                 });
 
             modelBuilder.Entity("PortfolioApi.Models.Project", b =>
@@ -214,7 +214,7 @@ namespace portfolioapi.Migrations
 
                     b.HasKey("ProjectId");
 
-                    b.ToTable("portfolio_api_models_project");
+                    b.ToTable("portfolioapi_models_project");
                 });
 
             modelBuilder.Entity("PortfolioApi.Models.Rank", b =>
@@ -226,7 +226,7 @@ namespace portfolioapi.Migrations
 
                     b.HasKey("RankId");
 
-                    b.ToTable("portfolio_api_models_rank");
+                    b.ToTable("portfolioapi_models_rank");
                 });
 
             modelBuilder.Entity("PortfolioApi.Models.Section", b =>
@@ -244,7 +244,7 @@ namespace portfolioapi.Migrations
 
                     b.HasIndex("ContentId");
 
-                    b.ToTable("portfolio_api_models_section");
+                    b.ToTable("portfolioapi_models_section");
                 });
 
             modelBuilder.Entity("PortfolioApi.Models.Addresses.Address", b =>
@@ -279,7 +279,7 @@ namespace portfolioapi.Migrations
 
             modelBuilder.Entity("PortfolioApi.Models.Section", b =>
                 {
-                    b.HasOne("PortfolioApi.Models.Content", "Content")
+                    b.HasOne("PortfolioApi.Models.Content")
                         .WithMany("Sections")
                         .HasForeignKey("ContentId")
                         .OnDelete(DeleteBehavior.Cascade);

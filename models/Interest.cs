@@ -1,16 +1,13 @@
 using System;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace portfolio_api.Models
+namespace PortfolioApi.Models
 {
-    public class Project
+    public class Interest
     {
         [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
-        public int ProjectId { get; set; }
-        public string Name { get; set; }
+        public int InterestId { get; set; }
         public string Description { get; set; }
-        public string Url { get; set; }
         [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Computed)]
         public DateTime? AddDate { get; set; }
     }
