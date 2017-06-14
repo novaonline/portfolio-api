@@ -36,4 +36,3 @@ msbuild.wrn
 #Custom
 src/out/
 src/Helpers/PortfolioInitializer.cs
-src/Properties/launchSettings.json
