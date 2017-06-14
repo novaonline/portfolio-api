@@ -11,4 +11,4 @@ For any IDE, two environment variables are needed:
 * DefaultConnection: `[database connection string]`
 * TokenAuthentication_SecretKey: `[any secret string]`
 
-Some example variables have been provided, but I recommend changing them to meet your needs.
+the variables have been provided.
