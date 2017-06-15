@@ -7,7 +7,7 @@ namespace PortfolioApi.Models
 {
     public class IdentityItem
     {
-        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
     }
 }

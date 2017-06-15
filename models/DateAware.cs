@@ -13,10 +13,10 @@ namespace PortfolioApi.Models
     /// </summary>
     public class DateAware : IdentityItem
     {
-        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Computed)]
+        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public DateTime? AddDate { get; set; }
 
-        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Computed)]
+        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public DateTime? UpdateDate { get; set; }
     }
 }
