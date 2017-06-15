@@ -4,7 +4,7 @@ using System.Text;
 
 namespace PortfolioApi.Models
 {
-    public class InfoItem : IdentityItem
+    public class InfoItem
     {
     }
 }

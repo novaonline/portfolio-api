@@ -11,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using PortfolioApi.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace PortfolioApi
 {
@@ -31,30 +32,14 @@ namespace PortfolioApi
                 IdentityResolver = GetIdentity
             };
 
-            var tokenValidationParameters = new TokenValidationParameters
-            {
-                // The signing key must match!
-                ValidateIssuerSigningKey = true,
-                IssuerSigningKey = signingKey,
-                // Validate the JWT Issuer (iss) claim
-                ValidateIssuer = true,
-                ValidIssuer = Configuration.GetSection("TokenAuthentication:Issuer").Value,
-                // Validate the JWT Audience (aud) claim
-                ValidateAudience = true,
-                ValidAudience = Configuration.GetSection("TokenAuthentication:Audience").Value,
-                // Validate the token expiry
-                ValidateLifetime = true,
-                // If you want to allow a certain amount of clock drift, set that here:
-                ClockSkew = TimeSpan.Zero
-            };
 
 
-            app.UseJwtBearerAuthentication(new JwtBearerOptions
-            {
-                AutomaticAuthenticate = true,
-                AutomaticChallenge = true,
-                TokenValidationParameters = tokenValidationParameters
-            });
+            //app.UseJwtBearerAuthentication(new JwtBearerOptions
+            //{
+            //    AutomaticAuthenticate = true,
+            //    AutomaticChallenge = true,
+            //    TokenValidationParameters = tokenValidationParameters
+            //});
 
             app.UseMiddleware<TokenProviderMiddleware>(Options.Create(tokenProviderOptions));
         }
@@ -66,7 +51,7 @@ namespace PortfolioApi
             PortfolioApi.Models.Clients.Client client;
             using (var contenxt = new PortfolioContext(optionsBuilder.Options))
             {
-                client = contenxt.Clients.Where(c => c.Secret == secret && c.Info.Name == name).First();
+                client = contenxt.Clients.Where(c => c.Secret == secret && c.Info.Name == name).FirstOrDefault();
             }
 
             if (client != null)

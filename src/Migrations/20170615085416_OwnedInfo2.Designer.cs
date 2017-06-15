@@ -11,9 +11,10 @@ using System;
 namespace PortfolioApi.Migrations
 {
     [DbContext(typeof(PortfolioContext))]
-    partial class PortfolioContextModelSnapshot : ModelSnapshot
+    [Migration("20170615085416_OwnedInfo2")]
+    partial class OwnedInfo2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "2.0.0-preview1-24937")

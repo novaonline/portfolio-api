@@ -12,6 +12,7 @@ using Swashbuckle.AspNetCore.Swagger;
 using PortfolioApi.Services;
 using Microsoft.EntityFrameworkCore;
 using PortfolioApi.Helpers.Swashbuckle.Filters;
+using Microsoft.IdentityModel.Tokens;
 
 namespace PortfolioApi
 {
@@ -57,6 +58,26 @@ namespace PortfolioApi
             services.AddDbContext<PortfolioContext>(options =>
                 options.UseSqlServer(Environment.GetEnvironmentVariable("DefaultConnection") ??
                     Configuration.GetConnectionString("DefaultConnection")));
+
+            services.AddJwtBearerAuthentication(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    // The signing key must match!
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = signingKey,
+                    // Validate the JWT Issuer (iss) claim
+                    ValidateIssuer = true,
+                    ValidIssuer = Configuration.GetSection("TokenAuthentication:Issuer").Value,
+                    // Validate the JWT Audience (aud) claim
+                    ValidateAudience = true,
+                    ValidAudience = Configuration.GetSection("TokenAuthentication:Audience").Value,
+                    // Validate the token expiry
+                    ValidateLifetime = true,
+                    // If you want to allow a certain amount of clock drift, set that here:
+                    ClockSkew = TimeSpan.Zero
+                };
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -64,6 +85,7 @@ namespace PortfolioApi
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
+            // use Microsoft.Extensions.Logging
 
             ConfigureAuth(app);
 
@@ -98,7 +120,7 @@ namespace PortfolioApi
                 _logger.LogError(0, ex, "Failed to migrate or seed database");
             }
 
-            //Helpers.PortfolioInitializer.Init(context); -- used to seed. This file is ignored in git
+            //Helpers.PortfolioInitializer.Init(context); // used to seed. This file is ignored in git
         }
     }
 }
