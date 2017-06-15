@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PortfolioApi.Services;
-using Model = PortfolioApi.Models.Contact;
+using Model = PortfolioApi.Models.Contacts;
 
 namespace PortfolioApi.Controllers
 {
@@ -15,12 +15,13 @@ namespace PortfolioApi.Controllers
         }
 
         [HttpGet, AllowAnonymous]
-        public Model Get()
+        [Produces(typeof(Model.Contact))]
+        public IActionResult Get()
         {
-            return _context.Contacts
-            .Include(contact => contact.Addresses)
-            .Include(contact => contact.PhoneNumbers)
-            .First();
+            return Ok(_context.Contacts
+            .Include(contact => contact.Info.Addresses)
+            .Include(contact => contact.Info.PhoneNumbers)
+            .FirstOrDefault());
         }
     }
 }

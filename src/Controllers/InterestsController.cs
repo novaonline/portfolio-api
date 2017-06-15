@@ -4,7 +4,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PortfolioApi.Services;
-using Model = PortfolioApi.Models.Interest;
+using Model = PortfolioApi.Models.Interests;
 
 namespace PortfolioApi.Controllers
 {
@@ -16,7 +16,7 @@ namespace PortfolioApi.Controllers
         }
 
         [HttpGet, AllowAnonymous]
-        [Produces(typeof(Model))]
+        [Produces(typeof(Model.Interest))]
         public IActionResult Get()
         {
             return Ok(_context.Interests.ToList());
@@ -24,15 +24,15 @@ namespace PortfolioApi.Controllers
 
         [HttpPost]
         [Produces(typeof(int))]
-        public IActionResult Post([FromBody] Model model)
+        public IActionResult Post([FromBody] Model.Interest model)
         {
-            Model createdModel;
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            
             try
             {
-                createdModel = new Model()
-                {
-                    Description = model.Description
-                };
             }
             catch (Exception ex)
             {
@@ -40,9 +40,9 @@ namespace PortfolioApi.Controllers
             }
             try
             {
-                _context.Interests.Add(createdModel);
-                _context.SaveChanges();
-                return Created("Created Successfully with Id", createdModel.InterestId);
+                _context.Interests.Add(model);
+                var id = _context.SaveChanges();
+                return Created("Created Successfully with Id", id);
             }
             catch (Exception ex)
             {
@@ -51,18 +51,21 @@ namespace PortfolioApi.Controllers
         }
 
         [HttpPut]
-        [Produces(typeof(Model))]
-        public IActionResult Put([FromBody] Model model)
+        [Produces(typeof(Model.Interest))]
+        public IActionResult Put([FromQuery]int id, [FromBody] Model.Info model)
         {
-            if (model.InterestId <= 0)
+            if (id <= 0)
             {
-                return BadRequest("Id must be provided");
+                return BadRequest("Invalid Id");
+            }
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
             }
             try
             {
-                var modelFromContext = _context.Interests.Find(model.InterestId);
-                modelFromContext.Description = string.IsNullOrEmpty(model.Description) ?
-                modelFromContext.Description : model.Description;
+                var modelFromContext = _context.Interests.Find(id);
+                modelFromContext.Info = model;
                 _context.SaveChanges();
                 return Ok(modelFromContext);
             }

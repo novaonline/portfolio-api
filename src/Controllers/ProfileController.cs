@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Model = PortfolioApi.Models.Profile;
+using Model = PortfolioApi.Models.Profiles;
 using PortfolioApi.Services;
 using Microsoft.AspNetCore.Authorization;
 
@@ -20,13 +20,10 @@ namespace PortfolioApi.Controllers
         //https://github.com/Microsoft/api-guidelines/blob/master/Guidelines.md
         // GET api/profile
         [HttpGet, AllowAnonymous]
-        public Model Get()
+        [Produces(typeof(Model.Profile))]
+        public IActionResult Get()
         {
-            if (_context.Profiles.Any())
-            {
-                return _context.Profiles.First();
-            }
-            return null;
+            return Ok(_context.Profiles.FirstOrDefault());
         }
     }
 }

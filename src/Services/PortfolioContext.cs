@@ -1,8 +1,12 @@
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
-using PortfolioApi.Models;
+using ProfilesModel = PortfolioApi.Models.Profiles;
+using ContactsModel = PortfolioApi.Models.Contacts;
+using InterestsModel = PortfolioApi.Models.Interests;
+using RankableItemsModel = PortfolioApi.Models.RankableItems;
+using ClientsModel = PortfolioApi.Models.Clients;
+using ProjectsModel = PortfolioApi.Models.Projects;
+using ContentsModel = PortfolioApi.Models.Contents;
 
 namespace PortfolioApi.Services
 {
@@ -14,16 +18,17 @@ namespace PortfolioApi.Services
     // https://www.codeproject.com/Articles/1155666/Creating-Angular-Application-with-ASP-NET-Core-Tem
     public class PortfolioContext : DbContext
     {
-        public DbSet<Profile> Profiles { get; set; }
-        public DbSet<Contact> Contacts { get; set; }
-        public DbSet<FrameworksAndLibs> FrameworksAndLibs { get; set; }
-        public DbSet<Interest> Interests { get; set; }
-        public DbSet<Language> Languages { get; set; }
-        public DbSet<Rank> Ranks { get; set; }
-        public DbSet<Project> Projects { get; set; }
-        public DbSet<Client> Clients { get; set; }
-        public DbSet<Content> Contents { get; set; }
-        public DbSet<Section> Sections { get; set; }
+        public DbSet<ProfilesModel.Profile> Profiles { get; set; }
+        public DbSet<ContactsModel.Contact> Contacts { get; set; }
+        public DbSet<RankableItemsModel.Frameworks.Framework> Frameworks { get; set; }
+        public DbSet<RankableItemsModel.Languages.Language> Languages { get; set; }
+        public DbSet<RankableItemsModel.Libraries.Library> Libraries{ get; set; }
+        public DbSet<RankableItemsModel.Ranks.Rank> Ranks { get; set; }
+        public DbSet<InterestsModel.Interest> Interests { get; set; }
+        public DbSet<ProjectsModel.Project> Projects { get; set; }
+        public DbSet<ClientsModel.Client> Clients { get; set; }
+        public DbSet<ContentsModel.Content> Contents { get; set; }
+        public DbSet<ContentsModel.Sections.Section> Sections { get; set; }
         
         public PortfolioContext(DbContextOptions<PortfolioContext> options)
         : base(options)
@@ -35,17 +40,20 @@ namespace PortfolioApi.Services
             foreach (var entityType in modelBuilder.Model.GetEntityTypes())
             {
                 entityType.Relational().TableName = entityType.Name.Replace('.', '_').ToLower();
-                foreach (var addDateProps in entityType.GetProperties().Where(x => x.Name == "AddDate"))
+                foreach (var addDateProps in entityType.GetProperties().Where(x => x.Name == "AddDate" || x.Name == "UpdateDate"))
                 {
                     addDateProps.Relational().DefaultValueSql = "GETUTCDATE()";
+                    // TODO get Update date to automatically update the Date
                 }
             }
             // http://www.c-sharpcorner.com/article/crud-operations-in-asp-net-core-using-entity-framework-core-code-first/
-            modelBuilder.Entity<Language>().HasIndex(l => l.Title);
-            modelBuilder.Entity<FrameworksAndLibs>().HasIndex(f => f.Title);
-            modelBuilder.Entity<Interest>().HasIndex(f => f.Description);
-            modelBuilder.Entity<Client>().Property(x => x.Secret).HasDefaultValueSql("NEWID()");
-            modelBuilder.Entity<Client>().HasIndex(x => new { x.Name, x.Secret });
+            //modelBuilder.Entity<RankableItemsModel.Languages.Language>().HasIndex(l => l.Info.Title);
+            //modelBuilder.Entity<RankableItemsModel.Frameworks.Framework>().HasIndex(f => f.Info.Title);
+            //modelBuilder.Entity<RankableItemsModel.Libraries.Library>().HasIndex(f => f.Info.Title);
+            //modelBuilder.Entity<InterestsModel.Interest>().HasIndex(f => f.Info.Description);
+            // TODO need to figure out this class stuff
+            modelBuilder.Entity<ClientsModel.Client>().Property(x => x.Secret).HasDefaultValueSql("NEWID()");
+            //modelBuilder.Entity<ClientsModel.Client>().HasIndex(x => new { x.Info.Name, x.Secret });
 
         }
     }

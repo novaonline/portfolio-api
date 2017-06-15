@@ -13,7 +13,7 @@ using PortfolioApi.Services;
 using Microsoft.EntityFrameworkCore;
 using PortfolioApi.Helpers.Swashbuckle.Filters;
 
-namespace portfolio_api
+namespace PortfolioApi
 {
     public partial class Startup
     {
@@ -43,6 +43,7 @@ namespace portfolio_api
             {
                 c.SwaggerDoc("v1", new Info { Title = "Portfolio API", Version = "v1" });
                 c.OperationFilter<AuthorizationHeaderOperationFilter>();
+                c.CustomSchemaIds(x => x.FullName);
             });
 
             // https://www.hanselman.com/blog/ASPNETCoreRESTfulWebAPIVersioningMadeEasy.aspx

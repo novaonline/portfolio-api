@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PortfolioApi.Services;
-using Model = PortfolioApi.Models.Content;
+using Model = PortfolioApi.Models.Contents;
 
 namespace PortfolioApi.Controllers
 {
@@ -17,7 +17,7 @@ namespace PortfolioApi.Controllers
         }
 
         [HttpGet, AllowAnonymous]
-        [Produces(typeof(IEnumerable<Model>))]
+        [Produces(typeof(IEnumerable<Model.Content>))]
         public IActionResult Get()
         {
             return Ok(_context.Contents
@@ -27,7 +27,7 @@ namespace PortfolioApi.Controllers
 
         [HttpPost]
         [Produces(typeof(int))]
-        public IActionResult Post([FromBody] Model model)
+        public IActionResult Post([FromBody] Model.Content model)
         {
             if(!ModelState.IsValid) {
                 BadRequest(ModelState);
@@ -36,7 +36,7 @@ namespace PortfolioApi.Controllers
             {
                 _context.Contents.Add(model);
                 _context.SaveChanges();
-                return Created("Created Successfully with Id", model.ContentId);
+                return Created("Created Successfully with Id", model.Id);
             }
             catch (Exception ex)
             {
@@ -45,18 +45,22 @@ namespace PortfolioApi.Controllers
         }
 
         [HttpPut]
-        [Produces(typeof(Model))]
-        public IActionResult Put([FromBody] Model model)
+        [Produces(typeof(Model.Content))]
+        public IActionResult Put([FromQuery] int id, [FromBody] Model.Info model)
         {
-            if (model.ContentId <= 0)
+            if (id <= 0)
             {
                 return BadRequest("Id must be provided");
             }
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
             try
             {
-                var modelFromContext = _context.Contents.Find(model.ContentId);
+                var modelFromContext = _context.Contents.Find(id);
 
-                modelFromContext.Sections = model.Sections;
+                modelFromContext.Info = model;
                 _context.SaveChanges();
                 return Ok(modelFromContext);
             }

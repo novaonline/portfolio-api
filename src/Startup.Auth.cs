@@ -12,7 +12,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using PortfolioApi.Services;
 
-namespace portfolio_api
+namespace PortfolioApi
 {
     public partial class Startup
     {
@@ -63,10 +63,10 @@ namespace portfolio_api
         {
             var optionsBuilder = new DbContextOptionsBuilder<PortfolioContext>();
             optionsBuilder.UseSqlServer(Environment.GetEnvironmentVariable("DefaultConnection") ?? Configuration.GetConnectionString("DefaultConnection"));
-            PortfolioApi.Models.Client client;
+            PortfolioApi.Models.Clients.Client client;
             using (var contenxt = new PortfolioContext(optionsBuilder.Options))
             {
-                client = contenxt.Clients.Where(c => c.Secret == secret && c.Name == name).First();
+                client = contenxt.Clients.Where(c => c.Secret == secret && c.Info.Name == name).First();
             }
 
             if (client != null)
