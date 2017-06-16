@@ -1,8 +1,9 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using portfolio_api.Services;
-namespace portfolio_api.Controllers
+using PortfolioApi.Services;
+namespace PortfolioApi.Controllers
 {
+
     [Authorize]
     public class PortfolioController : Controller
     {

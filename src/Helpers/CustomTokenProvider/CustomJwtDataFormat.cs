@@ -55,7 +55,7 @@ namespace CustomTokenAuthProvider
             }
 
             // Token validation passed
-            return new AuthenticationTicket(principal, new AuthenticationProperties(), "Cookie");
+            return new AuthenticationTicket(principal, new Microsoft.AspNetCore.Authentication.AuthenticationProperties(), "Cookie");
         }
 
         public string Protect(AuthenticationTicket data)

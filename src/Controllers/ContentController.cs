@@ -4,10 +4,10 @@ using System.Linq;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using portfolio_api.Services;
-using Model = portfolio_api.Models.Content;
+using PortfolioApi.Services;
+using Model = PortfolioApi.Models.Contents;
 
-namespace portfolio_api.Controllers
+namespace PortfolioApi.Controllers
 {
     [Route("api/[controller]")]
     public class ContentController : PortfolioController
@@ -17,26 +17,52 @@ namespace portfolio_api.Controllers
         }
 
         [HttpGet, AllowAnonymous]
-        [Produces(typeof(IEnumerable<Model>))]
+        [Produces(typeof(IEnumerable<Model.Content>))]
         public IActionResult Get()
         {
-            return Ok(_context.Contents
-            .Include(c => c.Sections)
-            .ToList());
+            var contents = _context.Contents
+                .Include(c => c.Info).ToList(); // not sure why include does not allow me to do multiple
+            contents = contents.Select(content =>
+            {
+                content.Sections = _context.Sections.Include(y => y.Info).Where(x => x.ContentId == content.Id).ToList();
+                return content;
+            }).ToList();
+            return Ok(contents.ToList());
+        }
+
+        [HttpGet("{id}"), AllowAnonymous]
+        [Produces(typeof(IEnumerable<Model.Content>))]
+        public IActionResult Get(int id)
+        {
+            var contents = _context.Contents
+                .Include(c => c.Info).SingleOrDefault(x => x.Id == id); // not sure why include does not allow me to do multiple
+            _context.Entry(contents)
+                .Collection(x => x.Sections);
+            return Ok(contents);
         }
 
         [HttpPost]
         [Produces(typeof(int))]
-        public IActionResult Post([FromBody] Model model)
+        public IActionResult Post([FromBody] ContentInputModel model)
         {
-            if(!ModelState.IsValid) {
+            if (!ModelState.IsValid)
+            {
                 BadRequest(ModelState);
             }
             try
             {
-                _context.Contents.Add(model);
-                _context.SaveChanges();
-                return Created("Created Successfully with Id", model.ContentId);
+                var content = new Model.Content
+                {
+                    Info = model.ContentInfo,
+                    HtmlId = model.htmlId,
+                };
+                foreach (var secInfo in model.SectionInfo)
+                {
+                    content.Sections.Add(new Model.Sections.Section() { Info = secInfo });
+                }
+                _context.Contents.Add(content);
+                var id = _context.SaveChanges();
+                return Created("Created Successfully with Id", id);
             }
             catch (Exception ex)
             {
@@ -44,21 +70,24 @@ namespace portfolio_api.Controllers
             }
         }
 
-        [HttpPut]
-        [Produces(typeof(Model))]
-        public IActionResult Put([FromBody] Model model)
+        [HttpPut("{id}")]
+        public IActionResult Put(int id, [FromBody] Model.Info model)
         {
-            if (model.ContentId <= 0)
+            if (id <= 0)
             {
                 return BadRequest("Id must be provided");
             }
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
             try
             {
-                var modelFromContext = _context.Contents.Find(model.ContentId);
+                var modelFromContext = _context.Contents.Include(x => x.Info).Single(x => x.Id == id);
 
-                modelFromContext.Sections = model.Sections;
+                modelFromContext.Info.Update(model);
                 _context.SaveChanges();
-                return Ok(modelFromContext);
+                return Ok();
             }
             catch (Exception ex)
             {
@@ -85,6 +114,18 @@ namespace portfolio_api.Controllers
             {
                 return StatusCode(500, ex.Message);
             }
+        }
+    }
+
+    public class ContentInputModel
+    {
+        public string htmlId { get; set; }
+        public Model.Info ContentInfo { get; set; }
+        public List<Model.Sections.Info> SectionInfo { get; set; }
+
+        public ContentInputModel()
+        {
+            SectionInfo = new List<Model.Sections.Info>();
         }
     }
 }

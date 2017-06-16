@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using portfolio_api.Services;
-using Model = portfolio_api.Models.Interest;
+using Microsoft.EntityFrameworkCore;
+using PortfolioApi.Services;
+using Model = PortfolioApi.Models.Interests;
 
-namespace portfolio_api.Controllers
+namespace PortfolioApi.Controllers
 {
     [Route("api/[controller]")]
     public class InterestsController : PortfolioController
@@ -16,23 +17,35 @@ namespace portfolio_api.Controllers
         }
 
         [HttpGet, AllowAnonymous]
-        [Produces(typeof(Model))]
+        [Produces(typeof(Model.Interest))]
         public IActionResult Get()
         {
-            return Ok(_context.Interests.ToList());
+            return Ok(_context.Interests
+            .Include(i => i.Info)
+            .ToList());
         }
+
+        [HttpGet("{id}"), AllowAnonymous]
+        [Produces(typeof(Model.Interest))]
+        public IActionResult Get(int id)
+        {
+            return Ok(_context.Interests
+            .Include(i => i.Info).SingleOrDefault(x => x.Id == id));
+        }
+
+
 
         [HttpPost]
         [Produces(typeof(int))]
-        public IActionResult Post([FromBody] Model model)
+        public IActionResult Post([FromBody] Model.Info model)
         {
-            Model createdModel;
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             try
             {
-                createdModel = new Model()
-                {
-                    Description = model.Description
-                };
             }
             catch (Exception ex)
             {
@@ -40,9 +53,13 @@ namespace portfolio_api.Controllers
             }
             try
             {
-                _context.Interests.Add(createdModel);
-                _context.SaveChanges();
-                return Created("Created Successfully with Id", createdModel.InterestId);
+                var m = new Model.Interest
+                {
+                    Info = model
+                };
+                _context.Interests.Add(m);
+                var id = _context.SaveChanges();
+                return Created("Created Successfully with Id", id);
             }
             catch (Exception ex)
             {
@@ -50,21 +67,23 @@ namespace portfolio_api.Controllers
             }
         }
 
-        [HttpPut]
-        [Produces(typeof(Model))]
-        public IActionResult Put([FromBody] Model model)
+        [HttpPut("{id}")]
+        public IActionResult Put(int id, [FromBody] Model.Info model)
         {
-            if (model.InterestId <= 0)
+            if (id <= 0)
             {
-                return BadRequest("Id must be provided");
+                return BadRequest("Invalid Id");
+            }
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
             }
             try
             {
-                var modelFromContext = _context.Interests.Find(model.InterestId);
-                modelFromContext.Description = string.IsNullOrEmpty(model.Description) ?
-                modelFromContext.Description : model.Description;
+                var modelFromContext = _context.Interests.Include(x => x.Info).Single(x => x.Id == id);
+                modelFromContext.Info.Update(model);
                 _context.SaveChanges();
-                return Ok(modelFromContext);
+                return Ok();
             }
             catch (Exception ex)
             {

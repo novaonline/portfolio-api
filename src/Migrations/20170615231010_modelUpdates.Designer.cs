@@ -11,9 +11,10 @@ using System;
 namespace PortfolioApi.Migrations
 {
     [DbContext(typeof(PortfolioContext))]
-    partial class PortfolioContextModelSnapshot : ModelSnapshot
+    [Migration("20170615231010_modelUpdates")]
+    partial class modelUpdates
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "2.0.0-preview1-24937")
@@ -40,9 +41,7 @@ namespace PortfolioApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Name", "Secret")
-                        .IsUnique()
-                        .HasAnnotation("SqlServer:Filter", "[Name] IS NOT NULL AND [Secret] IS NOT NULL");
+                    b.HasIndex("Name", "Secret");
 
                     b.ToTable("pfm_clients_client");
                 });

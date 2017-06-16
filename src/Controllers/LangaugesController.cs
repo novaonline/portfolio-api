@@ -4,10 +4,10 @@ using System.Linq;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using portfolio_api.Services;
-using Model = portfolio_api.Models.Language;
+using PortfolioApi.Services;
+using Model = PortfolioApi.Models.RankableItems.Languages;
 
-namespace portfolio_api.Controllers
+namespace PortfolioApi.Controllers
 {
     [Route("api/[controller]")]
     public class LanguagesController : PortfolioController
@@ -17,46 +17,57 @@ namespace portfolio_api.Controllers
         }
 
         [HttpGet, AllowAnonymous]
-        [Produces(typeof(Model))]
+        [Produces(typeof(Model.Language))]
         public IActionResult Get()
         {
-            return Ok(_context.Languages.Include(l => l.Rank));
+            return Ok(_context.Languages
+            .Include(l => l.Info)
+            .Include(l => l.Rank));
         }
 
+        [HttpGet("{id}"), AllowAnonymous]
+        [Produces(typeof(Model.Language))]
+        public IActionResult Get(int id)
+        {
+            return Ok(_context.Languages
+            .Include(l => l.Info)
+            .Include(l => l.Rank).SingleOrDefault(x=>x.Id == id));
+        }
+
+
         [HttpGet, AllowAnonymous]
-        [Produces(typeof(IEnumerable<Model>))]
+        [Produces(typeof(IEnumerable<Model.Language>))]
         [Route("SearchByTitle")]
         public IActionResult SearchByTitle(string searchTerm)
         {
-            IQueryable<Model> query = from l in _context.Languages
-                               where l.Title.Contains(searchTerm)
-                               select l;
-            return Ok(query.Include(q=>q.Rank).ToList());
+            IQueryable<Model.Language> query = from l in _context.Languages
+                                               where l.Title.Contains(searchTerm)
+                                               select l;
+            return Ok(query
+            .Include(q => q.Info)
+            .Include(q => q.Rank).ToList());
         }
 
         [HttpPost]
         [Produces(typeof(int))]
-        public IActionResult Post([FromBody] Model model)
+        public IActionResult Post([FromBody] LanguageInputModel model)
         {
-            Model createdModel;
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             try
             {
-                createdModel = new Model()
+                var language = new Model.Language
                 {
-                    Description = model.Description,
+                    Info = model.LanguageInfo,
                     Title = model.Title,
-                    RankId = model.RankId,
+                    RankId = model.RankId
                 };
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-            try
-            {
-                _context.Languages.Add(createdModel);
-                _context.SaveChanges();
-                return Created("Created Successfully with Id", createdModel.LanguageId);
+                _context.Languages.Add(language);
+                var id = _context.SaveChanges();
+                return Created("Created Successfully with Id", id);
             }
             catch (Exception ex)
             {
@@ -64,26 +75,23 @@ namespace portfolio_api.Controllers
             }
         }
 
-        [HttpPut]
-        [Produces(typeof(Model))]
-        public IActionResult Put([FromBody] Model model)
+        [HttpPut("{id}")]
+        public IActionResult Put(int id, [FromBody] Model.Info model)
         {
-            if (model.LanguageId <= 0)
+            if (id <= 0)
             {
-                return BadRequest("LanguageId must be provided");
+                return BadRequest("Id is invalid");
+            }
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
             }
             try
             {
-                var modelFromContext = _context.Languages.Find(model.LanguageId);
-
-                modelFromContext.Description = string.IsNullOrEmpty(model.Description) ?
-                modelFromContext.Description : model.Description;
-                modelFromContext.Title = string.IsNullOrEmpty(model.Title) ?
-                modelFromContext.Title : model.Title;
-                modelFromContext.RankId = model.RankId <= 0 ?
-                modelFromContext.RankId : model.RankId;
+                var modelFromContext = _context.Languages.Include(x=>x.Info).Single(x=>x.Id == id);
+                modelFromContext.Info.Update(model);
                 _context.SaveChanges();
-                return Ok(modelFromContext);
+                return Ok();
             }
             catch (Exception ex)
             {
@@ -111,5 +119,11 @@ namespace portfolio_api.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
+    }
+    public class LanguageInputModel
+    {
+        public int RankId { get; set; }
+        public string Title { get; set; }
+        public Model.Info LanguageInfo { get; set; }
     }
 }

@@ -2,25 +2,27 @@ using System.Linq;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using portfolio_api.Services;
-using Model = portfolio_api.Models.Contact;
+using PortfolioApi.Services;
+using Model = PortfolioApi.Models.Contacts;
 
-namespace portfolio_api.Controllers
+namespace PortfolioApi.Controllers
 {
     [Route("api/[controller]")]
-    public class ContactController: PortfolioController
+    public class ContactController : PortfolioController
     {
         public ContactController(PortfolioContext context) : base(context)
         {
         }
 
         [HttpGet, AllowAnonymous]
-        public Model Get()
+        [Produces(typeof(Model.Contact))]
+        public IActionResult Get()
         {
-            return _context.Contacts
-            .Include(contact => contact.Addresses)
-            .Include(contact => contact.PhoneNumbers)
-            .First();
+
+            return Ok(
+            _context.Contacts.Include(c => c.Info)
+            );
         }
+
     }
 }

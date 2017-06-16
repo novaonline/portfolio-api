@@ -10,9 +10,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using portfolio_api.Services;
+using PortfolioApi.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
-namespace portfolio_api
+namespace PortfolioApi
 {
     public partial class Startup
     {
@@ -20,7 +21,7 @@ namespace portfolio_api
         private void ConfigureAuth(IApplicationBuilder app)
         {
 
-            var signingKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Environment.GetEnvironmentVariable("TokenAuthentication_SecretKey") ?? Configuration.GetSection("TokenAuthentication:SecretKey").Value));
+            signingKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Environment.GetEnvironmentVariable("TokenAuthentication_SecretKey") ?? Configuration.GetSection("TokenAuthentication:SecretKey").Value));
 
             var tokenProviderOptions = new TokenProviderOptions
             {
@@ -31,31 +32,13 @@ namespace portfolio_api
                 IdentityResolver = GetIdentity
             };
 
-            var tokenValidationParameters = new TokenValidationParameters
-            {
-                // The signing key must match!
-                ValidateIssuerSigningKey = true,
-                IssuerSigningKey = signingKey,
-                // Validate the JWT Issuer (iss) claim
-                ValidateIssuer = true,
-                ValidIssuer = Configuration.GetSection("TokenAuthentication:Issuer").Value,
-                // Validate the JWT Audience (aud) claim
-                ValidateAudience = true,
-                ValidAudience = Configuration.GetSection("TokenAuthentication:Audience").Value,
-                // Validate the token expiry
-                ValidateLifetime = true,
-                // If you want to allow a certain amount of clock drift, set that here:
-                ClockSkew = TimeSpan.Zero
-            };
-
-
-            app.UseJwtBearerAuthentication(new JwtBearerOptions
-            {
-                AutomaticAuthenticate = true,
-                AutomaticChallenge = true,
-                TokenValidationParameters = tokenValidationParameters
-            });
-
+            //app.UseJwtBearerAuthentication(new JwtBearerOptions
+            //{
+            //    AutomaticAuthenticate = true,
+            //    AutomaticChallenge = true,
+            //    TokenValidationParameters = tokenValidationParameters
+            //});
+            app.UseAuthentication();
             app.UseMiddleware<TokenProviderMiddleware>(Options.Create(tokenProviderOptions));
         }
 
@@ -63,10 +46,10 @@ namespace portfolio_api
         {
             var optionsBuilder = new DbContextOptionsBuilder<PortfolioContext>();
             optionsBuilder.UseSqlServer(Environment.GetEnvironmentVariable("DefaultConnection") ?? Configuration.GetConnectionString("DefaultConnection"));
-            Models.Client client;
+            PortfolioApi.Models.Clients.Client client;
             using (var contenxt = new PortfolioContext(optionsBuilder.Options))
             {
-                client = contenxt.Clients.Where(c => c.Secret == secret && c.Name == name).First();
+                client = contenxt.Clients.Where(c => c.Secret == secret && c.Name == name).FirstOrDefault();
             }
 
             if (client != null)
