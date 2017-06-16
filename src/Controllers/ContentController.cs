@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PortfolioApi.Services;
 using Model = PortfolioApi.Models.Contents;
+using ContentInputModel = PortfolioApi.Models.Contents.InputGroup;
 
 namespace PortfolioApi.Controllers
 {
@@ -31,14 +32,14 @@ namespace PortfolioApi.Controllers
         }
 
         [HttpGet("{id}"), AllowAnonymous]
-        [Produces(typeof(IEnumerable<Model.Content>))]
+        [Produces(typeof(Model.Content))]
         public IActionResult Get(int id)
         {
-            var contents = _context.Contents
+            var content = _context.Contents
                 .Include(c => c.Info).SingleOrDefault(x => x.Id == id); // not sure why include does not allow me to do multiple
-            _context.Entry(contents)
+            _context.Entry(content)
                 .Collection(x => x.Sections);
-            return Ok(contents);
+            return Ok(content);
         }
 
         [HttpPost]
@@ -54,7 +55,7 @@ namespace PortfolioApi.Controllers
                 var content = new Model.Content
                 {
                     Info = model.ContentInfo,
-                    HtmlId = model.htmlId,
+                    HtmlId = model.HtmlId,
                 };
                 foreach (var secInfo in model.SectionInfo)
                 {
@@ -114,18 +115,6 @@ namespace PortfolioApi.Controllers
             {
                 return StatusCode(500, ex.Message);
             }
-        }
-    }
-
-    public class ContentInputModel
-    {
-        public string htmlId { get; set; }
-        public Model.Info ContentInfo { get; set; }
-        public List<Model.Sections.Info> SectionInfo { get; set; }
-
-        public ContentInputModel()
-        {
-            SectionInfo = new List<Model.Sections.Info>();
         }
     }
 }
