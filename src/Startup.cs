@@ -13,6 +13,8 @@ using PortfolioApi.Services;
 using Microsoft.EntityFrameworkCore;
 using PortfolioApi.Helpers.Swashbuckle.Filters;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace PortfolioApi
 {
@@ -38,8 +40,22 @@ namespace PortfolioApi
             // Add framework services.
             services.AddMvc();
 
+            services.AddAuthorization(options =>
+            {
+                options.DefaultPolicy = new AuthorizationPolicyBuilder(JwtBearerDefaults.AuthenticationScheme)
+                .RequireAuthenticatedUser()
+                .Build();
+            });
+
+            services.AddAuthentication(o =>
+            {
+                o.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                o.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            });
+
             services.AddJwtBearerAuthentication(options =>
             {
+                options.RequireHttpsMetadata = false;
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     // The signing key must match!

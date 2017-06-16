@@ -21,7 +21,7 @@ namespace PortfolioApi
         private void ConfigureAuth(IApplicationBuilder app)
         {
 
-            var signingKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Environment.GetEnvironmentVariable("TokenAuthentication_SecretKey") ?? Configuration.GetSection("TokenAuthentication:SecretKey").Value));
+            signingKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Environment.GetEnvironmentVariable("TokenAuthentication_SecretKey") ?? Configuration.GetSection("TokenAuthentication:SecretKey").Value));
 
             var tokenProviderOptions = new TokenProviderOptions
             {
@@ -38,7 +38,7 @@ namespace PortfolioApi
             //    AutomaticChallenge = true,
             //    TokenValidationParameters = tokenValidationParameters
             //});
-
+            app.UseAuthentication();
             app.UseMiddleware<TokenProviderMiddleware>(Options.Create(tokenProviderOptions));
         }
 

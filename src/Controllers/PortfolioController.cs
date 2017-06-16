@@ -4,7 +4,7 @@ using PortfolioApi.Services;
 namespace PortfolioApi.Controllers
 {
 
-    [Authorize(ActiveAuthenticationSchemes = "Bearer")]
+    [Authorize]
     public class PortfolioController : Controller
     {
         protected readonly PortfolioContext _context;
