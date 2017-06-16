@@ -11,9 +11,10 @@ using System;
 namespace PortfolioApi.Migrations
 {
     [DbContext(typeof(PortfolioContext))]
-    partial class PortfolioContextModelSnapshot : ModelSnapshot
+    [Migration("20170615221814_contactsUpdate3")]
+    partial class contactsUpdate3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "2.0.0-preview1-24937")
@@ -28,8 +29,6 @@ namespace PortfolioApi.Migrations
                         .ValueGeneratedOnAddOrUpdate()
                         .HasDefaultValueSql("GETUTCDATE()");
 
-                    b.Property<string>("Name");
-
                     b.Property<string>("Secret")
                         .ValueGeneratedOnAdd()
                         .HasDefaultValueSql("NEWID()");
@@ -40,9 +39,7 @@ namespace PortfolioApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Name", "Secret")
-                        .IsUnique()
-                        .HasAnnotation("SqlServer:Filter", "[Name] IS NOT NULL AND [Secret] IS NOT NULL");
+                    b.HasIndex("Secret");
 
                     b.ToTable("pfm_clients_client");
                 });
@@ -74,15 +71,11 @@ namespace PortfolioApi.Migrations
                         .ValueGeneratedOnAddOrUpdate()
                         .HasDefaultValueSql("GETUTCDATE()");
 
-                    b.Property<string>("HtmlId");
-
                     b.Property<DateTime?>("UpdateDate")
                         .ValueGeneratedOnAddOrUpdate()
                         .HasComputedColumnSql("GETUTCDATE()");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("HtmlId");
 
                     b.ToTable("pfm_contents_content");
                 });
@@ -154,15 +147,11 @@ namespace PortfolioApi.Migrations
                         .ValueGeneratedOnAddOrUpdate()
                         .HasDefaultValueSql("GETUTCDATE()");
 
-                    b.Property<string>("Title");
-
                     b.Property<DateTime?>("UpdateDate")
                         .ValueGeneratedOnAddOrUpdate()
                         .HasComputedColumnSql("GETUTCDATE()");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("Title");
 
                     b.ToTable("pfm_projects_project");
                 });
@@ -178,8 +167,6 @@ namespace PortfolioApi.Migrations
 
                     b.Property<int>("RankId");
 
-                    b.Property<string>("Title");
-
                     b.Property<DateTime?>("UpdateDate")
                         .ValueGeneratedOnAddOrUpdate()
                         .HasComputedColumnSql("GETUTCDATE()");
@@ -187,8 +174,6 @@ namespace PortfolioApi.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("RankId");
-
-                    b.HasIndex("Title");
 
                     b.ToTable("pfm_rankableitems_frameworks_framework");
                 });
@@ -204,8 +189,6 @@ namespace PortfolioApi.Migrations
 
                     b.Property<int>("RankId");
 
-                    b.Property<string>("Title");
-
                     b.Property<DateTime?>("UpdateDate")
                         .ValueGeneratedOnAddOrUpdate()
                         .HasComputedColumnSql("GETUTCDATE()");
@@ -213,8 +196,6 @@ namespace PortfolioApi.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("RankId");
-
-                    b.HasIndex("Title");
 
                     b.ToTable("pfm_rankableitems_languages_language");
                 });
@@ -230,8 +211,6 @@ namespace PortfolioApi.Migrations
 
                     b.Property<int>("RankId");
 
-                    b.Property<string>("Title");
-
                     b.Property<DateTime?>("UpdateDate")
                         .ValueGeneratedOnAddOrUpdate()
                         .HasComputedColumnSql("GETUTCDATE()");
@@ -239,8 +218,6 @@ namespace PortfolioApi.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("RankId");
-
-                    b.HasIndex("Title");
 
                     b.ToTable("pfm_rankableitems_libraries_library");
                 });
@@ -261,6 +238,17 @@ namespace PortfolioApi.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("pfm_rankableitems_ranks_rank");
+                });
+
+            modelBuilder.Entity("PortfolioApi.Models.Clients.Info", b =>
+                {
+                    b.Property<int?>("ClientId");
+
+                    b.Property<string>("Name");
+
+                    b.HasKey("ClientId");
+
+                    b.ToTable("pfm_clients_info");
                 });
 
             modelBuilder.Entity("PortfolioApi.Models.Contacts.Info", b =>
@@ -297,6 +285,8 @@ namespace PortfolioApi.Migrations
                     b.Property<string>("BackgroundUrl");
 
                     b.Property<string>("Header");
+
+                    b.Property<string>("HtmlId");
 
                     b.HasKey("ContentId");
 
@@ -354,6 +344,8 @@ namespace PortfolioApi.Migrations
 
                     b.Property<string>("Description");
 
+                    b.Property<string>("Name");
+
                     b.Property<string>("Url");
 
                     b.HasKey("ProjectId");
@@ -367,6 +359,8 @@ namespace PortfolioApi.Migrations
 
                     b.Property<string>("Description");
 
+                    b.Property<string>("Title");
+
                     b.HasKey("FrameworkId");
 
                     b.ToTable("pfm_rankableitems_frameworks_info");
@@ -378,6 +372,8 @@ namespace PortfolioApi.Migrations
 
                     b.Property<string>("Description");
 
+                    b.Property<string>("Title");
+
                     b.HasKey("LanguageId");
 
                     b.ToTable("pfm_rankableitems_languages_info");
@@ -388,6 +384,8 @@ namespace PortfolioApi.Migrations
                     b.Property<int?>("LibraryId");
 
                     b.Property<string>("Description");
+
+                    b.Property<string>("Title");
 
                     b.HasKey("LibraryId");
 
@@ -434,6 +432,14 @@ namespace PortfolioApi.Migrations
                     b.HasOne("PortfolioApi.Models.RankableItems.Ranks.Rank", "Rank")
                         .WithMany()
                         .HasForeignKey("RankId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("PortfolioApi.Models.Clients.Info", b =>
+                {
+                    b.HasOne("PortfolioApi.Models.Clients.Client")
+                        .WithOne("Info")
+                        .HasForeignKey("PortfolioApi.Models.Clients.Info", "ClientId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

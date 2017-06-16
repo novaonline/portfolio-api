@@ -22,17 +22,18 @@ namespace PortfolioApi.Controllers
         public IActionResult Get()
         {
             return Ok(_context.Frameworks
+            .Include(f => f.Info)
             .Include(f => f.Rank)
             .ToList());
         }
 
-        [HttpGet, AllowAnonymous]
+        [HttpGet("{id}"), AllowAnonymous]
         [Produces(typeof(Model.Framework))]
-        [Route("GetById")]
-        public IActionResult GetById(int id)
+        public IActionResult Get(int id)
         {
             return Ok(
                 _context.Frameworks
+                .Include(f => f.Info)
                 .Include(f => f.Rank)
                 .SingleOrDefault(x => x.Id == id)
             );
@@ -40,7 +41,7 @@ namespace PortfolioApi.Controllers
 
         [HttpPost]
         [Produces(typeof(int))]
-        public IActionResult Post([FromBody] Model.Framework model)
+        public IActionResult Post([FromBody] FrameworkInputModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -48,9 +49,13 @@ namespace PortfolioApi.Controllers
             }
             try
             {
-                var result = _context.Frameworks.Add(model);
-                _context.SaveChanges();
-                return Created("Created Successfully with Id", result);
+                var framework = new Model.Framework();
+                framework.RankId = model.RankId;
+                framework.Title = model.Title;
+                framework.Info = model.FrameworkInfo;
+                _context.Frameworks.Add(framework);
+                var id = _context.SaveChanges();
+                return Created("Created Successfully with Id", id);
             }
             catch (Exception ex)
             {
@@ -58,9 +63,9 @@ namespace PortfolioApi.Controllers
             }
         }
 
-        [HttpPut]
+        [HttpPut("{id}")]
         [Produces(typeof(Model.Framework))]
-        public IActionResult Put([FromQuery]int id, [FromBody] Model.Info model)
+        public IActionResult Put(int id, [FromBody] Model.Info model)
         {
             if (id <= 0)
             {
@@ -72,8 +77,8 @@ namespace PortfolioApi.Controllers
             }
             try
             {
-                var modelFromContext = _context.Frameworks.Find(id);
-                modelFromContext.Info = model;
+                var modelFromContext = _context.Frameworks.Include(x=>x.Info).Single(x=>x.Id == id);
+                modelFromContext.Info.Update(model);
                 _context.SaveChanges();
                 return Ok(modelFromContext);
             }
@@ -86,7 +91,7 @@ namespace PortfolioApi.Controllers
         [HttpPut]
         [Produces(typeof(Model.Framework))]
         [Route("UpdateRank")]
-        public IActionResult UpdateRank([FromQuery]int id, [FromBody] Rank model)
+        public IActionResult UpdateRank([FromQuery]int id, [FromBody] int rankId)
         {
             if (id <= 0)
             {
@@ -99,7 +104,7 @@ namespace PortfolioApi.Controllers
             try
             {
                 var modelFromContext = _context.Frameworks.Find(id);
-                modelFromContext.Rank = model;
+                modelFromContext.RankId = rankId;
                 _context.SaveChanges();
                 return Ok(modelFromContext);
             }
@@ -129,5 +134,11 @@ namespace PortfolioApi.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
+    }
+    public class FrameworkInputModel
+    {
+        public int RankId { get; set; }
+        public string Title { get; set; }
+        public Model.Info FrameworkInfo { get; set; }
     }
 }

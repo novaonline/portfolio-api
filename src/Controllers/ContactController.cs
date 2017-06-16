@@ -8,7 +8,7 @@ using Model = PortfolioApi.Models.Contacts;
 namespace PortfolioApi.Controllers
 {
     [Route("api/[controller]")]
-    public class ContactController: PortfolioController
+    public class ContactController : PortfolioController
     {
         public ContactController(PortfolioContext context) : base(context)
         {
@@ -18,10 +18,11 @@ namespace PortfolioApi.Controllers
         [Produces(typeof(Model.Contact))]
         public IActionResult Get()
         {
-            return Ok(_context.Contacts
-            .Include(contact => contact.Info.Addresses)
-            .Include(contact => contact.Info.PhoneNumbers)
-            .FirstOrDefault());
+
+            return Ok(
+            _context.Contacts.Include(c => c.Info)
+            );
         }
+
     }
 }

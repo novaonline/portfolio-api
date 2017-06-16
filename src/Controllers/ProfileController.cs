@@ -6,13 +6,14 @@ using Microsoft.AspNetCore.Mvc;
 using Model = PortfolioApi.Models.Profiles;
 using PortfolioApi.Services;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore;
 
 namespace PortfolioApi.Controllers
 {
     [Route("api/[controller]")]
     public class ProfileController : PortfolioController
     {
-        public ProfileController(PortfolioContext context):base(context)
+        public ProfileController(PortfolioContext context) : base(context)
         {
         }
 
@@ -23,7 +24,27 @@ namespace PortfolioApi.Controllers
         [Produces(typeof(Model.Profile))]
         public IActionResult Get()
         {
-            return Ok(_context.Profiles.FirstOrDefault());
+            return Ok(
+                _context.Profiles
+                .Include(p => p.Info)
+                .FirstOrDefault());
+        }
+
+        [HttpPut("{id}")]
+        public IActionResult Put(int id, [FromBody]Model.Info model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var profile = _context.Profiles.Include(x=>x.Info).SingleOrDefault(i => i.Id == id);
+            if(profile == null)
+            {
+                return NotFound();
+            }
+            profile.Info.Update(model);
+            _context.SaveChanges();
+            return Ok();
         }
     }
 }

@@ -3,7 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using PortfolioApi.Services;
 namespace PortfolioApi.Controllers
 {
-    [Authorize]
+
+    [Authorize(ActiveAuthenticationSchemes = "Bearer")]
     public class PortfolioController : Controller
     {
         protected readonly PortfolioContext _context;

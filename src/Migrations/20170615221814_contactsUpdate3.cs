@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace PortfolioApi.Migrations
 {
-    public partial class OwnedInfo2 : Migration
+    public partial class contactsUpdate3 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -17,7 +17,7 @@ namespace PortfolioApi.Migrations
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     AddDate = table.Column<DateTime>(nullable: true, defaultValueSql: "GETUTCDATE()"),
                     Secret = table.Column<string>(nullable: true, defaultValueSql: "NEWID()"),
-                    UpdateDate = table.Column<DateTime>(nullable: true, defaultValueSql: "GETUTCDATE()")
+                    UpdateDate = table.Column<DateTime>(nullable: true, computedColumnSql: "GETUTCDATE()")
                 },
                 constraints: table =>
                 {
@@ -31,7 +31,7 @@ namespace PortfolioApi.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     AddDate = table.Column<DateTime>(nullable: true, defaultValueSql: "GETUTCDATE()"),
-                    UpdateDate = table.Column<DateTime>(nullable: true, defaultValueSql: "GETUTCDATE()")
+                    UpdateDate = table.Column<DateTime>(nullable: true, computedColumnSql: "GETUTCDATE()")
                 },
                 constraints: table =>
                 {
@@ -45,7 +45,7 @@ namespace PortfolioApi.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     AddDate = table.Column<DateTime>(nullable: true, defaultValueSql: "GETUTCDATE()"),
-                    UpdateDate = table.Column<DateTime>(nullable: true, defaultValueSql: "GETUTCDATE()")
+                    UpdateDate = table.Column<DateTime>(nullable: true, computedColumnSql: "GETUTCDATE()")
                 },
                 constraints: table =>
                 {
@@ -59,7 +59,7 @@ namespace PortfolioApi.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     AddDate = table.Column<DateTime>(nullable: true, defaultValueSql: "GETUTCDATE()"),
-                    UpdateDate = table.Column<DateTime>(nullable: true, defaultValueSql: "GETUTCDATE()")
+                    UpdateDate = table.Column<DateTime>(nullable: true, computedColumnSql: "GETUTCDATE()")
                 },
                 constraints: table =>
                 {
@@ -73,7 +73,7 @@ namespace PortfolioApi.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     AddDate = table.Column<DateTime>(nullable: true, defaultValueSql: "GETUTCDATE()"),
-                    UpdateDate = table.Column<DateTime>(nullable: true, defaultValueSql: "GETUTCDATE()")
+                    UpdateDate = table.Column<DateTime>(nullable: true, computedColumnSql: "GETUTCDATE()")
                 },
                 constraints: table =>
                 {
@@ -87,7 +87,7 @@ namespace PortfolioApi.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     AddDate = table.Column<DateTime>(nullable: true, defaultValueSql: "GETUTCDATE()"),
-                    UpdateDate = table.Column<DateTime>(nullable: true, defaultValueSql: "GETUTCDATE()")
+                    UpdateDate = table.Column<DateTime>(nullable: true, computedColumnSql: "GETUTCDATE()")
                 },
                 constraints: table =>
                 {
@@ -101,7 +101,7 @@ namespace PortfolioApi.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     AddDate = table.Column<DateTime>(nullable: true, defaultValueSql: "GETUTCDATE()"),
-                    UpdateDate = table.Column<DateTime>(nullable: true, defaultValueSql: "GETUTCDATE()")
+                    UpdateDate = table.Column<DateTime>(nullable: true, computedColumnSql: "GETUTCDATE()")
                 },
                 constraints: table =>
                 {
@@ -109,7 +109,7 @@ namespace PortfolioApi.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "pfm_clients_client_Info",
+                name: "pfm_clients_info",
                 columns: table => new
                 {
                     ClientId = table.Column<int>(nullable: false),
@@ -117,9 +117,9 @@ namespace PortfolioApi.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_pfm_clients_client_Info", x => x.ClientId);
+                    table.PrimaryKey("PK_pfm_clients_info", x => x.ClientId);
                     table.ForeignKey(
-                        name: "FK_pfm_clients_client_Info_pfm_clients_client_ClientId",
+                        name: "FK_pfm_clients_info_pfm_clients_client_ClientId",
                         column: x => x.ClientId,
                         principalTable: "pfm_clients_client",
                         principalColumn: "Id",
@@ -127,17 +127,25 @@ namespace PortfolioApi.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "pfm_contacts_contact_Info",
+                name: "pfm_contacts_info",
                 columns: table => new
                 {
                     ContactId = table.Column<int>(nullable: false),
-                    Email = table.Column<string>(nullable: true)
+                    AddressType = table.Column<int>(nullable: false),
+                    City = table.Column<string>(nullable: true),
+                    Country = table.Column<string>(nullable: true),
+                    Email = table.Column<string>(nullable: true),
+                    PhoneNumber = table.Column<string>(nullable: true),
+                    PhoneType = table.Column<int>(nullable: false),
+                    Postal = table.Column<string>(nullable: true),
+                    State = table.Column<string>(nullable: true),
+                    StreetAddress = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_pfm_contacts_contact_Info", x => x.ContactId);
+                    table.PrimaryKey("PK_pfm_contacts_info", x => x.ContactId);
                     table.ForeignKey(
-                        name: "FK_pfm_contacts_contact_Info_pfm_contacts_contact_ContactId",
+                        name: "FK_pfm_contacts_info_pfm_contacts_contact_ContactId",
                         column: x => x.ContactId,
                         principalTable: "pfm_contacts_contact",
                         principalColumn: "Id",
@@ -152,7 +160,7 @@ namespace PortfolioApi.Migrations
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     AddDate = table.Column<DateTime>(nullable: true, defaultValueSql: "GETUTCDATE()"),
                     ContentId = table.Column<int>(nullable: false),
-                    UpdateDate = table.Column<DateTime>(nullable: true, defaultValueSql: "GETUTCDATE()")
+                    UpdateDate = table.Column<DateTime>(nullable: true, computedColumnSql: "GETUTCDATE()")
                 },
                 constraints: table =>
                 {
@@ -166,7 +174,7 @@ namespace PortfolioApi.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "pfm_contents_content_Info",
+                name: "pfm_contents_info",
                 columns: table => new
                 {
                     ContentId = table.Column<int>(nullable: false),
@@ -176,9 +184,9 @@ namespace PortfolioApi.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_pfm_contents_content_Info", x => x.ContentId);
+                    table.PrimaryKey("PK_pfm_contents_info", x => x.ContentId);
                     table.ForeignKey(
-                        name: "FK_pfm_contents_content_Info_pfm_contents_content_ContentId",
+                        name: "FK_pfm_contents_info_pfm_contents_content_ContentId",
                         column: x => x.ContentId,
                         principalTable: "pfm_contents_content",
                         principalColumn: "Id",
@@ -186,7 +194,7 @@ namespace PortfolioApi.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "pfm_interests_interest_Info",
+                name: "pfm_interests_info",
                 columns: table => new
                 {
                     InterestId = table.Column<int>(nullable: false),
@@ -194,9 +202,9 @@ namespace PortfolioApi.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_pfm_interests_interest_Info", x => x.InterestId);
+                    table.PrimaryKey("PK_pfm_interests_info", x => x.InterestId);
                     table.ForeignKey(
-                        name: "FK_pfm_interests_interest_Info_pfm_interests_interest_InterestId",
+                        name: "FK_pfm_interests_info_pfm_interests_interest_InterestId",
                         column: x => x.InterestId,
                         principalTable: "pfm_interests_interest",
                         principalColumn: "Id",
@@ -204,21 +212,21 @@ namespace PortfolioApi.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "pfm_profiles_profile_Info",
+                name: "pfm_profiles_info",
                 columns: table => new
                 {
                     ProfileId = table.Column<int>(nullable: false),
                     AboutMe = table.Column<string>(nullable: true),
                     BirthDate = table.Column<DateTime>(nullable: false),
-                    FirstName = table.Column<string>(nullable: true),
+                    FirstName = table.Column<string>(maxLength: 50, nullable: true),
                     ImageUrl = table.Column<string>(nullable: true),
-                    LastName = table.Column<string>(nullable: true)
+                    LastName = table.Column<string>(maxLength: 50, nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_pfm_profiles_profile_Info", x => x.ProfileId);
+                    table.PrimaryKey("PK_pfm_profiles_info", x => x.ProfileId);
                     table.ForeignKey(
-                        name: "FK_pfm_profiles_profile_Info_pfm_profiles_profile_ProfileId",
+                        name: "FK_pfm_profiles_info_pfm_profiles_profile_ProfileId",
                         column: x => x.ProfileId,
                         principalTable: "pfm_profiles_profile",
                         principalColumn: "Id",
@@ -226,7 +234,7 @@ namespace PortfolioApi.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "pfm_projects_project_Info",
+                name: "pfm_projects_info",
                 columns: table => new
                 {
                     ProjectId = table.Column<int>(nullable: false),
@@ -236,9 +244,9 @@ namespace PortfolioApi.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_pfm_projects_project_Info", x => x.ProjectId);
+                    table.PrimaryKey("PK_pfm_projects_info", x => x.ProjectId);
                     table.ForeignKey(
-                        name: "FK_pfm_projects_project_Info_pfm_projects_project_ProjectId",
+                        name: "FK_pfm_projects_info_pfm_projects_project_ProjectId",
                         column: x => x.ProjectId,
                         principalTable: "pfm_projects_project",
                         principalColumn: "Id",
@@ -253,7 +261,7 @@ namespace PortfolioApi.Migrations
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     AddDate = table.Column<DateTime>(nullable: true, defaultValueSql: "GETUTCDATE()"),
                     RankId = table.Column<int>(nullable: false),
-                    UpdateDate = table.Column<DateTime>(nullable: true, defaultValueSql: "GETUTCDATE()")
+                    UpdateDate = table.Column<DateTime>(nullable: true, computedColumnSql: "GETUTCDATE()")
                 },
                 constraints: table =>
                 {
@@ -274,7 +282,7 @@ namespace PortfolioApi.Migrations
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     AddDate = table.Column<DateTime>(nullable: true, defaultValueSql: "GETUTCDATE()"),
                     RankId = table.Column<int>(nullable: false),
-                    UpdateDate = table.Column<DateTime>(nullable: true, defaultValueSql: "GETUTCDATE()")
+                    UpdateDate = table.Column<DateTime>(nullable: true, computedColumnSql: "GETUTCDATE()")
                 },
                 constraints: table =>
                 {
@@ -295,7 +303,7 @@ namespace PortfolioApi.Migrations
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     AddDate = table.Column<DateTime>(nullable: true, defaultValueSql: "GETUTCDATE()"),
                     RankId = table.Column<int>(nullable: false),
-                    UpdateDate = table.Column<DateTime>(nullable: true, defaultValueSql: "GETUTCDATE()")
+                    UpdateDate = table.Column<DateTime>(nullable: true, computedColumnSql: "GETUTCDATE()")
                 },
                 constraints: table =>
                 {
@@ -309,7 +317,7 @@ namespace PortfolioApi.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "pfm_rankableitems_ranks_rank_Info",
+                name: "pfm_rankableitems_ranks_info",
                 columns: table => new
                 {
                     RankId = table.Column<int>(nullable: false),
@@ -317,9 +325,9 @@ namespace PortfolioApi.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_pfm_rankableitems_ranks_rank_Info", x => x.RankId);
+                    table.PrimaryKey("PK_pfm_rankableitems_ranks_info", x => x.RankId);
                     table.ForeignKey(
-                        name: "FK_pfm_rankableitems_ranks_rank_Info_pfm_rankableitems_ranks_rank_RankId",
+                        name: "FK_pfm_rankableitems_ranks_info_pfm_rankableitems_ranks_rank_RankId",
                         column: x => x.RankId,
                         principalTable: "pfm_rankableitems_ranks_rank",
                         principalColumn: "Id",
@@ -327,49 +335,7 @@ namespace PortfolioApi.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "pfm_contacts_addresses_address",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    AddDate = table.Column<DateTime>(nullable: true, defaultValueSql: "GETUTCDATE()"),
-                    ContactId = table.Column<int>(nullable: false),
-                    UpdateDate = table.Column<DateTime>(nullable: true, defaultValueSql: "GETUTCDATE()")
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_pfm_contacts_addresses_address", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_pfm_contacts_addresses_address_pfm_contacts_contact_Info_ContactId",
-                        column: x => x.ContactId,
-                        principalTable: "pfm_contacts_contact_Info",
-                        principalColumn: "ContactId",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "pfm_contacts_phones_phone",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    AddDate = table.Column<DateTime>(nullable: true, defaultValueSql: "GETUTCDATE()"),
-                    ContactId = table.Column<int>(nullable: false),
-                    UpdateDate = table.Column<DateTime>(nullable: true, defaultValueSql: "GETUTCDATE()")
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_pfm_contacts_phones_phone", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_pfm_contacts_phones_phone_pfm_contacts_contact_Info_ContactId",
-                        column: x => x.ContactId,
-                        principalTable: "pfm_contacts_contact_Info",
-                        principalColumn: "ContactId",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "pfm_contents_sections_section_Info",
+                name: "pfm_contents_sections_info",
                 columns: table => new
                 {
                     SectionId = table.Column<int>(nullable: false),
@@ -378,9 +344,9 @@ namespace PortfolioApi.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_pfm_contents_sections_section_Info", x => x.SectionId);
+                    table.PrimaryKey("PK_pfm_contents_sections_info", x => x.SectionId);
                     table.ForeignKey(
-                        name: "FK_pfm_contents_sections_section_Info_pfm_contents_sections_section_SectionId",
+                        name: "FK_pfm_contents_sections_info_pfm_contents_sections_section_SectionId",
                         column: x => x.SectionId,
                         principalTable: "pfm_contents_sections_section",
                         principalColumn: "Id",
@@ -388,7 +354,7 @@ namespace PortfolioApi.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "pfm_rankableitems_frameworks_framework_Info",
+                name: "pfm_rankableitems_frameworks_info",
                 columns: table => new
                 {
                     FrameworkId = table.Column<int>(nullable: false),
@@ -397,9 +363,9 @@ namespace PortfolioApi.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_pfm_rankableitems_frameworks_framework_Info", x => x.FrameworkId);
+                    table.PrimaryKey("PK_pfm_rankableitems_frameworks_info", x => x.FrameworkId);
                     table.ForeignKey(
-                        name: "FK_pfm_rankableitems_frameworks_framework_Info_pfm_rankableitems_frameworks_framework_FrameworkId",
+                        name: "FK_pfm_rankableitems_frameworks_info_pfm_rankableitems_frameworks_framework_FrameworkId",
                         column: x => x.FrameworkId,
                         principalTable: "pfm_rankableitems_frameworks_framework",
                         principalColumn: "Id",
@@ -407,7 +373,7 @@ namespace PortfolioApi.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "pfm_rankableitems_languages_language_Info",
+                name: "pfm_rankableitems_languages_info",
                 columns: table => new
                 {
                     LanguageId = table.Column<int>(nullable: false),
@@ -416,9 +382,9 @@ namespace PortfolioApi.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_pfm_rankableitems_languages_language_Info", x => x.LanguageId);
+                    table.PrimaryKey("PK_pfm_rankableitems_languages_info", x => x.LanguageId);
                     table.ForeignKey(
-                        name: "FK_pfm_rankableitems_languages_language_Info_pfm_rankableitems_languages_language_LanguageId",
+                        name: "FK_pfm_rankableitems_languages_info_pfm_rankableitems_languages_language_LanguageId",
                         column: x => x.LanguageId,
                         principalTable: "pfm_rankableitems_languages_language",
                         principalColumn: "Id",
@@ -426,7 +392,7 @@ namespace PortfolioApi.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "pfm_rankableitems_libraries_library_Info",
+                name: "pfm_rankableitems_libraries_info",
                 columns: table => new
                 {
                     LibraryId = table.Column<int>(nullable: false),
@@ -435,66 +401,19 @@ namespace PortfolioApi.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_pfm_rankableitems_libraries_library_Info", x => x.LibraryId);
+                    table.PrimaryKey("PK_pfm_rankableitems_libraries_info", x => x.LibraryId);
                     table.ForeignKey(
-                        name: "FK_pfm_rankableitems_libraries_library_Info_pfm_rankableitems_libraries_library_LibraryId",
+                        name: "FK_pfm_rankableitems_libraries_info_pfm_rankableitems_libraries_library_LibraryId",
                         column: x => x.LibraryId,
                         principalTable: "pfm_rankableitems_libraries_library",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateTable(
-                name: "pfm_contacts_addresses_address_Info",
-                columns: table => new
-                {
-                    AddressId = table.Column<int>(nullable: false),
-                    City = table.Column<string>(nullable: true),
-                    Country = table.Column<string>(nullable: true),
-                    Postal = table.Column<string>(nullable: true),
-                    State = table.Column<string>(nullable: true),
-                    StreetAddress = table.Column<string>(nullable: true),
-                    Type = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_pfm_contacts_addresses_address_Info", x => x.AddressId);
-                    table.ForeignKey(
-                        name: "FK_pfm_contacts_addresses_address_Info_pfm_contacts_addresses_address_AddressId",
-                        column: x => x.AddressId,
-                        principalTable: "pfm_contacts_addresses_address",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "pfm_contacts_phones_phone_Info",
-                columns: table => new
-                {
-                    PhoneId = table.Column<int>(nullable: false),
-                    Type = table.Column<int>(nullable: false),
-                    Value = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_pfm_contacts_phones_phone_Info", x => x.PhoneId);
-                    table.ForeignKey(
-                        name: "FK_pfm_contacts_phones_phone_Info_pfm_contacts_phones_phone_PhoneId",
-                        column: x => x.PhoneId,
-                        principalTable: "pfm_contacts_phones_phone",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
             migrationBuilder.CreateIndex(
-                name: "IX_pfm_contacts_addresses_address_ContactId",
-                table: "pfm_contacts_addresses_address",
-                column: "ContactId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_pfm_contacts_phones_phone_ContactId",
-                table: "pfm_contacts_phones_phone",
-                column: "ContactId");
+                name: "IX_pfm_clients_client_Secret",
+                table: "pfm_clients_client",
+                column: "Secret");
 
             migrationBuilder.CreateIndex(
                 name: "IX_pfm_contents_sections_section_ContentId",
@@ -515,54 +434,74 @@ namespace PortfolioApi.Migrations
                 name: "IX_pfm_rankableitems_libraries_library_RankId",
                 table: "pfm_rankableitems_libraries_library",
                 column: "RankId");
+
+            // EXTRA MANUALLY ADDED INDEXES
+            //migrationBuilder.CreateIndex(
+            //    name: "IX_pfm_rankableitems_languages_info_Title",
+            //    table: "pfm_rankableitems_languages_info",
+            //    column: "Title");
+
+            //migrationBuilder.CreateIndex(
+            //    name: "IX_pfm_rankableitems_frameworks_info_Title",
+            //    table: "pfm_rankableitems_frameworks_info",
+            //    column: "Title");
+
+            //migrationBuilder.CreateIndex(
+            //    name: "IX_pfm_rankableitems_libraries_info_Title",
+            //    table: "pfm_rankableitems_libraries_info",
+            //    column: "Title");
+
+            //migrationBuilder.CreateIndex(
+            //    name: "IX_pfm_interests_info_description",
+            //    table: "pfm_interests_info",
+            //    column: "Description");
+
+            //migrationBuilder.CreateIndex(
+            //    name: "IX_pfm_clients_info_Name",
+            //    table: "pfm_clients_info",
+            //    column: "Name");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "pfm_clients_client_Info");
+                name: "pfm_clients_info");
 
             migrationBuilder.DropTable(
-                name: "pfm_contacts_addresses_address_Info");
+                name: "pfm_contacts_info");
 
             migrationBuilder.DropTable(
-                name: "pfm_contacts_phones_phone_Info");
+                name: "pfm_contents_info");
 
             migrationBuilder.DropTable(
-                name: "pfm_contents_content_Info");
+                name: "pfm_contents_sections_info");
 
             migrationBuilder.DropTable(
-                name: "pfm_contents_sections_section_Info");
+                name: "pfm_interests_info");
 
             migrationBuilder.DropTable(
-                name: "pfm_interests_interest_Info");
+                name: "pfm_profiles_info");
 
             migrationBuilder.DropTable(
-                name: "pfm_profiles_profile_Info");
+                name: "pfm_projects_info");
 
             migrationBuilder.DropTable(
-                name: "pfm_projects_project_Info");
+                name: "pfm_rankableitems_frameworks_info");
 
             migrationBuilder.DropTable(
-                name: "pfm_rankableitems_frameworks_framework_Info");
+                name: "pfm_rankableitems_languages_info");
 
             migrationBuilder.DropTable(
-                name: "pfm_rankableitems_languages_language_Info");
+                name: "pfm_rankableitems_libraries_info");
 
             migrationBuilder.DropTable(
-                name: "pfm_rankableitems_libraries_library_Info");
-
-            migrationBuilder.DropTable(
-                name: "pfm_rankableitems_ranks_rank_Info");
+                name: "pfm_rankableitems_ranks_info");
 
             migrationBuilder.DropTable(
                 name: "pfm_clients_client");
 
             migrationBuilder.DropTable(
-                name: "pfm_contacts_addresses_address");
-
-            migrationBuilder.DropTable(
-                name: "pfm_contacts_phones_phone");
+                name: "pfm_contacts_contact");
 
             migrationBuilder.DropTable(
                 name: "pfm_contents_sections_section");
@@ -586,16 +525,10 @@ namespace PortfolioApi.Migrations
                 name: "pfm_rankableitems_libraries_library");
 
             migrationBuilder.DropTable(
-                name: "pfm_contacts_contact_Info");
-
-            migrationBuilder.DropTable(
                 name: "pfm_contents_content");
 
             migrationBuilder.DropTable(
                 name: "pfm_rankableitems_ranks_rank");
-
-            migrationBuilder.DropTable(
-                name: "pfm_contacts_contact");
         }
     }
 }

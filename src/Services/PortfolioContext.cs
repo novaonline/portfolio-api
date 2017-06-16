@@ -10,6 +10,8 @@ using ProjectsModel = PortfolioApi.Models.Projects;
 using ContentsModel = PortfolioApi.Models.Contents;
 using System;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.Extensions.Logging;
+using PortfolioApi.Helpers;
 
 namespace PortfolioApi.Services
 {
@@ -38,48 +40,87 @@ namespace PortfolioApi.Services
         {
         }
 
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.EnableSensitiveDataLogging(true);
+            LoggerFactory loggerFactory = new LoggerFactory();
+            loggerFactory.AddProvider(new TraceLoggerProvider());
+            optionsBuilder.UseLoggerFactory(loggerFactory);
+        }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            // https://blogs.msdn.microsoft.com/dotnet/2017/05/12/announcing-ef-core-2-0-preview-1/
+            // will need to wait till an update comes before these are columns and not tables
+            modelBuilder.Entity<ClientsModel.Client>(entity =>
+            {
+                entity.HasIndex(x => new { x.Name, x.Secret }).IsUnique();
+                entity.Property(x => x.Secret).HasDefaultValueSql("NEWID()");
+            });
+
+            modelBuilder.Entity<ProfilesModel.Profile>(entity =>
+            {
+                entity.OwnsOne(x => x.Info);
+
+            });
+            modelBuilder.Entity<ContactsModel.Contact>(entity =>
+            {
+                entity.OwnsOne(x => x.Info);
+            });
+            modelBuilder.Entity<RankableItemsModel.Frameworks.Framework>(entity =>
+            {
+                entity.HasIndex(x => x.Title);
+                entity.OwnsOne(x => x.Info);
+            });
+            modelBuilder.Entity<RankableItemsModel.Languages.Language>(entity =>
+            {
+                entity.HasIndex(x => x.Title);
+                entity.OwnsOne(x => x.Info);
+            });
+            modelBuilder.Entity<RankableItemsModel.Libraries.Library>(entity =>
+            {
+                entity.HasIndex(x => x.Title);
+                entity.OwnsOne(x => x.Info);
+            });
+            modelBuilder.Entity<RankableItemsModel.Ranks.Rank>(entity =>
+            {
+                entity.OwnsOne(x => x.Info);
+            });
+            modelBuilder.Entity<InterestsModel.Interest>(entity =>
+            {
+                entity.OwnsOne(x => x.Info);
+            });
+            modelBuilder.Entity<ProjectsModel.Project>(entity =>
+            {
+                entity.HasIndex(x => x.Title);
+                entity.OwnsOne(x => x.Info);
+            });
+            modelBuilder.Entity<ContentsModel.Content>(entity => {
+                entity.HasIndex(x => x.HtmlId);
+                entity.OwnsOne(x => x.Info);
+                //entity.HasMany(x => x.Sections);
+            });
+            modelBuilder.Entity<ContentsModel.Sections.Section>(entity =>
+            {
+                entity.OwnsOne(x => x.Info);
+            });
+
+            // http://www.c-sharpcorner.com/article/crud-operations-in-asp-net-core-using-entity-framework-core-code-first/
             foreach (var entityType in modelBuilder.Model.GetEntityTypes())
             {
                 entityType.Relational().TableName = entityType.Name.Replace('.', '_').ToLower().Replace("portfolioapi_models", "pfm");
-                foreach (var addDateProps in entityType.GetProperties().Where(x => x.Name == "AddDate" || x.Name == "UpdateDate"))
+                foreach (var dateProp in entityType.GetProperties().Where(x => x.Name == "AddDate" || x.Name == "UpdateDate"))
                 {
-                    addDateProps.Relational().DefaultValueSql = "GETUTCDATE()";
-                    // TODO get Update date to automatically update the Date
+                    if (dateProp.Name == "UpdateDate")
+                    {
+                        dateProp.Relational().ComputedColumnSql = "GETUTCDATE()";
+                    }
+                    else
+                    {
+                        dateProp.Relational().DefaultValueSql = "GETUTCDATE()";
+                    }
                 }
             }
-            // http://www.c-sharpcorner.com/article/crud-operations-in-asp-net-core-using-entity-framework-core-code-first/
-
-            // https://blogs.msdn.microsoft.com/dotnet/2017/05/12/announcing-ef-core-2-0-preview-1/
-            // untill that is updated, everything will have a an id
-            modelBuilder.Entity<ProfilesModel.Profile>().OwnsOne(x => x.Info);
-            modelBuilder.Entity<ContactsModel.Contact>().OwnsOne(x => x.Info);
-            modelBuilder.Entity<ContactsModel.Addresses.Address>().OwnsOne(x => x.Info);
-            modelBuilder.Entity<ContactsModel.Phones.Phone>().OwnsOne(x => x.Info);
-            modelBuilder.Entity<RankableItemsModel.Frameworks.Framework>().OwnsOne(x => x.Info);
-            modelBuilder.Entity<RankableItemsModel.Languages.Language>().OwnsOne(x => x.Info);
-            modelBuilder.Entity<RankableItemsModel.Libraries.Library>().OwnsOne(x => x.Info);
-            modelBuilder.Entity<RankableItemsModel.Ranks.Rank>().OwnsOne(x => x.Info);
-            modelBuilder.Entity<InterestsModel.Interest>().OwnsOne(x => x.Info);
-            modelBuilder.Entity<ProjectsModel.Project>().OwnsOne(x => x.Info);
-            modelBuilder.Entity<ClientsModel.Client>().OwnsOne(x => x.Info);
-            modelBuilder.Entity<ContentsModel.Content>().OwnsOne(x => x.Info);
-            modelBuilder.Entity<ContentsModel.Sections.Section>().OwnsOne(x => x.Info);
-
-            //// TODO need to figure out how to index complex stuff.
-            //modelBuilder.Entity<RankableItemsModel.Languages.Info>().HasIndex(l => l.Title);
-            //modelBuilder.Entity<RankableItemsModel.Frameworks.Info>().HasIndex(f => f.Title);
-            //modelBuilder.Entity<RankableItemsModel.Libraries.Info>().HasIndex(f => f.Title);
-            //modelBuilder.Entity<InterestsModel.Info>().HasIndex(f => f.Description);
-            //modelBuilder.Entity<ClientsModel.Info>().HasIndex(x => new { x.Name });
-            //modelBuilder.Entity<ClientsModel.Client>().HasIndex(x => new { x.Secret });
-
-
-
-            // TODO need to figure out this class stuff
-            modelBuilder.Entity<ClientsModel.Client>().Property(x => x.Secret).HasDefaultValueSql("NEWID()");
-
         }
     }
 

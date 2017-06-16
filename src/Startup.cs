@@ -37,7 +37,7 @@ namespace PortfolioApi
         {
             // Add framework services.
             services.AddMvc();
-
+            
             // Register the Swagger generator, defining one or more Swagger documents
             // https://docs.microsoft.com/en-us/aspnet/core/tutorials/web-api-help-pages-using-swagger
             services.AddSwaggerGen(c =>
@@ -47,17 +47,19 @@ namespace PortfolioApi
                 c.CustomSchemaIds(x => x.FullName);
             });
 
-            // https://www.hanselman.com/blog/ASPNETCoreRESTfulWebAPIVersioningMadeEasy.aspx
-            services.AddApiVersioning(o =>
-            {
-                o.AssumeDefaultVersionWhenUnspecified = true;
-                o.DefaultApiVersion = new ApiVersion(1, 0);
-            });
+            // // https://www.hanselman.com/blog/ASPNETCoreRESTfulWebAPIVersioningMadeEasy.aspx
+            // services.AddApiVersioning(o =>
+            // {
+            //     o.AssumeDefaultVersionWhenUnspecified = true;
+            //     o.DefaultApiVersion = new ApiVersion(1, 0);
+            // });
 
             // Add framework services.
             services.AddDbContext<PortfolioContext>(options =>
                 options.UseSqlServer(Environment.GetEnvironmentVariable("DefaultConnection") ??
-                    Configuration.GetConnectionString("DefaultConnection")));
+                    Configuration.GetConnectionString("DefaultConnection"))
+                    );
+
 
             services.AddJwtBearerAuthentication(options =>
             {
@@ -120,7 +122,7 @@ namespace PortfolioApi
                 _logger.LogError(0, ex, "Failed to migrate or seed database");
             }
 
-            //Helpers.PortfolioInitializer.Init(context); // used to seed. This file is ignored in git
+            Helpers.PortfolioInitializer.Init(context); // used to seed. This file is ignored in git
         }
     }
 }

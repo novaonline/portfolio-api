@@ -51,7 +51,7 @@ namespace PortfolioApi
             PortfolioApi.Models.Clients.Client client;
             using (var contenxt = new PortfolioContext(optionsBuilder.Options))
             {
-                client = contenxt.Clients.Where(c => c.Secret == secret && c.Info.Name == name).FirstOrDefault();
+                client = contenxt.Clients.Where(c => c.Secret == secret && c.Name == name).FirstOrDefault();
             }
 
             if (client != null)

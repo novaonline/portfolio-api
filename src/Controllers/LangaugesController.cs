@@ -20,8 +20,20 @@ namespace PortfolioApi.Controllers
         [Produces(typeof(Model.Language))]
         public IActionResult Get()
         {
-            return Ok(_context.Languages.Include(l => l.Rank));
+            return Ok(_context.Languages
+            .Include(l => l.Info)
+            .Include(l => l.Rank));
         }
+
+        [HttpGet("{id}"), AllowAnonymous]
+        [Produces(typeof(Model.Language))]
+        public IActionResult Get(int id)
+        {
+            return Ok(_context.Languages
+            .Include(l => l.Info)
+            .Include(l => l.Rank).SingleOrDefault(x=>x.Id == id));
+        }
+
 
         [HttpGet, AllowAnonymous]
         [Produces(typeof(IEnumerable<Model.Language>))]
@@ -29,14 +41,16 @@ namespace PortfolioApi.Controllers
         public IActionResult SearchByTitle(string searchTerm)
         {
             IQueryable<Model.Language> query = from l in _context.Languages
-                                               where l.Info.Title.Contains(searchTerm)
+                                               where l.Title.Contains(searchTerm)
                                                select l;
-            return Ok(query.Include(q => q.Rank).ToList());
+            return Ok(query
+            .Include(q => q.Info)
+            .Include(q => q.Rank).ToList());
         }
 
         [HttpPost]
         [Produces(typeof(int))]
-        public IActionResult Post([FromBody] Model.Language model)
+        public IActionResult Post([FromBody] LanguageInputModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -45,7 +59,13 @@ namespace PortfolioApi.Controllers
 
             try
             {
-                _context.Languages.Add(model);
+                var language = new Model.Language
+                {
+                    Info = model.LanguageInfo,
+                    Title = model.Title,
+                    RankId = model.RankId
+                };
+                _context.Languages.Add(language);
                 var id = _context.SaveChanges();
                 return Created("Created Successfully with Id", id);
             }
@@ -55,9 +75,8 @@ namespace PortfolioApi.Controllers
             }
         }
 
-        [HttpPut]
-        [Produces(typeof(Model.Language))]
-        public IActionResult Put([FromQuery] int id, [FromBody] Model.Info model)
+        [HttpPut("{id}")]
+        public IActionResult Put(int id, [FromBody] Model.Info model)
         {
             if (id <= 0)
             {
@@ -69,10 +88,10 @@ namespace PortfolioApi.Controllers
             }
             try
             {
-                var modelFromContext = _context.Languages.Find(id);
-                modelFromContext.Info = model;
+                var modelFromContext = _context.Languages.Include(x=>x.Info).Single(x=>x.Id == id);
+                modelFromContext.Info.Update(model);
                 _context.SaveChanges();
-                return Ok(modelFromContext);
+                return Ok();
             }
             catch (Exception ex)
             {
@@ -100,5 +119,11 @@ namespace PortfolioApi.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
+    }
+    public class LanguageInputModel
+    {
+        public int RankId { get; set; }
+        public string Title { get; set; }
+        public Model.Info LanguageInfo { get; set; }
     }
 }

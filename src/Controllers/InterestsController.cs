@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using PortfolioApi.Services;
 using Model = PortfolioApi.Models.Interests;
 
@@ -19,18 +20,30 @@ namespace PortfolioApi.Controllers
         [Produces(typeof(Model.Interest))]
         public IActionResult Get()
         {
-            return Ok(_context.Interests.ToList());
+            return Ok(_context.Interests
+            .Include(i => i.Info)
+            .ToList());
         }
+
+        [HttpGet("{id}"), AllowAnonymous]
+        [Produces(typeof(Model.Interest))]
+        public IActionResult Get(int id)
+        {
+            return Ok(_context.Interests
+            .Include(i => i.Info).SingleOrDefault(x => x.Id == id));
+        }
+
+
 
         [HttpPost]
         [Produces(typeof(int))]
-        public IActionResult Post([FromBody] Model.Interest model)
+        public IActionResult Post([FromBody] Model.Info model)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            
+
             try
             {
             }
@@ -40,7 +53,11 @@ namespace PortfolioApi.Controllers
             }
             try
             {
-                _context.Interests.Add(model);
+                var m = new Model.Interest
+                {
+                    Info = model
+                };
+                _context.Interests.Add(m);
                 var id = _context.SaveChanges();
                 return Created("Created Successfully with Id", id);
             }
@@ -50,9 +67,8 @@ namespace PortfolioApi.Controllers
             }
         }
 
-        [HttpPut]
-        [Produces(typeof(Model.Interest))]
-        public IActionResult Put([FromQuery]int id, [FromBody] Model.Info model)
+        [HttpPut("{id}")]
+        public IActionResult Put(int id, [FromBody] Model.Info model)
         {
             if (id <= 0)
             {
@@ -64,10 +80,10 @@ namespace PortfolioApi.Controllers
             }
             try
             {
-                var modelFromContext = _context.Interests.Find(id);
-                modelFromContext.Info = model;
+                var modelFromContext = _context.Interests.Include(x => x.Info).Single(x => x.Id == id);
+                modelFromContext.Info.Update(model);
                 _context.SaveChanges();
-                return Ok(modelFromContext);
+                return Ok();
             }
             catch (Exception ex)
             {

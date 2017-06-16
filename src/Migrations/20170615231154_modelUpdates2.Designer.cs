@@ -11,8 +11,8 @@ using System;
 namespace PortfolioApi.Migrations
 {
     [DbContext(typeof(PortfolioContext))]
-    [Migration("20170615085416_OwnedInfo2")]
-    partial class OwnedInfo2
+    [Migration("20170615231154_modelUpdates2")]
+    partial class modelUpdates2
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -29,39 +29,23 @@ namespace PortfolioApi.Migrations
                         .ValueGeneratedOnAddOrUpdate()
                         .HasDefaultValueSql("GETUTCDATE()");
 
+                    b.Property<string>("Name");
+
                     b.Property<string>("Secret")
                         .ValueGeneratedOnAdd()
                         .HasDefaultValueSql("NEWID()");
 
                     b.Property<DateTime?>("UpdateDate")
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasDefaultValueSql("GETUTCDATE()");
+                        .HasComputedColumnSql("GETUTCDATE()");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Name", "Secret")
+                        .IsUnique()
+                        .HasAnnotation("SqlServer:Filter", "[Name] IS NOT NULL AND [Secret] IS NOT NULL");
 
                     b.ToTable("pfm_clients_client");
-                });
-
-            modelBuilder.Entity("PortfolioApi.Models.Contacts.Addresses.Address", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<DateTime?>("AddDate")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasDefaultValueSql("GETUTCDATE()");
-
-                    b.Property<int>("ContactId");
-
-                    b.Property<DateTime?>("UpdateDate")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasDefaultValueSql("GETUTCDATE()");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ContactId");
-
-                    b.ToTable("pfm_contacts_addresses_address");
                 });
 
             modelBuilder.Entity("PortfolioApi.Models.Contacts.Contact", b =>
@@ -75,33 +59,11 @@ namespace PortfolioApi.Migrations
 
                     b.Property<DateTime?>("UpdateDate")
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasDefaultValueSql("GETUTCDATE()");
+                        .HasComputedColumnSql("GETUTCDATE()");
 
                     b.HasKey("Id");
 
                     b.ToTable("pfm_contacts_contact");
-                });
-
-            modelBuilder.Entity("PortfolioApi.Models.Contacts.Phones.Phone", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<DateTime?>("AddDate")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasDefaultValueSql("GETUTCDATE()");
-
-                    b.Property<int>("ContactId");
-
-                    b.Property<DateTime?>("UpdateDate")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasDefaultValueSql("GETUTCDATE()");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ContactId");
-
-                    b.ToTable("pfm_contacts_phones_phone");
                 });
 
             modelBuilder.Entity("PortfolioApi.Models.Contents.Content", b =>
@@ -113,11 +75,15 @@ namespace PortfolioApi.Migrations
                         .ValueGeneratedOnAddOrUpdate()
                         .HasDefaultValueSql("GETUTCDATE()");
 
+                    b.Property<string>("HtmlId");
+
                     b.Property<DateTime?>("UpdateDate")
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasDefaultValueSql("GETUTCDATE()");
+                        .HasComputedColumnSql("GETUTCDATE()");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("HtmlId");
 
                     b.ToTable("pfm_contents_content");
                 });
@@ -135,7 +101,7 @@ namespace PortfolioApi.Migrations
 
                     b.Property<DateTime?>("UpdateDate")
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasDefaultValueSql("GETUTCDATE()");
+                        .HasComputedColumnSql("GETUTCDATE()");
 
                     b.HasKey("Id");
 
@@ -155,7 +121,7 @@ namespace PortfolioApi.Migrations
 
                     b.Property<DateTime?>("UpdateDate")
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasDefaultValueSql("GETUTCDATE()");
+                        .HasComputedColumnSql("GETUTCDATE()");
 
                     b.HasKey("Id");
 
@@ -173,7 +139,7 @@ namespace PortfolioApi.Migrations
 
                     b.Property<DateTime?>("UpdateDate")
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasDefaultValueSql("GETUTCDATE()");
+                        .HasComputedColumnSql("GETUTCDATE()");
 
                     b.HasKey("Id");
 
@@ -189,11 +155,15 @@ namespace PortfolioApi.Migrations
                         .ValueGeneratedOnAddOrUpdate()
                         .HasDefaultValueSql("GETUTCDATE()");
 
+                    b.Property<string>("Title");
+
                     b.Property<DateTime?>("UpdateDate")
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasDefaultValueSql("GETUTCDATE()");
+                        .HasComputedColumnSql("GETUTCDATE()");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Title");
 
                     b.ToTable("pfm_projects_project");
                 });
@@ -209,13 +179,17 @@ namespace PortfolioApi.Migrations
 
                     b.Property<int>("RankId");
 
+                    b.Property<string>("Title");
+
                     b.Property<DateTime?>("UpdateDate")
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasDefaultValueSql("GETUTCDATE()");
+                        .HasComputedColumnSql("GETUTCDATE()");
 
                     b.HasKey("Id");
 
                     b.HasIndex("RankId");
+
+                    b.HasIndex("Title");
 
                     b.ToTable("pfm_rankableitems_frameworks_framework");
                 });
@@ -231,13 +205,17 @@ namespace PortfolioApi.Migrations
 
                     b.Property<int>("RankId");
 
+                    b.Property<string>("Title");
+
                     b.Property<DateTime?>("UpdateDate")
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasDefaultValueSql("GETUTCDATE()");
+                        .HasComputedColumnSql("GETUTCDATE()");
 
                     b.HasKey("Id");
 
                     b.HasIndex("RankId");
+
+                    b.HasIndex("Title");
 
                     b.ToTable("pfm_rankableitems_languages_language");
                 });
@@ -253,13 +231,17 @@ namespace PortfolioApi.Migrations
 
                     b.Property<int>("RankId");
 
+                    b.Property<string>("Title");
+
                     b.Property<DateTime?>("UpdateDate")
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasDefaultValueSql("GETUTCDATE()");
+                        .HasComputedColumnSql("GETUTCDATE()");
 
                     b.HasKey("Id");
 
                     b.HasIndex("RankId");
+
+                    b.HasIndex("Title");
 
                     b.ToTable("pfm_rankableitems_libraries_library");
                 });
@@ -275,31 +257,28 @@ namespace PortfolioApi.Migrations
 
                     b.Property<DateTime?>("UpdateDate")
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasDefaultValueSql("GETUTCDATE()");
+                        .HasComputedColumnSql("GETUTCDATE()");
 
                     b.HasKey("Id");
 
                     b.ToTable("pfm_rankableitems_ranks_rank");
                 });
 
-            modelBuilder.Entity("PortfolioApi.Models.Clients.Info", b =>
+            modelBuilder.Entity("PortfolioApi.Models.Contacts.Info", b =>
                 {
-                    b.Property<int?>("ClientId");
+                    b.Property<int?>("ContactId");
 
-                    b.Property<string>("Name");
-
-                    b.HasKey("ClientId");
-
-                    b.ToTable("Client.Info->Info");
-                });
-
-            modelBuilder.Entity("PortfolioApi.Models.Contacts.Addresses.Info", b =>
-                {
-                    b.Property<int?>("AddressId");
+                    b.Property<int>("AddressType");
 
                     b.Property<string>("City");
 
                     b.Property<string>("Country");
+
+                    b.Property<string>("Email");
+
+                    b.Property<string>("PhoneNumber");
+
+                    b.Property<int>("PhoneType");
 
                     b.Property<string>("Postal");
 
@@ -307,35 +286,9 @@ namespace PortfolioApi.Migrations
 
                     b.Property<string>("StreetAddress");
 
-                    b.Property<int>("Type");
-
-                    b.HasKey("AddressId");
-
-                    b.ToTable("Address.Info->Info");
-                });
-
-            modelBuilder.Entity("PortfolioApi.Models.Contacts.Info", b =>
-                {
-                    b.Property<int?>("ContactId");
-
-                    b.Property<string>("Email");
-
                     b.HasKey("ContactId");
 
-                    b.ToTable("Contact.Info->Info");
-                });
-
-            modelBuilder.Entity("PortfolioApi.Models.Contacts.Phones.Info", b =>
-                {
-                    b.Property<int?>("PhoneId");
-
-                    b.Property<int>("Type");
-
-                    b.Property<string>("Value");
-
-                    b.HasKey("PhoneId");
-
-                    b.ToTable("Phone.Info->Info");
+                    b.ToTable("pfm_contacts_info");
                 });
 
             modelBuilder.Entity("PortfolioApi.Models.Contents.Info", b =>
@@ -346,11 +299,9 @@ namespace PortfolioApi.Migrations
 
                     b.Property<string>("Header");
 
-                    b.Property<string>("HtmlId");
-
                     b.HasKey("ContentId");
 
-                    b.ToTable("Content.Info->Info");
+                    b.ToTable("pfm_contents_info");
                 });
 
             modelBuilder.Entity("PortfolioApi.Models.Contents.Sections.Info", b =>
@@ -363,7 +314,7 @@ namespace PortfolioApi.Migrations
 
                     b.HasKey("SectionId");
 
-                    b.ToTable("Section.Info->Info");
+                    b.ToTable("pfm_contents_sections_info");
                 });
 
             modelBuilder.Entity("PortfolioApi.Models.Interests.Info", b =>
@@ -374,7 +325,7 @@ namespace PortfolioApi.Migrations
 
                     b.HasKey("InterestId");
 
-                    b.ToTable("Interest.Info->Info");
+                    b.ToTable("pfm_interests_info");
                 });
 
             modelBuilder.Entity("PortfolioApi.Models.Profiles.Info", b =>
@@ -385,15 +336,17 @@ namespace PortfolioApi.Migrations
 
                     b.Property<DateTime>("BirthDate");
 
-                    b.Property<string>("FirstName");
+                    b.Property<string>("FirstName")
+                        .HasMaxLength(50);
 
                     b.Property<string>("ImageUrl");
 
-                    b.Property<string>("LastName");
+                    b.Property<string>("LastName")
+                        .HasMaxLength(50);
 
                     b.HasKey("ProfileId");
 
-                    b.ToTable("Profile.Info->Info");
+                    b.ToTable("pfm_profiles_info");
                 });
 
             modelBuilder.Entity("PortfolioApi.Models.Projects.Info", b =>
@@ -402,13 +355,11 @@ namespace PortfolioApi.Migrations
 
                     b.Property<string>("Description");
 
-                    b.Property<string>("Name");
-
                     b.Property<string>("Url");
 
                     b.HasKey("ProjectId");
 
-                    b.ToTable("Project.Info->Info");
+                    b.ToTable("pfm_projects_info");
                 });
 
             modelBuilder.Entity("PortfolioApi.Models.RankableItems.Frameworks.Info", b =>
@@ -417,11 +368,9 @@ namespace PortfolioApi.Migrations
 
                     b.Property<string>("Description");
 
-                    b.Property<string>("Title");
-
                     b.HasKey("FrameworkId");
 
-                    b.ToTable("Framework.Info->Info");
+                    b.ToTable("pfm_rankableitems_frameworks_info");
                 });
 
             modelBuilder.Entity("PortfolioApi.Models.RankableItems.Languages.Info", b =>
@@ -430,11 +379,9 @@ namespace PortfolioApi.Migrations
 
                     b.Property<string>("Description");
 
-                    b.Property<string>("Title");
-
                     b.HasKey("LanguageId");
 
-                    b.ToTable("Language.Info->Info");
+                    b.ToTable("pfm_rankableitems_languages_info");
                 });
 
             modelBuilder.Entity("PortfolioApi.Models.RankableItems.Libraries.Info", b =>
@@ -443,11 +390,9 @@ namespace PortfolioApi.Migrations
 
                     b.Property<string>("Description");
 
-                    b.Property<string>("Title");
-
                     b.HasKey("LibraryId");
 
-                    b.ToTable("Library.Info->Info");
+                    b.ToTable("pfm_rankableitems_libraries_info");
                 });
 
             modelBuilder.Entity("PortfolioApi.Models.RankableItems.Ranks.Info", b =>
@@ -458,23 +403,7 @@ namespace PortfolioApi.Migrations
 
                     b.HasKey("RankId");
 
-                    b.ToTable("Rank.Info->Info");
-                });
-
-            modelBuilder.Entity("PortfolioApi.Models.Contacts.Addresses.Address", b =>
-                {
-                    b.HasOne("PortfolioApi.Models.Contacts.Info")
-                        .WithMany("Addresses")
-                        .HasForeignKey("ContactId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("PortfolioApi.Models.Contacts.Phones.Phone", b =>
-                {
-                    b.HasOne("PortfolioApi.Models.Contacts.Info")
-                        .WithMany("PhoneNumbers")
-                        .HasForeignKey("ContactId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                    b.ToTable("pfm_rankableitems_ranks_info");
                 });
 
             modelBuilder.Entity("PortfolioApi.Models.Contents.Sections.Section", b =>
@@ -509,35 +438,11 @@ namespace PortfolioApi.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("PortfolioApi.Models.Clients.Info", b =>
-                {
-                    b.HasOne("PortfolioApi.Models.Clients.Client")
-                        .WithOne("Info")
-                        .HasForeignKey("PortfolioApi.Models.Clients.Info", "ClientId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("PortfolioApi.Models.Contacts.Addresses.Info", b =>
-                {
-                    b.HasOne("PortfolioApi.Models.Contacts.Addresses.Address")
-                        .WithOne("Info")
-                        .HasForeignKey("PortfolioApi.Models.Contacts.Addresses.Info", "AddressId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
             modelBuilder.Entity("PortfolioApi.Models.Contacts.Info", b =>
                 {
                     b.HasOne("PortfolioApi.Models.Contacts.Contact")
                         .WithOne("Info")
                         .HasForeignKey("PortfolioApi.Models.Contacts.Info", "ContactId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("PortfolioApi.Models.Contacts.Phones.Info", b =>
-                {
-                    b.HasOne("PortfolioApi.Models.Contacts.Phones.Phone")
-                        .WithOne("Info")
-                        .HasForeignKey("PortfolioApi.Models.Contacts.Phones.Info", "PhoneId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
