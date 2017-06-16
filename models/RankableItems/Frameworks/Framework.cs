@@ -2,6 +2,7 @@
 {
     public class Framework : RankableItems
     {
+        public string Title { get; set; }
         public Info Info { get; set; }
     }
 }

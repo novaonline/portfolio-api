@@ -37,7 +37,27 @@ namespace PortfolioApi
         {
             // Add framework services.
             services.AddMvc();
-            
+
+            services.AddJwtBearerAuthentication(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    // The signing key must match!
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = signingKey,
+                    // Validate the JWT Issuer (iss) claim
+                    ValidateIssuer = true,
+                    ValidIssuer = Configuration.GetSection("TokenAuthentication:Issuer").Value,
+                    // Validate the JWT Audience (aud) claim
+                    ValidateAudience = true,
+                    ValidAudience = Configuration.GetSection("TokenAuthentication:Audience").Value,
+                    // Validate the token expiry
+                    ValidateLifetime = true,
+                    // If you want to allow a certain amount of clock drift, set that here:
+                    ClockSkew = TimeSpan.Zero
+                };
+            });
+
             // Register the Swagger generator, defining one or more Swagger documents
             // https://docs.microsoft.com/en-us/aspnet/core/tutorials/web-api-help-pages-using-swagger
             services.AddSwaggerGen(c =>
@@ -60,26 +80,6 @@ namespace PortfolioApi
                     Configuration.GetConnectionString("DefaultConnection"))
                     );
 
-
-            services.AddJwtBearerAuthentication(options =>
-            {
-                options.TokenValidationParameters = new TokenValidationParameters
-                {
-                    // The signing key must match!
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = signingKey,
-                    // Validate the JWT Issuer (iss) claim
-                    ValidateIssuer = true,
-                    ValidIssuer = Configuration.GetSection("TokenAuthentication:Issuer").Value,
-                    // Validate the JWT Audience (aud) claim
-                    ValidateAudience = true,
-                    ValidAudience = Configuration.GetSection("TokenAuthentication:Audience").Value,
-                    // Validate the token expiry
-                    ValidateLifetime = true,
-                    // If you want to allow a certain amount of clock drift, set that here:
-                    ClockSkew = TimeSpan.Zero
-                };
-            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

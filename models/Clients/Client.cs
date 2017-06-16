@@ -6,6 +6,6 @@ namespace PortfolioApi.Models.Clients
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public string Secret { get; set; }
-        public Info Info { get; set; }
+        public string Name { get; set; }
     }
 }

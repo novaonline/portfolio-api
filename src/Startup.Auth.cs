@@ -32,8 +32,6 @@ namespace PortfolioApi
                 IdentityResolver = GetIdentity
             };
 
-
-
             //app.UseJwtBearerAuthentication(new JwtBearerOptions
             //{
             //    AutomaticAuthenticate = true,

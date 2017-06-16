@@ -5,6 +5,7 @@ namespace PortfolioApi.Models.Contents
 {
     public class Content : DateAware
     {
+        public string HtmlId { get; set; }
         public Info Info { get; set; }
 
         public List<Section> Sections { get; set; }
