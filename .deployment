@@ -1,2 +1,2 @@
 [config]
-project = src/portfolio-api.csproj
+project = src/PortfolioApi.csproj
