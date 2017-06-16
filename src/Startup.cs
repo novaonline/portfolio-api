@@ -138,7 +138,7 @@ namespace PortfolioApi
                 _logger.LogError(0, ex, "Failed to migrate or seed database");
             }
 
-            Helpers.PortfolioInitializer.Init(context); // used to seed. This file is ignored in git
+            //Helpers.PortfolioInitializer.Init(context); // used to seed. This file is ignored in git
         }
     }
 }
