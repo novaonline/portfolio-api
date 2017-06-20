@@ -37,8 +37,7 @@ namespace PortfolioApi.Controllers
         {
             var content = _context.Contents
                 .Include(c => c.Info).SingleOrDefault(x => x.Id == id); // not sure why include does not allow me to do multiple
-            _context.Entry(content)
-                .Collection(x => x.Sections);
+            content.Sections = _context.Sections.Include(y => y.Info).Where(x => x.ContentId == id).ToList();
             return Ok(content);
         }
 
