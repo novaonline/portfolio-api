@@ -24,7 +24,7 @@ namespace PortfolioApi.Controllers
             return Ok(_context.Frameworks
             .Include(f => f.Info)
             .Include(f => f.Rank)
-            .ThenInclude(f=>f.Info)
+            .ThenInclude(f=>f.Info).OrderByDescending(x=>x.RankId)
             .ToList());
         }
 

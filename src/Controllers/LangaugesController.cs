@@ -23,8 +23,7 @@ namespace PortfolioApi.Controllers
             var lang = _context.Languages
             .Include(l => l.Info)
             .Include(l => l.Rank)
-            .ThenInclude(x=>x.Info);
-
+            .ThenInclude(x=>x.Info).OrderByDescending(x=>x.RankId);
             return Ok(lang);
         }
 
