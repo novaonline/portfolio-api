@@ -35,6 +35,7 @@ namespace PortfolioApi.Controllers
                 _context.Frameworks
                 .Include(f => f.Info)
                 .Include(f => f.Rank)
+                .ThenInclude(f=>f.Info)
                 .SingleOrDefault(x => x.Id == id)
             );
         }
