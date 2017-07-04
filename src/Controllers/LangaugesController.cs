@@ -20,9 +20,12 @@ namespace PortfolioApi.Controllers
         [Produces(typeof(Model.Language))]
         public IActionResult Get()
         {
-            return Ok(_context.Languages
+            var lang = _context.Languages
             .Include(l => l.Info)
-            .Include(l => l.Rank));
+            .Include(l => l.Rank)
+            .ThenInclude(x=>x.Info);
+
+            return Ok(lang);
         }
 
         [HttpGet("{id}"), AllowAnonymous]
