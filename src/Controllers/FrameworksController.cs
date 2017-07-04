@@ -49,11 +49,13 @@ namespace PortfolioApi.Controllers
             }
             try
             {
-                var framework = new Model.Framework();
-                framework.RankId = model.RankId;
-                framework.Title = model.Title;
-                framework.Info = model.FrameworkInfo;
-                _context.Frameworks.Add(framework);
+                var framework = new Model.Framework
+                {
+                    RankId = model.RankId,
+                    Title = model.Title,
+                    Info = model.FrameworkInfo
+                };
+                _context.Frameworks.Add(entity: framework);
                 var id = _context.SaveChanges();
                 return Created("Created Successfully with Id", id);
             }
@@ -67,17 +69,17 @@ namespace PortfolioApi.Controllers
         [Produces(typeof(Model.Framework))]
         public IActionResult Put(int id, [FromBody] Model.Info model)
         {
-            if (id <= 0)
-            {
-                return BadRequest("Invalid Id");
-            }
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
             try
             {
-                var modelFromContext = _context.Frameworks.Include(x=>x.Info).Single(x=>x.Id == id);
+                var modelFromContext = _context.Frameworks.Include(x => x.Info).Single(x => x.Id == id);
+                if (modelFromContext == null)
+                {
+                    return BadRequest("Id does not exist");
+                }
                 modelFromContext.Info.Update(model);
                 _context.SaveChanges();
                 return Ok(modelFromContext);
@@ -93,10 +95,6 @@ namespace PortfolioApi.Controllers
         [Route("UpdateRank")]
         public IActionResult UpdateRank([FromQuery]int id, [FromBody] int rankId)
         {
-            if (id <= 0)
-            {
-                return BadRequest("Invalid Id");
-            }
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -104,6 +102,10 @@ namespace PortfolioApi.Controllers
             try
             {
                 var modelFromContext = _context.Frameworks.Find(id);
+                if (modelFromContext == null)
+                {
+                    return BadRequest("Id not found");
+                }
                 modelFromContext.RankId = rankId;
                 _context.SaveChanges();
                 return Ok(modelFromContext);
@@ -123,7 +125,7 @@ namespace PortfolioApi.Controllers
                 var modelToDelete = _context.Frameworks.Find(frameworksAndLibsId);
                 if (modelToDelete == null)
                 {
-                    return NotFound();
+                    return BadRequest("Id not dound");
                 }
                 _context.Remove(modelToDelete);
                 _context.SaveChanges();

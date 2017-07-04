@@ -29,8 +29,13 @@ namespace PortfolioApi.Controllers
         [Produces(typeof(Model.Interest))]
         public IActionResult Get(int id)
         {
-            return Ok(_context.Interests
-            .Include(i => i.Info).SingleOrDefault(x => x.Id == id));
+            var m = _context.Interests
+            .Include(i => i.Info).SingleOrDefault(x => x.Id == id);
+            if (m == null)
+            {
+                BadRequest("Id not found");
+            }
+            return Ok(m);
         }
 
 
@@ -43,7 +48,6 @@ namespace PortfolioApi.Controllers
             {
                 return BadRequest(ModelState);
             }
-
             try
             {
             }
@@ -70,10 +74,6 @@ namespace PortfolioApi.Controllers
         [HttpPut("{id}")]
         public IActionResult Put(int id, [FromBody] Model.Info model)
         {
-            if (id <= 0)
-            {
-                return BadRequest("Invalid Id");
-            }
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -81,6 +81,10 @@ namespace PortfolioApi.Controllers
             try
             {
                 var modelFromContext = _context.Interests.Include(x => x.Info).Single(x => x.Id == id);
+                if(modelFromContext == null)
+                {
+                    BadRequest("Id not found");
+                }
                 modelFromContext.Info.Update(model);
                 _context.SaveChanges();
                 return Ok();
@@ -100,7 +104,7 @@ namespace PortfolioApi.Controllers
                 var modelToDelete = _context.Interests.Find(interestId);
                 if (modelToDelete == null)
                 {
-                    return NotFound();
+                    return BadRequest("Id not found");
                 }
                 _context.Remove(modelToDelete);
                 _context.SaveChanges();

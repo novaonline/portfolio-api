@@ -29,9 +29,14 @@ namespace PortfolioApi.Controllers
         [Produces(typeof(Model.Language))]
         public IActionResult Get(int id)
         {
-            return Ok(_context.Languages
+            var m = _context.Languages
             .Include(l => l.Info)
-            .Include(l => l.Rank).SingleOrDefault(x=>x.Id == id));
+            .Include(l => l.Rank).SingleOrDefault(x => x.Id == id);
+            if (m == null)
+            {
+                return BadRequest("Id not found");
+            }
+            return Ok();
         }
 
 
@@ -56,7 +61,6 @@ namespace PortfolioApi.Controllers
             {
                 return BadRequest(ModelState);
             }
-
             try
             {
                 var language = new Model.Language
@@ -78,17 +82,17 @@ namespace PortfolioApi.Controllers
         [HttpPut("{id}")]
         public IActionResult Put(int id, [FromBody] Model.Info model)
         {
-            if (id <= 0)
-            {
-                return BadRequest("Id is invalid");
-            }
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
             try
             {
-                var modelFromContext = _context.Languages.Include(x=>x.Info).Single(x=>x.Id == id);
+                var modelFromContext = _context.Languages.Include(x => x.Info).Single(x => x.Id == id);
+                if(modelFromContext == null)
+                {
+                    return BadRequest("Id not found");
+                }
                 modelFromContext.Info.Update(model);
                 _context.SaveChanges();
                 return Ok();
@@ -108,7 +112,7 @@ namespace PortfolioApi.Controllers
                 var modelToDelete = _context.Languages.Find(languageId);
                 if (modelToDelete == null)
                 {
-                    return NotFound();
+                    return BadRequest("Id not found");
                 }
                 _context.Remove(modelToDelete);
                 _context.SaveChanges();

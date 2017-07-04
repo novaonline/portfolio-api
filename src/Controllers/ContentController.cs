@@ -37,7 +37,10 @@ namespace PortfolioApi.Controllers
         {
             var content = _context.Contents
                 .Include(c => c.Info).SingleOrDefault(x => x.Id == id); // not sure why include does not allow me to do multiple
-            content.Sections = _context.Sections.Include(y => y.Info).Where(x => x.ContentId == id).ToList();
+            if (content != null)
+            {
+                content.Sections = _context.Sections.Include(y => y.Info).Where(x => x.ContentId == id).ToList();
+            }
             return Ok(content);
         }
 
@@ -58,7 +61,7 @@ namespace PortfolioApi.Controllers
                 };
                 foreach (var secInfo in model.SectionInfo)
                 {
-                    content.Sections.Add(new Model.Sections.Section() { Info = secInfo });
+                    content.Sections.Add(item: new Model.Sections.Section { Info = secInfo });
                 }
                 _context.Contents.Add(content);
                 var id = _context.SaveChanges();
@@ -73,10 +76,6 @@ namespace PortfolioApi.Controllers
         [HttpPut("{id}")]
         public IActionResult Put(int id, [FromBody] Model.Info model)
         {
-            if (id <= 0)
-            {
-                return BadRequest("Id must be provided");
-            }
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -84,7 +83,10 @@ namespace PortfolioApi.Controllers
             try
             {
                 var modelFromContext = _context.Contents.Include(x => x.Info).Single(x => x.Id == id);
-
+                if(modelFromContext == null)
+                {
+                    return BadRequest("Id not found");
+                }
                 modelFromContext.Info.Update(model);
                 _context.SaveChanges();
                 return Ok();
@@ -104,7 +106,7 @@ namespace PortfolioApi.Controllers
                 var modelToDelete = _context.Contents.Find(contentId);
                 if (modelToDelete == null)
                 {
-                    return NotFound();
+                    return BadRequest("Id not found");
                 }
                 _context.Remove(modelToDelete);
                 _context.SaveChanges();

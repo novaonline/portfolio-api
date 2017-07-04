@@ -40,7 +40,7 @@ namespace PortfolioApi.Controllers
             var profile = _context.Profiles.Include(x=>x.Info).SingleOrDefault(i => i.Id == id);
             if(profile == null)
             {
-                return NotFound();
+                return BadRequest("Id not found");
             }
             profile.Info.Update(model);
             _context.SaveChanges();
