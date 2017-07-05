@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PortfolioApi.Services;
 using Model = PortfolioApi.Models.Interests;
+using Microsoft.AspNetCore.Cors;
 
 namespace PortfolioApi.Controllers
 {
@@ -18,6 +19,7 @@ namespace PortfolioApi.Controllers
 
         [HttpGet, AllowAnonymous]
         [Produces(typeof(Model.Interest))]
+        [EnableCors("AllowSpecificOrigin")]
         public IActionResult Get()
         {
             return Ok(_context.Interests
@@ -27,6 +29,7 @@ namespace PortfolioApi.Controllers
 
         [HttpGet("{id}"), AllowAnonymous]
         [Produces(typeof(Model.Interest))]
+        [EnableCors("AllowSpecificOrigin")]
         public IActionResult Get(int id)
         {
             var m = _context.Interests

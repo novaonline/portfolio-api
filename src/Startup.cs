@@ -43,7 +43,8 @@ namespace PortfolioApi
             {
                 options.AddPolicy("AllowSpecificOrigin",
                     builder => builder.WithOrigins("http://localhost:3000,http://equagrainereactportfolio.azurewebsites.net")
-                    .WithMethods("get"));
+                    .AllowAnyHeader()
+                    .AllowAnyMethod());
             });
             services.AddAuthorization(options =>
             {
