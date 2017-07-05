@@ -39,7 +39,12 @@ namespace PortfolioApi
         {
             // Add framework services.
             services.AddMvc();
-
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowSpecificOrigin",
+                    builder => builder.WithOrigins("http://localhost:3000,http://equagrainereactportfolio.azurewebsites.net")
+                    .WithMethods("get"));
+            });
             services.AddAuthorization(options =>
             {
                 options.DefaultPolicy = new AuthorizationPolicyBuilder(JwtBearerDefaults.AuthenticationScheme)
@@ -115,8 +120,8 @@ namespace PortfolioApi
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Portfolio API V1");
             });
-
-
+            // Shows UseCors with named policy.
+            app.UseCors("AllowSpecificOrigin");
             app.UseMvc();
 
             // Migrate and seed the database during startup. Must be synchronous.

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PortfolioApi.Services;
 using Model = PortfolioApi.Models.Contacts;
+using Microsoft.AspNetCore.Cors;
 
 namespace PortfolioApi.Controllers
 {
@@ -16,6 +17,7 @@ namespace PortfolioApi.Controllers
 
         [HttpGet, AllowAnonymous]
         [Produces(typeof(Model.Contact))]
+        [EnableCors("AllowSpecificOrigin")]
         public IActionResult Get()
         {
             return Ok(
