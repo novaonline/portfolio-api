@@ -42,7 +42,7 @@ namespace PortfolioApi
             services.AddCors(options =>
             {
                 options.AddPolicy("AllowSpecificOrigin",
-                    builder => builder.WithOrigins("http://localhost:3000,http://equagrainereactportfolio.azurewebsites.net")
+                    builder => builder.WithOrigins("http://localhost:3000","http://equagrainereactportfolio.azurewebsites.net")
                     .AllowAnyHeader()
                     .AllowAnyMethod());
             });
