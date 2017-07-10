@@ -108,12 +108,13 @@ namespace PortfolioApi
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, PortfolioContext context)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, PortfolioContext context)
         {
-            loggerFactory.AddConsole(Configuration.GetSection("Logging"));
-            loggerFactory.AddDebug();
-            // use Microsoft.Extensions.Logging
-
+            //TODO
+            //'ConsoleLoggerExtensions.AddConsole(ILoggerFactory, IConfiguration)' is obsolete: 
+            //'This method is obsolete and will be removed in a future version. 
+            //The recommended alternative is to call the Microsoft.Extensions.Logging.AddConsole() extension method on the Microsoft.Extensions.Logging.LoggerFactory instance.' 
+            
             ConfigureAuth(app);
 
             // Enable middleware to serve generated Swagger as a JSON endpoint.
