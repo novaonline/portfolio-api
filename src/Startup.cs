@@ -38,11 +38,14 @@ namespace PortfolioApi
         public void ConfigureServices(IServiceCollection services)
         {
             // Add framework services.
-            services.AddMvc();
+            services.AddMvc(options =>
+            {
+               options.CacheProfiles.Add("Default", new CacheProfile() { Duration = 60 });
+            });
             services.AddCors(options =>
             {
                 options.AddPolicy("AllowSpecificOrigin",
-                    builder => builder.WithOrigins("http://localhost:3000","http://equagrainereactportfolio.azurewebsites.net")
+                    builder => builder.WithOrigins("http://localhost:3000", "http://equagrainereactportfolio.azurewebsites.net")
                     .AllowAnyHeader()
                     .AllowAnyMethod());
             });
