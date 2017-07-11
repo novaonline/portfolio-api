@@ -41,6 +41,8 @@ namespace PortfolioApi
             services.AddMvc(options =>
             {
                options.CacheProfiles.Add("Default", new CacheProfile() { Duration = 60 });
+                options.CacheProfiles.Add("ContentCache", new CacheProfile() {  Duration = 86400 });
+
             });
             services.AddCors(options =>
             {

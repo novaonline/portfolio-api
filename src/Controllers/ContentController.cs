@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Cors;
 
 namespace PortfolioApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]"), ResponseCache(CacheProfileName = "ContentCache")]
     public class ContentController : PortfolioController
     {
         public ContentController(PortfolioContext context) : base(context)
