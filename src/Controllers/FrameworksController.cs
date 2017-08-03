@@ -54,6 +54,7 @@ namespace PortfolioApi.Controllers
             }
             try
             {
+                // TODO: need to ensure that info is not null
                 var framework = new Model.Framework
                 {
                     RankId = model.RankId,
