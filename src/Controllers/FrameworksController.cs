@@ -1,13 +1,13 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PortfolioApi.Services;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using FrameworkInputModel = PortfolioApi.Models.RankableItems.Frameworks.InputGroup;
 using Model = PortfolioApi.Models.RankableItems.Frameworks;
-using Rank = PortfolioApi.Models.RankableItems.Ranks.Rank;
-using Microsoft.AspNetCore.Cors;
 
 namespace PortfolioApi.Controllers
 {
@@ -142,11 +142,5 @@ namespace PortfolioApi.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
-    }
-    public class FrameworkInputModel
-    {
-        public int RankId { get; set; }
-        public string Title { get; set; }
-        public Model.Info FrameworkInfo { get; set; }
     }
 }
