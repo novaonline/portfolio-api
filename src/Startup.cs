@@ -37,22 +37,23 @@ namespace PortfolioApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            // Add framework services.
-            services.AddMvc(options =>
-            {
-                options.CacheProfiles.Add("Default", new CacheProfile() { Duration = 60 });
-                options.CacheProfiles.Add("ContentCache", new CacheProfile() { Duration = 86400 });
-
-            });
             services.AddCors(options =>
             {
                 options.AddPolicy("CorsPolicy", builder =>
                 {
                     builder.AllowAnyOrigin()
                                     .AllowAnyMethod()
-                                    .AllowAnyHeader();
+                                    .AllowAnyHeader()
+                                    .AllowCredentials();
 
                 });
+
+            });
+            // Add framework services.
+            services.AddMvc(options =>
+            {
+                options.CacheProfiles.Add("Default", new CacheProfile() { Duration = 60 });
+                options.CacheProfiles.Add("ContentCache", new CacheProfile() { Duration = 86400 });
 
             });
             services.AddAuthorization(options =>
@@ -121,6 +122,9 @@ namespace PortfolioApi
             //'This method is obsolete and will be removed in a future version. 
             //The recommended alternative is to call the Microsoft.Extensions.Logging.AddConsole() extension method on the Microsoft.Extensions.Logging.LoggerFactory instance.' 
 
+            // global policy - assign here or on each controller
+            app.UseCors("CorsPolicy");
+
             ConfigureAuth(app);
 
             // Enable middleware to serve generated Swagger as a JSON endpoint.
@@ -131,8 +135,7 @@ namespace PortfolioApi
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Portfolio API V1");
             });
-            // global policy - assign here or on each controller
-            app.UseCors("CorsPolicy");
+
             app.UseMvc();
 
             // Migrate and seed the database during startup. Must be synchronous.
