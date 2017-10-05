@@ -19,7 +19,6 @@ namespace PortfolioApi.Controllers
 
         [HttpGet, AllowAnonymous]
         [Produces(typeof(Model.Interest))]
-        [EnableCors("AllowSpecificOrigin")]
         public IActionResult Get()
         {
             return Ok(_context.Interests
@@ -29,7 +28,6 @@ namespace PortfolioApi.Controllers
 
         [HttpGet("{id}"), AllowAnonymous]
         [Produces(typeof(Model.Interest))]
-        [EnableCors("AllowSpecificOrigin")]
         public IActionResult Get(int id)
         {
             var m = _context.Interests

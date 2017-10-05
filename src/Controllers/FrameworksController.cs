@@ -20,7 +20,6 @@ namespace PortfolioApi.Controllers
 
         [HttpGet, AllowAnonymous]
         [Produces(typeof(IEnumerable<Model.Framework>))]
-        [EnableCors("AllowSpecificOrigin")]
         public IActionResult Get()
         {
             return Ok(_context.Frameworks
@@ -32,7 +31,6 @@ namespace PortfolioApi.Controllers
 
         [HttpGet("{id}"), AllowAnonymous]
         [Produces(typeof(Model.Framework))]
-        [EnableCors("AllowSpecificOrigin")]
         public IActionResult Get(int id)
         {
             return Ok(

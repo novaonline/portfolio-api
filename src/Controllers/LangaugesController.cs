@@ -19,7 +19,6 @@ namespace PortfolioApi.Controllers
 
         [HttpGet, AllowAnonymous]
         [Produces(typeof(Model.Language))]
-        [EnableCors("AllowSpecificOrigin")]
         public IActionResult Get()
         {
             var lang = _context.Languages
@@ -31,7 +30,6 @@ namespace PortfolioApi.Controllers
 
         [HttpGet("{id}"), AllowAnonymous]
         [Produces(typeof(Model.Language))]
-        [EnableCors("AllowSpecificOrigin")]
         public IActionResult Get(int id)
         {
             var m = _context.Languages

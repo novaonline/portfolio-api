@@ -20,7 +20,6 @@ namespace PortfolioApi.Controllers
 
         [HttpGet, AllowAnonymous]
         [Produces(typeof(IEnumerable<Model.Content>))]
-        [EnableCors("AllowSpecificOrigin")]
         public IActionResult Get()
         {
             var contents = _context.Contents
@@ -35,7 +34,6 @@ namespace PortfolioApi.Controllers
 
         [HttpGet("{id}"), AllowAnonymous]
         [Produces(typeof(Model.Content))]
-        [EnableCors("AllowSpecificOrigin")]
         public IActionResult Get(int id)
         {
             var content = _context.Contents

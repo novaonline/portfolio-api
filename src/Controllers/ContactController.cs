@@ -17,7 +17,6 @@ namespace PortfolioApi.Controllers
 
         [HttpGet, AllowAnonymous]
         [Produces(typeof(Model.Contact))]
-        [EnableCors("AllowSpecificOrigin")]
         public IActionResult Get()
         {
             return Ok(

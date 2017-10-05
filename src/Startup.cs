@@ -40,16 +40,20 @@ namespace PortfolioApi
             // Add framework services.
             services.AddMvc(options =>
             {
-               options.CacheProfiles.Add("Default", new CacheProfile() { Duration = 60 });
-                options.CacheProfiles.Add("ContentCache", new CacheProfile() {  Duration = 86400 });
+                options.CacheProfiles.Add("Default", new CacheProfile() { Duration = 60 });
+                options.CacheProfiles.Add("ContentCache", new CacheProfile() { Duration = 86400 });
 
             });
             services.AddCors(options =>
             {
-                options.AddPolicy("AllowSpecificOrigin",
-                    builder => builder.WithOrigins("http://localhost:3000", "http://equagrainereactportfolio.azurewebsites.net")
-                    .AllowAnyHeader()
-                    .AllowAnyMethod());
+                options.AddPolicy("CorsPolicy", builder =>
+                {
+                    builder.AllowAnyOrigin()
+                                    .AllowAnyMethod()
+                                    .AllowAnyHeader();
+
+                });
+
             });
             services.AddAuthorization(options =>
             {
@@ -116,7 +120,7 @@ namespace PortfolioApi
             //'ConsoleLoggerExtensions.AddConsole(ILoggerFactory, IConfiguration)' is obsolete: 
             //'This method is obsolete and will be removed in a future version. 
             //The recommended alternative is to call the Microsoft.Extensions.Logging.AddConsole() extension method on the Microsoft.Extensions.Logging.LoggerFactory instance.' 
-            
+
             ConfigureAuth(app);
 
             // Enable middleware to serve generated Swagger as a JSON endpoint.
@@ -127,8 +131,8 @@ namespace PortfolioApi
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Portfolio API V1");
             });
-            // Shows UseCors with named policy.
-            app.UseCors("AllowSpecificOrigin");
+            // global policy - assign here or on each controller
+            app.UseCors("CorsPolicy");
             app.UseMvc();
 
             // Migrate and seed the database during startup. Must be synchronous.

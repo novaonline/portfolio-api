@@ -23,7 +23,6 @@ namespace PortfolioApi.Controllers
         // GET api/profile
         [HttpGet, AllowAnonymous]
         [Produces(typeof(Model.Profile))]
-        [EnableCors("AllowSpecificOrigin")]
         public IActionResult Get()
         {
             return Ok(

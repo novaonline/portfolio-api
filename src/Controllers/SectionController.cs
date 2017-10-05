@@ -20,7 +20,6 @@ namespace PortfolioApi.Controllers
 
         [HttpGet("{id}"), AllowAnonymous]
         [Produces(typeof(Model.Section))]
-        [EnableCors("AllowSpecificOrigin")]
         public IActionResult Get(int id)
         {
             var contents = _context.Sections
