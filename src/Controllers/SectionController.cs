@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PortfolioApi.Services;
@@ -23,6 +24,10 @@ namespace PortfolioApi.Controllers
         {
             var contents = _context.Sections
                 .Include(c => c.Info).SingleOrDefault(x => x.Id == id);
+            if (contents == null)
+            {
+                return BadRequest("Id not found");
+            }
             return Ok(contents);
         }
 
@@ -60,7 +65,10 @@ namespace PortfolioApi.Controllers
             try
             {
                 var modelFromContext = _context.Sections.Include(x => x.Info).Single(x => x.Id == id);
-
+                if(modelFromContext == null)
+                {
+                    return BadRequest("Id not found");
+                }
                 modelFromContext.Info.Update(model);
                 _context.SaveChanges();
                 return Ok();
@@ -80,7 +88,7 @@ namespace PortfolioApi.Controllers
                 var modelToDelete = _context.Sections.Find(sectionId);
                 if (modelToDelete == null)
                 {
-                    return NotFound();
+                    return BadRequest("Id not found");
                 }
                 _context.Remove(modelToDelete);
                 _context.SaveChanges();

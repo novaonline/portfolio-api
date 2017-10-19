@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PortfolioApi.Services;
 using Model = PortfolioApi.Models.Contacts;
+using Microsoft.AspNetCore.Cors;
 
 namespace PortfolioApi.Controllers
 {
@@ -18,7 +19,6 @@ namespace PortfolioApi.Controllers
         [Produces(typeof(Model.Contact))]
         public IActionResult Get()
         {
-
             return Ok(
             _context.Contacts.Include(c => c.Info)
             );

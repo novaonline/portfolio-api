@@ -1,12 +1,13 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PortfolioApi.Services;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using FrameworkInputModel = PortfolioApi.Models.RankableItems.Frameworks.InputGroup;
 using Model = PortfolioApi.Models.RankableItems.Frameworks;
-using Rank = PortfolioApi.Models.RankableItems.Ranks.Rank;
 
 namespace PortfolioApi.Controllers
 {
@@ -24,6 +25,7 @@ namespace PortfolioApi.Controllers
             return Ok(_context.Frameworks
             .Include(f => f.Info)
             .Include(f => f.Rank)
+            .ThenInclude(f=>f.Info).OrderByDescending(x=>x.RankId)
             .ToList());
         }
 
@@ -35,6 +37,7 @@ namespace PortfolioApi.Controllers
                 _context.Frameworks
                 .Include(f => f.Info)
                 .Include(f => f.Rank)
+                .ThenInclude(f=>f.Info)
                 .SingleOrDefault(x => x.Id == id)
             );
         }
@@ -49,11 +52,14 @@ namespace PortfolioApi.Controllers
             }
             try
             {
-                var framework = new Model.Framework();
-                framework.RankId = model.RankId;
-                framework.Title = model.Title;
-                framework.Info = model.FrameworkInfo;
-                _context.Frameworks.Add(framework);
+                // TODO: need to ensure that info is not null
+                var framework = new Model.Framework
+                {
+                    RankId = model.RankId,
+                    Title = model.Title,
+                    Info = model.FrameworkInfo
+                };
+                _context.Frameworks.Add(entity: framework);
                 var id = _context.SaveChanges();
                 return Created("Created Successfully with Id", id);
             }
@@ -67,17 +73,17 @@ namespace PortfolioApi.Controllers
         [Produces(typeof(Model.Framework))]
         public IActionResult Put(int id, [FromBody] Model.Info model)
         {
-            if (id <= 0)
-            {
-                return BadRequest("Invalid Id");
-            }
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
             try
             {
-                var modelFromContext = _context.Frameworks.Include(x=>x.Info).Single(x=>x.Id == id);
+                var modelFromContext = _context.Frameworks.Include(x => x.Info).Single(x => x.Id == id);
+                if (modelFromContext == null)
+                {
+                    return BadRequest("Id does not exist");
+                }
                 modelFromContext.Info.Update(model);
                 _context.SaveChanges();
                 return Ok(modelFromContext);
@@ -93,10 +99,6 @@ namespace PortfolioApi.Controllers
         [Route("UpdateRank")]
         public IActionResult UpdateRank([FromQuery]int id, [FromBody] int rankId)
         {
-            if (id <= 0)
-            {
-                return BadRequest("Invalid Id");
-            }
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -104,6 +106,10 @@ namespace PortfolioApi.Controllers
             try
             {
                 var modelFromContext = _context.Frameworks.Find(id);
+                if (modelFromContext == null)
+                {
+                    return BadRequest("Id not found");
+                }
                 modelFromContext.RankId = rankId;
                 _context.SaveChanges();
                 return Ok(modelFromContext);
@@ -123,7 +129,7 @@ namespace PortfolioApi.Controllers
                 var modelToDelete = _context.Frameworks.Find(frameworksAndLibsId);
                 if (modelToDelete == null)
                 {
-                    return NotFound();
+                    return BadRequest("Id not dound");
                 }
                 _context.Remove(modelToDelete);
                 _context.SaveChanges();
@@ -134,11 +140,5 @@ namespace PortfolioApi.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
-    }
-    public class FrameworkInputModel
-    {
-        public int RankId { get; set; }
-        public string Title { get; set; }
-        public Model.Info FrameworkInfo { get; set; }
     }
 }

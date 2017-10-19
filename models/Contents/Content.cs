@@ -9,5 +9,10 @@ namespace PortfolioApi.Models.Contents
         public Info Info { get; set; }
 
         public List<Section> Sections { get; set; }
+
+        public Content()
+        {
+            Sections = new List<Section>();
+        }
     }
 }

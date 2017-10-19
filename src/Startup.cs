@@ -37,9 +37,25 @@ namespace PortfolioApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            // Add framework services.
-            services.AddMvc();
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy", builder =>
+                {
+                    builder.AllowAnyOrigin()
+                                    .AllowAnyMethod()
+                                    .AllowAnyHeader()
+                                    .AllowCredentials();
 
+                });
+
+            });
+            // Add framework services.
+            services.AddMvc(options =>
+            {
+                options.CacheProfiles.Add("Default", new CacheProfile() { Duration = 60 });
+                options.CacheProfiles.Add("ContentCache", new CacheProfile() { Duration = 86400 });
+
+            });
             services.AddAuthorization(options =>
             {
                 options.DefaultPolicy = new AuthorizationPolicyBuilder(JwtBearerDefaults.AuthenticationScheme)
@@ -99,11 +115,15 @@ namespace PortfolioApi
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, PortfolioContext context)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, PortfolioContext context)
         {
-            loggerFactory.AddConsole(Configuration.GetSection("Logging"));
-            loggerFactory.AddDebug();
-            // use Microsoft.Extensions.Logging
+            //TODO
+            //'ConsoleLoggerExtensions.AddConsole(ILoggerFactory, IConfiguration)' is obsolete: 
+            //'This method is obsolete and will be removed in a future version. 
+            //The recommended alternative is to call the Microsoft.Extensions.Logging.AddConsole() extension method on the Microsoft.Extensions.Logging.LoggerFactory instance.' 
+
+            // global policy - assign here or on each controller
+            app.UseCors("CorsPolicy");
 
             ConfigureAuth(app);
 
@@ -115,7 +135,6 @@ namespace PortfolioApi
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Portfolio API V1");
             });
-
 
             app.UseMvc();
 
