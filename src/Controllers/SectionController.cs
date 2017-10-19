@@ -35,7 +35,7 @@ namespace PortfolioApi.Controllers
         [Produces(typeof(int))]
         public IActionResult Post(int contentId, [FromBody] Model.Info model)
         {
-            if (_context.Sections.Find(contentId) == null)
+            if (_context.Contents.Find(contentId) == null)
             {
                 return BadRequest("Content Id does not exist");
             }
