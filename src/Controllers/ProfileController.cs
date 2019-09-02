@@ -1,17 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Model = PortfolioApi.Models.Profiles;
-using PortfolioApi.Services;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Cors;
+using PortfolioApi.Repository.EntityFramework.Context;
+using System.Linq;
+using Model = PortfolioApi.Models.Profiles;
 
 namespace PortfolioApi.Controllers
 {
-    [Route("api/[controller]")]
+	[Route("api/[controller]")]
     public class ProfileController : PortfolioController
     {
         public ProfileController(PortfolioContext context) : base(context)

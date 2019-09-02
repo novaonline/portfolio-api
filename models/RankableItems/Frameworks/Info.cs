@@ -1,6 +1,8 @@
-﻿namespace PortfolioApi.Models.RankableItems.Frameworks
+﻿using PortfolioApi.Models.Interfaces;
+
+namespace PortfolioApi.Models.RankableItems.Frameworks
 {
-    public class Info : InfoItem, IPortfolioInfo<Info>
+	public class Info : InfoItem, IPortfolioInfo<Info>
     {
         public string Description { get; set; }
         public string ImageUrl { get; set; }

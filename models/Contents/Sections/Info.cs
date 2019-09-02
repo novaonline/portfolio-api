@@ -1,6 +1,8 @@
-﻿namespace PortfolioApi.Models.Contents.Sections
+﻿using PortfolioApi.Models.Interfaces;
+
+namespace PortfolioApi.Models.Contents.Sections
 {
-    public class Info: InfoItem, IPortfolioInfo<Info>
+	public class Info: InfoItem, IPortfolioInfo<Info>
     {
         public string Meta { get; set; }
         public string Body { get; set; }

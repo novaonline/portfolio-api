@@ -1,8 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using PortfolioApi.Services;
+using PortfolioApi.Repository.EntityFramework.Context;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +10,7 @@ using Model = PortfolioApi.Models.RankableItems.Frameworks;
 
 namespace PortfolioApi.Controllers
 {
-    [Route("api/[controller]")]
+	[Route("api/[controller]")]
     public class FrameworksController : PortfolioController
     {
         public FrameworksController(PortfolioContext context) : base(context)

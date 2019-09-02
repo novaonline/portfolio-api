@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using PortfolioApi.Models.Interfaces;
+using System.Collections.Generic;
 
 namespace PortfolioApi.Models.Contacts
 {
-    public class Info: InfoItem, IPortfolioInfo<Info>
+	public class Info: InfoItem, IPortfolioInfo<Info>
     {
         public string Email { get; set; }
         public string StreetAddress { get; set; }

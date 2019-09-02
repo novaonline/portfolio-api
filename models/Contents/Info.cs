@@ -1,6 +1,8 @@
-﻿namespace PortfolioApi.Models.Contents
+﻿using PortfolioApi.Models.Interfaces;
+
+namespace PortfolioApi.Models.Contents
 {
-    public class Info : InfoItem, IPortfolioInfo<Info>
+	public class Info : InfoItem, IPortfolioInfo<Info>
     {
         public string Header { get; set; }
         public string BackgroundUrl { get; set; }

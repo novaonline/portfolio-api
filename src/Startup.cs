@@ -1,24 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using PortfolioApi.Repository.EntityFramework.Context;
 using Swashbuckle.AspNetCore.Swagger;
-using PortfolioApi.Services;
-using Microsoft.EntityFrameworkCore;
-using PortfolioApi.Helpers.Swashbuckle.Filters;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+using System;
 
 namespace PortfolioApi
 {
-    public partial class Startup
+	public partial class Startup
     {
         ILogger _logger;
         public Startup(IHostingEnvironment env, ILoggerFactory loggerFactory)
@@ -69,33 +64,12 @@ namespace PortfolioApi
                 o.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             });
 
-            services.AddJwtBearerAuthentication(options =>
-            {
-                options.RequireHttpsMetadata = false;
-                options.TokenValidationParameters = new TokenValidationParameters
-                {
-                    // The signing key must match!
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = signingKey,
-                    // Validate the JWT Issuer (iss) claim
-                    ValidateIssuer = true,
-                    ValidIssuer = Configuration.GetSection("TokenAuthentication:Issuer").Value,
-                    // Validate the JWT Audience (aud) claim
-                    ValidateAudience = true,
-                    ValidAudience = Configuration.GetSection("TokenAuthentication:Audience").Value,
-                    // Validate the token expiry
-                    ValidateLifetime = true,
-                    // If you want to allow a certain amount of clock drift, set that here:
-                    ClockSkew = TimeSpan.Zero
-                };
-            });
 
             // Register the Swagger generator, defining one or more Swagger documents
             // https://docs.microsoft.com/en-us/aspnet/core/tutorials/web-api-help-pages-using-swagger
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new Info { Title = "Portfolio API", Version = "v1" });
-                c.OperationFilter<AuthorizationHeaderOperationFilter>();
                 c.CustomSchemaIds(x => x.FullName);
             });
 
@@ -125,7 +99,6 @@ namespace PortfolioApi
             // global policy - assign here or on each controller
             app.UseCors("CorsPolicy");
 
-            ConfigureAuth(app);
 
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();

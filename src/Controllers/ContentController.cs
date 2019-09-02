@@ -1,17 +1,16 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using PortfolioApi.Services;
-using Model = PortfolioApi.Models.Contents;
+using PortfolioApi.Repository.EntityFramework.Context;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using ContentInputModel = PortfolioApi.Models.Contents.InputGroup;
-using Microsoft.AspNetCore.Cors;
+using Model = PortfolioApi.Models.Contents;
 
 namespace PortfolioApi.Controllers
 {
-    [Route("api/[controller]"), ResponseCache(CacheProfileName = "ContentCache")]
+	[Route("api/[controller]"), ResponseCache(CacheProfileName = "ContentCache")]
     public class ContentController : PortfolioController
     {
         public ContentController(PortfolioContext context) : base(context)

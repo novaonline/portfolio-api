@@ -1,17 +1,14 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using PortfolioApi.Services;
+using PortfolioApi.Repository.EntityFramework.Context;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Model = PortfolioApi.Models.Contents.Sections;
 
 namespace PortfolioApi.Controllers
 {
-    [Route("api/[controller]")]
+	[Route("api/[controller]")]
     public class SectionController : PortfolioController
     {
         public SectionController(PortfolioContext context) : base(context)

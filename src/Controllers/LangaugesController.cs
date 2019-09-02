@@ -1,16 +1,15 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using PortfolioApi.Services;
+using PortfolioApi.Repository.EntityFramework.Context;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using Model = PortfolioApi.Models.RankableItems.Languages;
-using Microsoft.AspNetCore.Cors;
 
 namespace PortfolioApi.Controllers
 {
-    [Route("api/[controller]")]
+	[Route("api/[controller]")]
     public class LanguagesController : PortfolioController
     {
         public LanguagesController(PortfolioContext context) : base(context)

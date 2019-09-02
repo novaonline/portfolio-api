@@ -1,14 +1,12 @@
-using System.Linq;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using PortfolioApi.Services;
+using PortfolioApi.Repository.EntityFramework.Context;
 using Model = PortfolioApi.Models.Contacts;
-using Microsoft.AspNetCore.Cors;
 
 namespace PortfolioApi.Controllers
 {
-    [Route("api/[controller]")]
+	[Route("api/[controller]")]
     public class ContactController : PortfolioController
     {
         public ContactController(PortfolioContext context) : base(context)

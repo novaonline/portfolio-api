@@ -1,8 +1,9 @@
-﻿using System;
+﻿using PortfolioApi.Models.Interfaces;
+using System;
 
 namespace PortfolioApi.Models.Profiles
 {
-    public class Info : InfoItem, IPortfolioInfo<Info>
+	public class Info : InfoItem, IPortfolioInfo<Info>
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }

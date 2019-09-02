@@ -1,6 +1,8 @@
-﻿namespace PortfolioApi.Models.Interests
+﻿using PortfolioApi.Models.Interfaces;
+
+namespace PortfolioApi.Models.Interests
 {
-    public class Info : InfoItem, IPortfolioInfo<Info>
+	public class Info : InfoItem, IPortfolioInfo<Info>
     {
         public string Description { get; set; }
 

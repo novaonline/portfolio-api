@@ -1,6 +1,8 @@
-﻿namespace PortfolioApi.Models.RankableItems.Languages
+﻿using PortfolioApi.Models.Interfaces;
+
+namespace PortfolioApi.Models.RankableItems.Languages
 {
-    public class Info: InfoItem, IPortfolioInfo<Info>
+	public class Info: InfoItem, IPortfolioInfo<Info>
     {
         public string Description { get; set; }
 
