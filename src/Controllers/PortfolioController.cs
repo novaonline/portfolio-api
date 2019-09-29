@@ -1,16 +1,29 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using PortfolioApi.Models;
+using PortfolioApi.Models.Helpers;
 using PortfolioApi.Repository.EntityFramework.Context;
 namespace PortfolioApi.Controllers
 {
 
-	[Authorize, ResponseCache(CacheProfileName = "Default")]
+    [Authorize, ResponseCache(CacheProfileName = "Default")]
+    [Route("api/[controller]")]
     public class PortfolioController : Controller
     {
-        protected readonly PortfolioContext _context;
-        public PortfolioController(PortfolioContext context)
+        public PortfolioController()
         {
-            _context = context;
+        }
+
+        protected ActionResult Respond<T>(ServiceMessage<T> result) where T : Entity
+        {
+            if (!result.Validation.IsValid)
+            {
+                return BadRequest(result);
+            }
+            else
+            {
+                return Ok(result);
+            }
         }
     }
 }

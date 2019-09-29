@@ -1,25 +1,31 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using PortfolioApi.Core.Domains.Contacts.Interfaces;
+using PortfolioApi.Models.Helpers;
 using PortfolioApi.Repository.EntityFramework.Context;
 using Model = PortfolioApi.Models.Contacts;
 
 namespace PortfolioApi.Controllers
 {
-	[Route("api/[controller]")]
     public class ContactController : PortfolioController
     {
-        public ContactController(PortfolioContext context) : base(context)
+        private readonly IContactsService _contactService;
+
+        public ContactController(IContactsService contactService) : base()
         {
+            _contactService = contactService;
         }
 
-        [HttpGet, AllowAnonymous]
-        [Produces(typeof(Model.Contact))]
-        public IActionResult Get()
+        [HttpGet("{profileId}"), AllowAnonymous]
+        [Produces(typeof(ServiceMessage<Model.Contact>))]
+        public IActionResult Get(int profileId)
         {
-            return Ok(
-            _context.Contacts.Include(c => c.Info)
-            );
+            // TODO: Create a Validation function that will check if Validation returns client error
+            return Respond(_contactService.Get(new Model.Contact
+            {
+                ProfileId = profileId
+            }));
         }
 
     }

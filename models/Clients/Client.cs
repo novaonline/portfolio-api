@@ -1,6 +1,6 @@
 ﻿namespace PortfolioApi.Models.Clients
 {
-    public class Client : DateAware
+    public class Client : Entity
     {
         //[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public string Secret { get; set; }

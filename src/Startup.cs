@@ -16,7 +16,7 @@ namespace PortfolioApi
 	public partial class Startup
     {
         ILogger _logger;
-        public Startup(IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public Startup(IWebHostEnvironment env, ILoggerFactory loggerFactory)
         {
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
@@ -89,7 +89,7 @@ namespace PortfolioApi
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, PortfolioContext context)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, PortfolioContext context)
         {
             //TODO
             //'ConsoleLoggerExtensions.AddConsole(ILoggerFactory, IConfiguration)' is obsolete: 

@@ -1,7 +1,7 @@
 ﻿namespace PortfolioApi.Models.Profiles
 {
-    public class Profile: DateAware
+    public class Profile: Entity
     {
-        public Info Info { get; set; }
+        public ProfileInfo Info { get; set; }
     }
 }

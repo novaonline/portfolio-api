@@ -1,7 +1,8 @@
 ﻿namespace PortfolioApi.Models.Contacts
 {
-    public class Contact : DateAware
+    public class Contact : Entity
     {
-        public Info Info { get; set; }
+        public int ProfileId { get; set; }
+        public ContactInfo Info { get; set; }
     }
 }
