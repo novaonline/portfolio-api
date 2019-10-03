@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using PortfolioApi.Models.Interfaces.Repos;
@@ -9,7 +10,7 @@ namespace PortfolioApi.Core.Domains.Profiles.Repository
     /// <summary>
     /// The Repository Implementation for Profile Entities
     /// </summary>
-    public class ProfilesEntityRepository : IRepoCrud<Profile>
+    public class ProfilesEntityRepository : IRepoCrud<Profile, ProfileInfo>
     {
         private readonly PortfolioContext _portfolioContext;
 
@@ -54,10 +55,11 @@ namespace PortfolioApi.Core.Domains.Profiles.Repository
             }
         }
 
-        public Profile Update(Profile input)
+        public Profile Update(Profile search, ProfileInfo input)
         {
-            var m = _portfolioContext.Profiles.Find(input.Id);
-            m.Info = input.Info;
+            var m = _portfolioContext.Profiles.Find(search.Id);
+            m.Info = input;
+            m.SetUpdateDate();
             var result = _portfolioContext.SaveChanges();
             return m;
         }

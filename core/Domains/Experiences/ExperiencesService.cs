@@ -24,7 +24,7 @@ namespace PortfolioApi.Core.Domains.Experiences
             throw new System.NotImplementedException();
         }
 
-        public ServiceMessage<Experience> Update(Experience input)
+        public ServiceMessage<Experience> Update(Experience search, ExperienceInfo input)
         {
             throw new System.NotImplementedException();
         }

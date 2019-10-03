@@ -13,9 +13,9 @@ namespace PortfolioApi.Core.Domains.Profiles
     public class ProfilesService : IProfilesService
     {
         private readonly IValidatorCreate<Profile> _validateForCreation;
-        private readonly IRepoCrud<Profile> _profileRepo;
+        private readonly IRepoCrud<Profile, ProfileInfo> _profileRepo;
 
-        public ProfilesService(IValidatorCreate<Profile> validateForCreation, IRepoCrud<Profile> profileRepo)
+        public ProfilesService(IValidatorCreate<Profile> validateForCreation, IRepoCrud<Profile, ProfileInfo> profileRepo)
         {
             _validateForCreation = validateForCreation;
             _profileRepo = profileRepo;
@@ -47,7 +47,7 @@ namespace PortfolioApi.Core.Domains.Profiles
             throw new System.NotImplementedException();
         }
 
-        public ServiceMessage<Profile> Update(Profile input)
+        public ServiceMessage<Profile> Update(Profile search, ProfileInfo input)
         {
             throw new System.NotImplementedException();
         }

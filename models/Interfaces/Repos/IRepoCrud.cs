@@ -3,11 +3,12 @@ namespace PortfolioApi.Models.Interfaces.Repos
     /// <summary>
     /// Facade for a simple CRUD repository
     /// </summary>
-    /// <typeparam name="T"></typeparam>
-    public interface IRepoCrud<T> : IRepoCreate<T>,
+    /// <typeparam name="T">The Entity</typeparam>
+    /// <typeparam name="U">Info Type</typeparam>
+    public interface IRepoCrud<T,U> : IRepoCreate<T>,
     IRepoRead<T>,
-    IRepoUpdate<T>,
-    IRepoDelete<T> where T : Entity
+    IRepoUpdate<U, T>,
+    IRepoDelete<T> where T : Entity where U : Info
     {
 
     }

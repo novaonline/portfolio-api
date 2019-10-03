@@ -5,6 +5,11 @@ using ContactsModel = PortfolioApi.Models.Contacts;
 using ProfilesModel = PortfolioApi.Models.Profiles;
 using ExperiencseModel = PortfolioApi.Models.Experiences;
 using IdentityItemModel = PortfolioApi.Models.IdentityItem;
+using System;
+using Microsoft.EntityFrameworkCore.ValueGeneration;
+using JetBrains.Annotations;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+using System.Diagnostics.CodeAnalysis;
 
 namespace PortfolioApi.Repository.EntityFramework.Context
 {
@@ -34,8 +39,7 @@ namespace PortfolioApi.Repository.EntityFramework.Context
         {
             modelBuilder.Entity<IdentityItemModel>(entity =>
             {
-                entity.HasIndex(x => new { x.Id }).IsUnique();
-                entity.Property(x => x.Id).HasDefaultValueSql("NEWID()");
+                entity.HasKey(x => x.Id);
                 entity.Property(x => x.Id).UseIdentityColumn();
             });
 
@@ -44,41 +48,42 @@ namespace PortfolioApi.Repository.EntityFramework.Context
             modelBuilder.Entity<ClientsModel.Client>(entity =>
             {
                 entity.HasIndex(x => new { x.Name, x.Secret }).IsUnique();
-                entity.Property(x => x.Secret).HasDefaultValueSql("NEWID()");
-                entity.Property(x => x.Secret).UseIdentityColumn();
             });
 
             modelBuilder.Entity<ProfilesModel.Profile>(entity =>
             {
-                entity.OwnsOne(x => x.Info);
-                entity.HasIndex(x => new {x.Info.LastName, x.Info.FirstName});
+                entity.OwnsOne(x => x.Info, inf =>
+                {
+                    inf.HasIndex(x => new { x.LastName, x.FirstName });
+                });
             });
+
             modelBuilder.Entity<ContactsModel.Contact>(entity =>
             {
-                entity.OwnsOne(x => x.Info);
+                entity.OwnsOne(x => x.Info, inf =>
+                {
+                    inf.HasIndex(x => x.Email);
+                });
             });
+
             modelBuilder.Entity<ExperiencseModel.Experience>(entity =>
             {
                 entity.HasIndex(x => x.Type);
-                entity.HasIndex(x => x.Info.Title);
-                entity.OwnsOne(x => x.Info);
+                entity.OwnsOne(x => x.Info, inf =>
+                {
+                    inf.OwnsMany(x => x.Sections, s =>
+                    {
+                        s.OwnsOne(si => si.Info);
+                    });
+                    inf.HasIndex(x => x.Title);
+                });
             });
 
-            // http://www.c-sharpcorner.com/article/crud-operations-in-asp-net-core-using-entity-framework-core-code-first/
-            foreach (var entityType in modelBuilder.Model.GetEntityTypes())
+            modelBuilder.Entity<Models.Entity>(entity =>
             {
-                foreach (var dateProp in entityType.GetProperties().Where(x => x.Name == "AddDate" || x.Name == "UpdateDate"))
-                {
-                    if (dateProp.Name == "UpdateDate")
-                    {
-                        dateProp.SetComputedColumnSql("GETUTCDATE()");
-                    }
-                    else
-                    {
-                        dateProp.SetDefaultValueSql("GETUTCDATE()");
-                    }
-                }
-            }
+                entity.Property(p => p.UpdateDate).HasDefaultValue(DateTime.UtcNow);
+                entity.Property(p => p.AddDate).HasDefaultValue(DateTime.UtcNow);
+            });
         }
     }
 }

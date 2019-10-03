@@ -24,7 +24,7 @@ namespace PortfolioApi.Core.Domains.Contacts
             throw new System.NotImplementedException();
         }
 
-        public ServiceMessage<Contact> Update(Contact input)
+        public ServiceMessage<Contact> Update(Contact search, ContactInfo input)
         {
             throw new System.NotImplementedException();
         }

@@ -2,7 +2,7 @@
 
 namespace PortfolioApi.Models.Profiles
 {
-	public class ProfileInfo
+    public class ProfileInfo : Info
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }

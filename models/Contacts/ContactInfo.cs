@@ -2,7 +2,7 @@
 
 namespace PortfolioApi.Models.Contacts
 {
-	public class ContactInfo
+    public class ContactInfo : Info
     {
         public string Email { get; set; }
         public string StreetAddress { get; set; }
@@ -14,6 +14,7 @@ namespace PortfolioApi.Models.Contacts
         public Addresses.AddressType AddressType { get; set; }
         public Phones.PhoneType PhoneType { get; set; }
 
+        public ContactInfo() { }
         public ContactInfo(ContactInfo model)
         {
             Email = model.Email;

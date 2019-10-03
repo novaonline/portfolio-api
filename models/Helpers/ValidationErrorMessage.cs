@@ -1,4 +1,4 @@
-namespace Portfolio.Api.Models.Helpers
+namespace PortfolioApi.Models.Helpers
 {
     public class ValidationErrorMessage
     {
@@ -23,7 +23,7 @@ namespace Portfolio.Api.Models.Helpers
         public ValidationErrorMessage() { }
         public ValidationErrorMessage(string errorMessage) : this()
         {
-            this.Message = errorMessage;
+            Message = errorMessage;
         }
     }
 }

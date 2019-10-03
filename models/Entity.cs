@@ -17,5 +17,10 @@ namespace PortfolioApi.Models
 
         //[DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public DateTime? UpdateDate { get; set; }
+
+        public void SetUpdateDate()
+        {
+            UpdateDate = DateTime.UtcNow;
+        }
     }
 }

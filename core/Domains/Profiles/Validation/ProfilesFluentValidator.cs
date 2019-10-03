@@ -2,7 +2,6 @@ using System;
 using System.Linq;
 using System.Text.RegularExpressions;
 using FluentValidation;
-using Portfolio.Api.Models.Helpers;
 using PortfolioApi.Models.Helpers;
 using PortfolioApi.Models.Interfaces.Validators;
 using PortfolioApi.Models.Profiles;

@@ -91,7 +91,7 @@ namespace PortfolioApi
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, PortfolioContext context)
         {
-            //TODO
+            //TODO add logger
             //'ConsoleLoggerExtensions.AddConsole(ILoggerFactory, IConfiguration)' is obsolete: 
             //'This method is obsolete and will be removed in a future version. 
             //The recommended alternative is to call the Microsoft.Extensions.Logging.AddConsole() extension method on the Microsoft.Extensions.Logging.LoggerFactory instance.' 

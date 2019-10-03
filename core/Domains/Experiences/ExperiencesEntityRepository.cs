@@ -9,7 +9,7 @@ namespace PortfolioApi.Core.Domains.Experiences
     /// <summary>
     /// Repository Implementation to access the Experience Entities
     /// </summary>
-    public class ExperienceEntityRepository : IRepoCrud<Experience>
+    public class ExperienceEntityRepository : IRepoCrud<Experience, ExperienceInfo>
     {
         private readonly PortfolioContext _portfolioContext;
 
@@ -54,10 +54,10 @@ namespace PortfolioApi.Core.Domains.Experiences
             }
         }
 
-        public Experience Update(Experience input)
+        public Experience Update(Experience search, ExperienceInfo input)
         {
-            var m = _portfolioContext.Experiences.Find(input.Id);
-            m.Info = input.Info;
+            var m = _portfolioContext.Experiences.Find(search.Id);
+            m.Info = input;
             var result = _portfolioContext.SaveChanges();
             return m;
         }

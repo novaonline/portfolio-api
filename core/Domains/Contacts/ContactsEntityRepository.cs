@@ -9,7 +9,7 @@ namespace PortfolioApi.Core.Domains.Contacts
     /// <summary>
     /// Repository Implementation to access Contact Information
     /// </summary>
-    public class ContactsEntityRepository : IRepoCrud<Contact>
+    public class ContactsEntityRepository : IRepoCrud<Contact, ContactInfo>
     {
         private readonly PortfolioContext _portfolioContext;
 
@@ -49,10 +49,10 @@ namespace PortfolioApi.Core.Domains.Contacts
             }
         }
 
-        public Contact Update(Contact input)
+        public Contact Update(Contact search, ContactInfo input)
         {
-             var m = _portfolioContext.Contacts.Find(input.Id);
-            m.Info = input.Info;
+             var m = _portfolioContext.Contacts.Find(search.Id);
+            m.Info = input;
             var result = _portfolioContext.SaveChanges();
             return m;
         }

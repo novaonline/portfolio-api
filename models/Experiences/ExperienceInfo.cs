@@ -3,7 +3,7 @@ using ExperienceSection = PortfolioApi.Models.Experiences.Sections.ExperienceSec
 
 namespace PortfolioApi.Models.Experiences
 {
-    public class ExperienceInfo
+    public class ExperienceInfo : Info
     {
         public string Title { get; set; }
 
