@@ -4,8 +4,8 @@ namespace PortfolioApi.Models.Interfaces.Repos
     /// A repository that has update operations
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public interface IRepoUpdate<T, O> : IUpdate<O, T, O> where T : Info where O : Entity
+    public interface IRepoUpdate<T, O>  where O : Entity where T : IInfo<T>
     {
-
+        O Update(O search, T input);
     }
 }

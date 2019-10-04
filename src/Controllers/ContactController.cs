@@ -1,9 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using PortfolioApi.Core.Domains.Contacts.Interfaces;
 using PortfolioApi.Models.Helpers;
-using PortfolioApi.Repository.EntityFramework.Context;
 using Model = PortfolioApi.Models.Contacts;
 
 namespace PortfolioApi.Controllers
@@ -22,7 +20,7 @@ namespace PortfolioApi.Controllers
         public IActionResult Get(int profileId)
         {
             // TODO: Create a Validation function that will check if Validation returns client error
-            return Respond(_contactService.Get(new Model.Contact
+            return Respond(_contactService.Read(new Model.Contact
             {
                 ProfileId = profileId
             }));

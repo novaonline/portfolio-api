@@ -7,7 +7,7 @@ namespace PortfolioApi.Models.Helpers
     /// A model to package validation messages
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class Validation<T> where T : Entity
+    public class Validation<T> where T : Entity, new()
     {
         /// <summary>
         /// The result of the data after validation. Some clean up may have happened
@@ -29,6 +29,7 @@ namespace PortfolioApi.Models.Helpers
 
         public Validation() 
         {
+            this.Result = new T();
             ErrorMessagesPerProperty = new Dictionary<string, List<ValidationErrorMessage>>();
         }
 

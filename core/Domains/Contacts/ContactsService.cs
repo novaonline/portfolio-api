@@ -19,7 +19,7 @@ namespace PortfolioApi.Core.Domains.Contacts
             throw new System.NotImplementedException();
         }
 
-        public ServiceMessage<Contact> Get(Contact input)
+        public ServiceMessage<Contact> Read(Contact input)
         {
             throw new System.NotImplementedException();
         }

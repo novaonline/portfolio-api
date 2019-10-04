@@ -1,29 +1,32 @@
 using System.Collections.Generic;
+using System.Linq;
 using ExperienceSection = PortfolioApi.Models.Experiences.Sections.ExperienceSection;
 
 namespace PortfolioApi.Models.Experiences
 {
-    public class ExperienceInfo : Info
+    public class ExperienceInfo : Info<ExperienceInfo>
     {
-        public string Title { get; set; }
+        public string? Title { get; set; }
 
-        public string BackgroundUrl { get; set; }
+        public string? BackgroundUrl { get; set; }
 
-        public int ExperienceYears { get; set; }
+        public int? ExperienceYears { get; set; }
 
-        public List<ExperienceSection> Sections { get; set; }
+        public List<ExperienceSection>? Sections { get; set; }
 
-        public ExperienceInfo()
-        {
-            Sections = new List<ExperienceSection>();
-        }
+        public ExperienceInfo() { }
 
         public ExperienceInfo(ExperienceInfo model) : this()
         {
-            Title = model.Title;
-            BackgroundUrl = model.BackgroundUrl;
-            ExperienceYears = model.ExperienceYears;
-            Sections = model.Sections ?? new List<ExperienceSection>();
+            UpdateProperties(model);
+        }
+
+        public override void UpdateProperties(ExperienceInfo update)
+        {
+            this.BackgroundUrl = update.BackgroundUrl ?? this.BackgroundUrl;
+            this.ExperienceYears = update.ExperienceYears ?? this.ExperienceYears;
+            this.Sections = update.Sections ?? this.Sections ?? new List<ExperienceSection>();
+            this.Title = update.Title ?? this.Title;
         }
     }
 }

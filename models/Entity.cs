@@ -10,7 +10,7 @@ namespace PortfolioApi.Models
     /// The date it was updated
     /// All Dates are stored using the UTC time zone
     /// </summary>
-    public class Entity : IdentityItem
+    public class Entity : IdentityItem 
     {
         //[DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public DateTime? AddDate { get; set; }

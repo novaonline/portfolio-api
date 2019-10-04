@@ -6,8 +6,8 @@ namespace PortfolioApi.Models.Interfaces.Repos
     /// A repository that has read operations
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public interface IRepoRead<T> : IRead<T, IEnumerable<T>> where T : Entity
+    public interface IRepoRead<T> where T : Entity
     {
-
+        IEnumerable<T> Read(T input);
     }
 }

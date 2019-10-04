@@ -1,10 +1,7 @@
 ﻿using core.Domains.Profiles.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using PortfolioApi.Repository.EntityFramework.Context;
 using System.Collections.Generic;
-using System.Linq;
 using Model = PortfolioApi.Models.Profiles;
 
 namespace PortfolioApi.Controllers

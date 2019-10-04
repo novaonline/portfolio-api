@@ -37,7 +37,7 @@ namespace PortfolioApi.Core.Domains.Profiles
             throw new System.NotImplementedException();
         }
 
-        public ServiceMessage<Profile> Get(Profile input)
+        public ServiceMessage<Profile> Read(Profile input)
         {
             throw new System.NotImplementedException();
         }

@@ -4,8 +4,8 @@ namespace PortfolioApi.Models.Interfaces.Repos
     /// A Repository that allows delete operations
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public interface IRepoDelete<T> : IDelete<T, T> where T : Entity
+    public interface IRepoDelete<T> where T : Entity
     {
-
+        T Delete(T input);
     }
 }

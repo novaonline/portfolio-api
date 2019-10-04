@@ -1,4 +1,4 @@
-using core.Domains.Experiences.Interfaces;
+using PortfolioApi.Domains.Experiences.Interfaces;
 using PortfolioApi.Models.Experiences;
 using PortfolioApi.Models.Helpers;
 
@@ -19,7 +19,7 @@ namespace PortfolioApi.Core.Domains.Experiences
             throw new System.NotImplementedException();
         }
 
-        public ServiceMessage<Experience> Get(Experience input)
+        public ServiceMessage<Experience> Read(Experience input)
         {
             throw new System.NotImplementedException();
         }

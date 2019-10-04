@@ -4,5 +4,10 @@
     {
         public int ProfileId { get; set; }
         public ContactInfo Info { get; set; }
+
+        public Contact()
+        {
+            this.Info = new ContactInfo();
+        }
     }
 }

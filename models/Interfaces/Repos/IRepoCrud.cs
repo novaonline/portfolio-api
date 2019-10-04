@@ -8,7 +8,7 @@ namespace PortfolioApi.Models.Interfaces.Repos
     public interface IRepoCrud<T,U> : IRepoCreate<T>,
     IRepoRead<T>,
     IRepoUpdate<U, T>,
-    IRepoDelete<T> where T : Entity where U : Info
+    IRepoDelete<T> where T : Entity where U : IInfo<U>
     {
 
     }

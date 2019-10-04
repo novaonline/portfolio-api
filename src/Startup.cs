@@ -109,7 +109,7 @@ namespace PortfolioApi
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Portfolio API V1");
             });
 
-            app.UseMvc();
+            //app.UseMvc();
 
             // Migrate and seed the database during startup. Must be synchronous.
             try

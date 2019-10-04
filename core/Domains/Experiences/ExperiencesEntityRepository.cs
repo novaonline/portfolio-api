@@ -33,7 +33,7 @@ namespace PortfolioApi.Core.Domains.Experiences
             return model;
         }
 
-        public IEnumerable<Experience> Get(Experience input)
+        public IEnumerable<Experience> Read(Experience input)
         {
             if (input.Info != null && !string.IsNullOrEmpty(input.Type) && !string.IsNullOrEmpty(input.Info.Title))
             {

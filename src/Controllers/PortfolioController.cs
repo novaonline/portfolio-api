@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PortfolioApi.Models;
 using PortfolioApi.Models.Helpers;
-using PortfolioApi.Repository.EntityFramework.Context;
 namespace PortfolioApi.Controllers
 {
 
@@ -14,7 +13,7 @@ namespace PortfolioApi.Controllers
         {
         }
 
-        protected ActionResult Respond<T>(ServiceMessage<T> result) where T : Entity
+        protected ActionResult Respond<T>(ServiceMessage<T> result) where T : Entity, new()
         {
             if (!result.Validation.IsValid)
             {

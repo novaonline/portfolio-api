@@ -40,14 +40,14 @@ namespace PortfolioApi.Tests.Integration.Profiles
             //When
             var profileWithJustId = new Profile { Id = 1 };
             var rCreate = repo.Create(profile);
-            var rGetList = repo.Get(profileWithJustId);
+            var rGetList = repo.Read(profileWithJustId);
             var rGet = rGetList.First();
             var aboutMeUpdateExpected = "I'm you";
             rGet.Info.AboutMe = aboutMeUpdateExpected;
             var rUpdate = repo.Update(profileWithJustId, rGet.Info);
-            var rUpdateOutput = repo.Get(profileWithJustId);
+            var rUpdateOutput = repo.Read(profileWithJustId);
             var rDelete = repo.Delete(profileWithJustId);
-            var rDeleteOutput = repo.Get(profileWithJustId);
+            var rDeleteOutput = repo.Read(profileWithJustId);
 
             //Then
             Assert.Equal(profile, rCreate);

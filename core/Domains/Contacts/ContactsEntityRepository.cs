@@ -33,7 +33,7 @@ namespace PortfolioApi.Core.Domains.Contacts
             return model;
         }
 
-        public IEnumerable<Contact> Get(Contact input)
+        public IEnumerable<Contact> Read(Contact input)
         {
             if (input.ProfileId != default(int))
             {

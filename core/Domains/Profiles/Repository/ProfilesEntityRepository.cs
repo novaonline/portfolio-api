@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using PortfolioApi.Models.Interfaces.Repos;
@@ -34,7 +33,7 @@ namespace PortfolioApi.Core.Domains.Profiles.Repository
             return model;
         }
 
-        public IEnumerable<Profile> Get(Profile input)
+        public IEnumerable<Profile> Read(Profile input)
         {
             if (input.Info != null && !string.IsNullOrEmpty(input.Info.LastName) && !string.IsNullOrEmpty(input.Info.FirstName))
             {
@@ -58,7 +57,7 @@ namespace PortfolioApi.Core.Domains.Profiles.Repository
         public Profile Update(Profile search, ProfileInfo input)
         {
             var m = _portfolioContext.Profiles.Find(search.Id);
-            m.Info = input;
+            m.Info.UpdateProperties(input);
             m.SetUpdateDate();
             var result = _portfolioContext.SaveChanges();
             return m;
