@@ -10,8 +10,6 @@ namespace PortfolioApi.Models.Experiences
 
         public string? BackgroundUrl { get; set; }
 
-        public int? ExperienceYears { get; set; }
-
         public List<ExperienceSection>? Sections { get; set; }
 
         public ExperienceInfo() { }
@@ -24,7 +22,6 @@ namespace PortfolioApi.Models.Experiences
         public override void UpdateProperties(ExperienceInfo update)
         {
             this.BackgroundUrl = update.BackgroundUrl ?? this.BackgroundUrl;
-            this.ExperienceYears = update.ExperienceYears ?? this.ExperienceYears;
             this.Sections = update.Sections ?? this.Sections ?? new List<ExperienceSection>();
             this.Title = update.Title ?? this.Title;
         }

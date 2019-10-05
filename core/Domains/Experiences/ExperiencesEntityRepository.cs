@@ -9,11 +9,11 @@ namespace PortfolioApi.Core.Domains.Experiences
     /// <summary>
     /// Repository Implementation to access the Experience Entities
     /// </summary>
-    public class ExperienceEntityRepository : IRepoCrud<Experience, ExperienceInfo>
+    public class ExperiencesEntityRepository : IRepoCrud<Experience, ExperienceInfo>
     {
         private readonly PortfolioContext _portfolioContext;
 
-        public ExperienceEntityRepository(PortfolioContext portfolioContext)
+        public ExperiencesEntityRepository(PortfolioContext portfolioContext)
         {
             _portfolioContext = portfolioContext;
         }
