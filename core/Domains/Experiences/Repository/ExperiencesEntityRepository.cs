@@ -4,7 +4,7 @@ using PortfolioApi.Models.Experiences;
 using PortfolioApi.Models.Interfaces.Repos;
 using PortfolioApi.Repository.EntityFramework.Context;
 
-namespace PortfolioApi.Core.Domains.Experiences
+namespace PortfolioApi.Core.Domains.Experiences.Repository
 {
     /// <summary>
     /// Repository Implementation to access the Experience Entities
@@ -20,7 +20,7 @@ namespace PortfolioApi.Core.Domains.Experiences
 
         public Experience Create(Experience input)
         {
-           var changeTracking = _portfolioContext.Experiences.Add(input);
+            var changeTracking = _portfolioContext.Experiences.Add(input);
             var result = _portfolioContext.SaveChanges();
             return input;
         }
@@ -43,13 +43,13 @@ namespace PortfolioApi.Core.Domains.Experiences
             }
             else if (!string.IsNullOrEmpty(input.Type))
             {
-               return _portfolioContext.Experiences.Where(x => x.Type == input.Type);
+                return _portfolioContext.Experiences.Where(x => x.Type == input.Type);
             }
             else
             {
                 var result = new List<Experience>();
                 var item = _portfolioContext.Experiences.Find(input.Id);
-                if(item != null) result.Add(item);
+                if (item != null) result.Add(item);
                 return result;
             }
         }

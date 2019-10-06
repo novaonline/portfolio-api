@@ -11,13 +11,13 @@ namespace PortfolioApi.Core.Domains.Profiles.Validation
     /// <summary>
     /// The validation of Profile entities
     /// </summary>
-    public class ProfilesFluentValidator : IValidatorCreate<Profile>
+    public class ProfilesCreateFluentValidator : IValidatorCreate<Profile>
     {
-        private readonly ProfilesFluentValidatorModel _validator;
+        private readonly ProfilesCreateFluentValidatorModel _validator;
 
-        public ProfilesFluentValidator()
+        public ProfilesCreateFluentValidator()
         {
-            _validator = new ProfilesFluentValidatorModel();
+            _validator = new ProfilesCreateFluentValidatorModel();
         }
         public Validation<Profile> Validate(Profile input)
         {
@@ -35,9 +35,9 @@ namespace PortfolioApi.Core.Domains.Profiles.Validation
         }
     }
 
-    public class ProfilesFluentValidatorModel : AbstractValidator<Profile>
+    public class ProfilesCreateFluentValidatorModel : AbstractValidator<Profile>
     {
-        public ProfilesFluentValidatorModel()
+        public ProfilesCreateFluentValidatorModel()
         {
             RuleFor(p => p.Info).NotNull();
             RuleFor(p => p.Info.AboutMe).NotEmpty().WithMessage("Please tell us about yourself. People want to know!");

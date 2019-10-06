@@ -6,8 +6,8 @@ namespace PortfolioApi.Models.Interfaces.Validators
     /// An entity that requires update validation
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public interface IValidatorUpdate<T> where T : Entity, new()
+    public interface IValidatorUpdate<S, T> where S : Entity, new() where T : IInfo<T>
     {
-        Validation<T> Validate(T input);
+        Validation<S> Validate(S search, T input);
     }
 }

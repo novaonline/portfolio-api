@@ -1,5 +1,5 @@
 using System.Linq;
-using PortfolioApi.Core.Domains.Contacts;
+using PortfolioApi.Core.Domains.Contacts.Repository;
 using PortfolioApi.Models.Contacts;
 using Xunit;
 

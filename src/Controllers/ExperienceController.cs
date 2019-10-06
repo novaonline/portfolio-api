@@ -16,7 +16,7 @@ namespace PortfolioApi.Controllers
         }
 
         [HttpGet("{searchTerm}"), AllowAnonymous]
-        [Produces(typeof(ServiceMessage<Experience>))]
+        [Produces(typeof(ServiceMessages<Experience>))]
         public IActionResult Get(Experience searchTerm)
         {
             return Respond(_experiencesService.Read(searchTerm));

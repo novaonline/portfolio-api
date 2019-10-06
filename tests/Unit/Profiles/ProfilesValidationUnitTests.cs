@@ -13,7 +13,7 @@ namespace PortfolioApi.Tests.Unit.Profiles
 
         public ProfilesValidationUnitTests()
         {
-            _validator = new ProfilesFluentValidator();
+            _validator = new ProfilesCreateFluentValidator();
         }
 
 

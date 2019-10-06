@@ -16,7 +16,7 @@ namespace PortfolioApi.Controllers
         }
 
         [HttpGet("{profileId}"), AllowAnonymous]
-        [Produces(typeof(ServiceMessage<Model.Contact>))]
+        [Produces(typeof(ServiceMessages<Model.Contact>))]
         public IActionResult Get(int profileId)
         {
             // TODO: Create a Validation function that will check if Validation returns client error

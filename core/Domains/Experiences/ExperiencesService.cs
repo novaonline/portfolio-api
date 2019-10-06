@@ -1,32 +1,25 @@
+using PortfolioApi.Core.Domains.Common;
 using PortfolioApi.Domains.Experiences.Interfaces;
 using PortfolioApi.Models.Experiences;
 using PortfolioApi.Models.Helpers;
+using PortfolioApi.Models.Interfaces.Repos;
+using PortfolioApi.Models.Interfaces.Validators;
 
 namespace PortfolioApi.Core.Domains.Experiences
 {
     /// <summary>
     /// Main Experiences Logic
     /// </summary>
-    public class ExperiencesService : IExperiencesService
+    public class ExperiencesService : BaseService<Experience, ExperienceInfo>, IExperiencesService
     {
-        public ServiceMessage<Experience> Create(Experience input)
-        {
-            throw new System.NotImplementedException();
-        }
 
-        public ServiceMessage<Experience> Delete(Experience input)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public ServiceMessage<Experience> Read(Experience input)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public ServiceMessage<Experience> Update(Experience search, ExperienceInfo input)
-        {
-            throw new System.NotImplementedException();
+        public ExperiencesService(
+            IRepoCrud<Experience, ExperienceInfo> profileRepo,
+            IValidatorCreate<Experience> validateForCreation,
+            IValidatorUpdate<Experience, ExperienceInfo> validateForUpdate,
+            IValidatorDelete<Experience> validateForDelete) : base(profileRepo, validateForCreation, validateForUpdate, validateForDelete)
+        { 
+            
         }
     }
 }

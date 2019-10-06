@@ -24,5 +24,17 @@ namespace PortfolioApi.Controllers
                 return Ok(result);
             }
         }
+
+               protected ActionResult Respond<T>(ServiceMessages<T> result) where T : Entity, new()
+        {
+            if (!result.Validation.IsValid)
+            {
+                return BadRequest(result);
+            }
+            else
+            {
+                return Ok(result);
+            }
+        }
     }
 }

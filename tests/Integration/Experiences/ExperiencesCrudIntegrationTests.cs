@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using PortfolioApi.Core.Domains.Experiences;
+using PortfolioApi.Core.Domains.Experiences.Repository;
 using PortfolioApi.Models.Experiences;
 using PortfolioApi.Models.Experiences.Sections;
 using Xunit;

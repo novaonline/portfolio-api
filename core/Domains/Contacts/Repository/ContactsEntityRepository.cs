@@ -4,7 +4,7 @@ using PortfolioApi.Models.Contacts;
 using PortfolioApi.Models.Interfaces.Repos;
 using PortfolioApi.Repository.EntityFramework.Context;
 
-namespace PortfolioApi.Core.Domains.Contacts
+namespace PortfolioApi.Core.Domains.Contacts.Repository
 {
     /// <summary>
     /// Repository Implementation to access Contact Information
@@ -35,7 +35,7 @@ namespace PortfolioApi.Core.Domains.Contacts
 
         public IEnumerable<Contact> Read(Contact input)
         {
-            if (input.ProfileId != default(int))
+            if (input.ProfileId != default)
             {
                 return _portfolioContext.Contacts
                 .Where(x => x.ProfileId == input.ProfileId);
@@ -44,14 +44,14 @@ namespace PortfolioApi.Core.Domains.Contacts
             {
                 var result = new List<Contact>();
                 var item = _portfolioContext.Contacts.Find(input.Id);
-                if(item != null) result.Add(item);
+                if (item != null) result.Add(item);
                 return result;
             }
         }
 
         public Contact Update(Contact search, ContactInfo input)
         {
-             var m = _portfolioContext.Contacts.Find(search.Id);
+            var m = _portfolioContext.Contacts.Find(search.Id);
             m.Info = input;
             var result = _portfolioContext.SaveChanges();
             return m;
