@@ -5,6 +5,8 @@ using PortfolioApi.Models.Helpers;
 namespace PortfolioApi.Controllers
 {
 
+    //https://github.com/domaindrivendev/Swashbuckle.AspNetCore
+    //https://github.com/Microsoft/api-guidelines/blob/master/Guidelines.md
     [Authorize, ResponseCache(CacheProfileName = "Default")]
     [Route("api/[controller]")]
     public class PortfolioController : Controller
@@ -25,7 +27,7 @@ namespace PortfolioApi.Controllers
             }
         }
 
-               protected ActionResult Respond<T>(ServiceMessages<T> result) where T : Entity, new()
+        protected ActionResult Respond<T>(ServiceMessages<T> result) where T : Entity, new()
         {
             if (!result.Validation.IsValid)
             {

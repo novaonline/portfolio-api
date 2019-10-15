@@ -10,5 +10,10 @@
         {
             this.Info = new ExperienceInfo();
         }
+
+        public Experience(int Id) : this()
+        {
+            this.Id = Id;
+        }
     }
 }

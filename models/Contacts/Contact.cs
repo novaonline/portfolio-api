@@ -9,5 +9,10 @@
         {
             this.Info = new ContactInfo();
         }
+
+        public Contact(int Id) : this()
+        {
+            this.Id = Id;
+        }
     }
 }

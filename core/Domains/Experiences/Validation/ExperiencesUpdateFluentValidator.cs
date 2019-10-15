@@ -1,6 +1,8 @@
+using System;
 using System.Linq;
 using FluentValidation;
 using PortfolioApi.Models.Experiences;
+using PortfolioApi.Models.Experiences.Sections;
 using PortfolioApi.Models.Helpers;
 using PortfolioApi.Models.Interfaces.Validators;
 
@@ -33,11 +35,31 @@ namespace PortfolioApi.Core.Domains.Experiences.Validation
 
     public class ExperiencesUpdateFluentValidatorModel : AbstractValidator<Experience>
     {
-
+        public ExperiencesUpdateFluentValidatorModel()
+        {
+            RuleFor(p => p.Id).NotEmpty();
+        }
     }
 
     public class ExperiencesInfoUpdateFluentValidatorModel : AbstractValidator<ExperienceInfo>
     {
+        public ExperiencesInfoUpdateFluentValidatorModel()
+        {
+            RuleFor(p => p.BackgroundUrl)
+            .Matches(@"\.(?:jpg|gif|png)")
+            .WithMessage("Image is not supported or formatted correctly")
+            .When(x => !String.IsNullOrEmpty(x.BackgroundUrl));
+
+            RuleForEach(x => x.Sections).SetValidator(new ExperienceSectionUpdateAbstractValidator());
+        }
+    }
+
+    public class ExperienceSectionUpdateAbstractValidator : AbstractValidator<ExperienceSection>
+    {
+        public ExperienceSectionUpdateAbstractValidator()
+        {
+            RuleFor(x => x.Id).NotEmpty();
+        }
 
     }
 }

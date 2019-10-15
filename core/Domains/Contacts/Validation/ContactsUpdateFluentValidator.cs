@@ -34,11 +34,19 @@ namespace PortfolioApi.Core.Domains.Contacts.Validation
 
     public class ContactsUpdateFluentValidatorModel : AbstractValidator<Contact>
     {
-
+        public ContactsUpdateFluentValidatorModel()
+        {
+            RuleFor(x => x.Id).NotEmpty();
+        }
     }
 
     public class ContactsInfoUpdateFluentValidatorModel : AbstractValidator<ContactInfo>
     {
+        public ContactsInfoUpdateFluentValidatorModel()
+        {
+            RuleFor(x => x).NotNull();
+            RuleFor(x => x.Email).EmailAddress().When(x => !string.IsNullOrEmpty(x.Email));
+        }
 
     }
 }

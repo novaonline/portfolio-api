@@ -8,5 +8,10 @@
         {
             this.Info = new ProfileInfo();
         }
+
+        public Profile(int Id) : this()
+        {
+            this.Id = Id;
+        }
     }
 }

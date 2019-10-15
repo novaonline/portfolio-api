@@ -9,36 +9,37 @@ namespace PortfolioApi.Core.Domains.Contacts.Validation
     /// <summary>
     /// The validation of Contact Information
     /// </summary>
-    public class ContactsCreateFluentValidator : IValidatorUpdate<Contact, ContactInfo>
+    public class ContactsCreateFluentValidator : IValidatorCreate<Contact>
     {
         private readonly ContactsCreateFluentValidatorModel _validator;
-        private readonly ContactsInfoCreateFluentValidatorModel _validatorInfo;
 
         public ContactsCreateFluentValidator()
         {
             _validator = new ContactsCreateFluentValidatorModel();
-            _validatorInfo = new ContactsInfoCreateFluentValidatorModel();
         }
 
-        public Validation<Contact> Validate(Contact search, ContactInfo input)
+        public Validation<Contact> Validate(Contact input)
         {
-            var vSearch = _validator.Validate(search);
-            var vInfo = _validatorInfo.Validate(input);
+            var v = _validator.Validate(input);
             return new Validation<Contact>
             {
-                Result = search,
-                ErrorMessagesPerProperty = vSearch.IsValid ? vInfo.Errors.GroupBy(e => e.PropertyName).ToDictionary(g => g.Key, g => g.Select(f => new ValidationErrorMessage(f.ErrorMessage)).ToList()) : vSearch.Errors.GroupBy(e => e.PropertyName).ToDictionary(g => g.Key, g => g.Select(f => new ValidationErrorMessage(f.ErrorMessage)).ToList())
+                Result = input,
+                ErrorMessagesPerProperty = v.Errors
+                .GroupBy(e => e.PropertyName)
+                .ToDictionary(g => g.Key, g => g.Select(f => new ValidationErrorMessage(f.ErrorMessage)).ToList())
             };
         }
     }
 
     public class ContactsCreateFluentValidatorModel : AbstractValidator<Contact>
     {
-
-    }
-
-    public class ContactsInfoCreateFluentValidatorModel : AbstractValidator<ContactInfo>
-    {
-
+        public ContactsCreateFluentValidatorModel()
+        {
+            RuleFor(x => x.Id).NotEmpty();
+            RuleFor(x => x.ProfileId).NotEmpty();
+            RuleFor(x => x.Info).NotNull();
+            RuleFor(x => x.Info.Email).NotEmpty();
+            RuleFor(x => x.Info.Email).EmailAddress();
+        }
     }
 }

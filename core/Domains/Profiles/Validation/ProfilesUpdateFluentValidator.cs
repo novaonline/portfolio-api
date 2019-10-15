@@ -31,7 +31,7 @@ namespace PortfolioApi.Core.Domains.Profiles.Validation
             return new Validation<Profile>
             {
                 Result = search,
-                ErrorMessagesPerProperty = (vSearch.IsValid) ? vInfo.Errors.GroupBy(e => e.PropertyName).ToDictionary(g => g.Key, g => g.Select(f => new ValidationErrorMessage(f.ErrorMessage)).ToList())  : vSearch.Errors.GroupBy(e => e.PropertyName).ToDictionary(g => g.Key, g => g.Select(f => new ValidationErrorMessage(f.ErrorMessage)).ToList())
+                ErrorMessagesPerProperty = (vSearch.IsValid) ? vInfo.Errors.GroupBy(e => e.PropertyName).ToDictionary(g => g.Key, g => g.Select(f => new ValidationErrorMessage(f.ErrorMessage)).ToList()) : vSearch.Errors.GroupBy(e => e.PropertyName).ToDictionary(g => g.Key, g => g.Select(f => new ValidationErrorMessage(f.ErrorMessage)).ToList())
             };
 
         }
@@ -50,18 +50,16 @@ namespace PortfolioApi.Core.Domains.Profiles.Validation
         public ProfilesInfoUpdateFluentValidatorModel()
         {
             RuleFor(p => p).NotNull();
-            RuleFor(p => p.AboutMe).NotEmpty().WithMessage("Please tell us about yourself. People want to know!");
-            RuleFor(p => p.BirthDate).GreaterThan(DateTime.UtcNow.AddYears(-500)).WithMessage("Valid birthdate please!");
-            RuleFor(p => p.FirstName).NotEmpty();
-            RuleFor(p => p.LastName).NotEmpty();
-            RuleFor(p => p.ImageUrl).Custom((p, ctx) =>
-            {
-                if (!String.IsNullOrEmpty(p)
-                && !Regex.Match(p, @"\.(?:jpg|gif|png)").Success)
-                {
-                    ctx.AddFailure("Image is not supported or formatted correctly");
-                }
-            });
+            
+            RuleFor(p => p.BirthDate)
+            .GreaterThan(DateTime.UtcNow.AddYears(-200))
+            .WithMessage("Valid birthdate please!")
+            .When(x => x.BirthDate.HasValue);
+
+            RuleFor(p => p.ImageUrl)
+            .Matches(@"\.(?:jpg|gif|png)")
+            .WithMessage("Image is not supported or formatted correctly")
+            .When(x => !String.IsNullOrEmpty(x.ImageUrl));
         }
     }
 }

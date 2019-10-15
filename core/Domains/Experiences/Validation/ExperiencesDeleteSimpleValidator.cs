@@ -8,26 +8,26 @@ namespace PortfolioApi.Core.Domains.Experiences.Validation
     /// <summary>
     /// The Validation of Experience entities
     /// </summary>
-    public class ExperiencesDeleteSimpleValidator : IValidatorUpdate<Experience, ExperienceInfo>
+    public class ExperiencesDeleteSimpleValidator : IValidatorDelete<Experience>
     {
         public ExperiencesDeleteSimpleValidator() { }
-        public Validation<Experience> Validate(Experience search, ExperienceInfo input)
+        public Validation<Experience> Validate(Experience input)
         {
-            if (search.Id == default)
+            if (input.Id == default)
             {
                 return new Validation<Experience>
                 {
-                    Result = search,
+                    Result = input,
                     ErrorMessagesPerProperty = new Dictionary<string, List<ValidationErrorMessage>>
                     {
-                        {nameof(search.Id), new List<ValidationErrorMessage> { new ValidationErrorMessage("Id is required") }}
+                        {nameof(input.Id), new List<ValidationErrorMessage> { new ValidationErrorMessage("Id is required") }}
                     }
                 };
             }
 
             return new Validation<Experience>
             {
-                Result = search,
+                Result = input,
                 ErrorMessagesPerProperty = new Dictionary<string, List<ValidationErrorMessage>>()
             };
         }

@@ -7,13 +7,15 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using PortfolioApi.Core.Builder;
+using PortfolioApi.Models.Helpers.Builder;
 using PortfolioApi.Repository.EntityFramework.Context;
 using Swashbuckle.AspNetCore.Swagger;
 using System;
 
 namespace PortfolioApi
 {
-	public partial class Startup
+    public partial class Startup
     {
         ILogger _logger;
         public Startup(IWebHostEnvironment env, ILoggerFactory loggerFactory)
@@ -81,10 +83,16 @@ namespace PortfolioApi
             // });
 
             // Add framework services.
-            services.AddDbContext<PortfolioContext>(options =>
-                options.UseSqlServer(Environment.GetEnvironmentVariable("DefaultConnection") ??
-                    Configuration.GetConnectionString("DefaultConnection"))
-                    );
+            // services.AddDbContext<PortfolioContext>(options =>
+            //     options.UseSqlServer(Environment.GetEnvironmentVariable("DefaultConnection") ??
+            //         Configuration.GetConnectionString("DefaultConnection"))
+            //         );
+
+            PortfolioFactory.NewFactory.SetDefaultPersistence(o =>
+            {
+                o.ConnectionString = Configuration.GetConnectionString("DefaultConnection");
+                o.PersistenceType = PersistenceType.InMemorySqlSever;
+            }).Build(services);
 
         }
 
