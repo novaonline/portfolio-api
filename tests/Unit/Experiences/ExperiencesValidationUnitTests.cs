@@ -6,9 +6,9 @@ using PortfolioApi.Models.Experiences.Sections;
 using PortfolioApi.Models.Interfaces.Validators;
 using Xunit;
 
-namespace PortfolioApi.Tests.Unit.Experiences
+namespace PortfolioApi.Tests.Unit.ExperienFces
 {
-    public class ExperiencesValidationUnitTests
+    public class ExperiencesValidationUnitTests : IDisposable
     {
         IValidatorCreate<Experience> createValidator;
         IValidatorUpdate<Experience, ExperienceInfo> updateValidator;

@@ -35,7 +35,6 @@ namespace PortfolioApi.Core.Domains.Contacts.Validation
     {
         public ContactsCreateFluentValidatorModel()
         {
-            RuleFor(x => x.Id).NotEmpty();
             RuleFor(x => x.ProfileId).NotEmpty();
             RuleFor(x => x.Info).NotNull();
             RuleFor(x => x.Info.Email).NotEmpty();

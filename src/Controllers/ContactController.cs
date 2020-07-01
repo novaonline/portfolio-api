@@ -6,27 +6,61 @@ using PortfolioApi.Models.Helpers;
 
 namespace PortfolioApi.Controllers
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class ContactController : PortfolioController
     {
         private readonly IContactsService _contactService;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="contactService"></param>
+        /// <returns></returns>
         public ContactController(IContactsService contactService) : base()
         {
             _contactService = contactService;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="searchTerm"></param>
+        /// <returns></returns>
         [HttpGet, Produces(typeof(ServiceMessages<Contact>))]
         public IActionResult Get(Contact searchTerm) => Respond(_contactService.Read(searchTerm));
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="Id"></param>
+        /// <returns></returns>
         [HttpGet(RouteTemplates.Id), Produces(typeof(ServiceMessage<Contact>))]
         public IActionResult Get(int Id) => Respond(_contactService.Read(new Contact(Id)));
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="contact"></param>
+        /// <returns></returns>
         [HttpPost, Produces(typeof(ServiceMessage<Contact>))]
-        public IActionResult Post(Contact contact) => Respond(_contactService.Create(contact));
+        public IActionResult Post([FromBody]Contact contact) => Respond(_contactService.Create(contact));
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="Id"></param>
+        /// <param name="contactInfo"></param>
+        /// <returns></returns>
         [HttpPut(RouteTemplates.Id), Produces(typeof(ServiceMessage<Contact>))]
-        public IActionResult Put(int Id, ContactInfo contactInfo) => Respond(_contactService.Update(new Contact(Id), contactInfo));
+        public IActionResult Put(int Id, [FromBody]ContactInfo contactInfo) => Respond(_contactService.Update(new Contact(Id), contactInfo));
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="Id"></param>
+        /// <returns></returns>
         [HttpDelete(RouteTemplates.Id), Produces(typeof(ServiceMessage<Contact>))]
         public IActionResult Delete(int Id) => Respond(_contactService.Delete(new Contact(Id)));
     }

@@ -31,7 +31,7 @@ namespace PortfolioApi.Core.Domains.Common
             if (validationResult.IsValid)
             {
                 result.Result = _profileRepo.Create(validationResult.Result);
-            }
+            } 
             return result;
         }
 

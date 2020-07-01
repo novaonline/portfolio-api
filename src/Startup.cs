@@ -3,21 +3,31 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.OpenApi.Models;
 using PortfolioApi.Core.Builder;
 using PortfolioApi.Models.Helpers.Builder;
 using PortfolioApi.Repository.EntityFramework.Context;
-using Swashbuckle.AspNetCore.Swagger;
 using System;
+using System.IO;
+using System.Reflection;
 
 namespace PortfolioApi
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public partial class Startup
     {
         ILogger _logger;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="env"></param>
+        /// <param name="loggerFactory"></param>
         public Startup(IWebHostEnvironment env, ILoggerFactory loggerFactory)
         {
             var builder = new ConfigurationBuilder()
@@ -29,29 +39,46 @@ namespace PortfolioApi
             _logger = loggerFactory.CreateLogger<Startup>();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <value></value>
         public IConfigurationRoot Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
+        /// <summary>
+        /// This method gets called by the runtime. Use this method to add services to the container.
+        /// </summary>
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddCors(options =>
             {
                 options.AddPolicy("CorsPolicy", builder =>
                 {
-                    builder.AllowAnyOrigin()
+                    builder
                                     .AllowAnyMethod()
                                     .AllowAnyHeader()
                                     .AllowCredentials();
-
                 });
 
             });
+
+            services.AddLogging(options =>
+            {
+                options.AddConsole();
+            });
+
             // Add framework services.
-            services.AddMvc(options =>
+            services.AddControllers(options =>
             {
                 options.CacheProfiles.Add("Default", new CacheProfile() { Duration = 60 });
                 options.CacheProfiles.Add("ContentCache", new CacheProfile() { Duration = 86400 });
 
+            })
+            .AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.WriteIndented = true;
+                options.JsonSerializerOptions.IgnoreNullValues = true;
+                //options.JsonSerializerOptions.Converters.Add(new StringEnumConverter()); 
             });
             services.AddAuthorization(options =>
             {
@@ -71,22 +98,21 @@ namespace PortfolioApi
             // https://docs.microsoft.com/en-us/aspnet/core/tutorials/web-api-help-pages-using-swagger
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new Info { Title = "Portfolio API", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Portfolio API", Version = "v1" });
                 c.CustomSchemaIds(x => x.FullName);
+
+                // Set the comments path for the Swagger JSON and UI.
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                c.IncludeXmlComments(xmlPath);
             });
 
             // // https://www.hanselman.com/blog/ASPNETCoreRESTfulWebAPIVersioningMadeEasy.aspx
-            // services.AddApiVersioning(o =>
-            // {
-            //     o.AssumeDefaultVersionWhenUnspecified = true;
-            //     o.DefaultApiVersion = new ApiVersion(1, 0);
-            // });
-
-            // Add framework services.
-            // services.AddDbContext<PortfolioContext>(options =>
-            //     options.UseSqlServer(Environment.GetEnvironmentVariable("DefaultConnection") ??
-            //         Configuration.GetConnectionString("DefaultConnection"))
-            //         );
+            services.AddApiVersioning(o =>
+            {
+                o.AssumeDefaultVersionWhenUnspecified = true;
+                o.DefaultApiVersion = new ApiVersion(1, 0);
+            });
 
             PortfolioFactory.NewFactory.SetDefaultPersistence(o =>
             {
@@ -96,13 +122,22 @@ namespace PortfolioApi
 
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+
+        /// <summary>
+        /// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        /// </summary>
+        /// <param name="app"></param>
+        /// <param name="env"></param>
+        /// <param name="context"></param>
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, PortfolioContext context)
         {
+
             //TODO add logger
             //'ConsoleLoggerExtensions.AddConsole(ILoggerFactory, IConfiguration)' is obsolete: 
             //'This method is obsolete and will be removed in a future version. 
             //The recommended alternative is to call the Microsoft.Extensions.Logging.AddConsole() extension method on the Microsoft.Extensions.Logging.LoggerFactory instance.' 
+
+            app.UseStaticFiles();
 
             // global policy - assign here or on each controller
             app.UseCors("CorsPolicy");
@@ -115,28 +150,19 @@ namespace PortfolioApi
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Portfolio API V1");
+                c.RoutePrefix = string.Empty;  // Set Swagger UI at apps root
             });
+
+            app.UseRouting();
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+            });
+
 
             //app.UseMvc();
 
-            // Migrate and seed the database during startup. Must be synchronous.
-            try
-            {
-                //http://benjii.me/2017/05/enable-entity-framework-core-migrations-visual-studio-2017/
-                using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>()
-                    .CreateScope())
-                {
-                    serviceScope.ServiceProvider.GetService<PortfolioContext>().Database.Migrate();
-                    _logger.LogInformation("Database Migration passed");
 
-                    //serviceScope.ServiceProvider.GetService<ISeedService>().SeedDatabase().Wait();
-                }
-            }
-            catch (Exception ex)
-            {
-                //http://ardalis.com/logging-and-using-services-in-startup-in-aspnet-core-apps
-                _logger.LogError(0, ex, "Failed to migrate or seed database");
-            }
 
             //Helpers.PortfolioInitializer.Init(context); // used to seed. This file is ignored in git
         }

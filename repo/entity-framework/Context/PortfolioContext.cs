@@ -1,15 +1,9 @@
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
 using ClientsModel = PortfolioApi.Models.Clients;
 using ContactsModel = PortfolioApi.Models.Contacts;
 using ProfilesModel = PortfolioApi.Models.Profiles;
 using ExperiencseModel = PortfolioApi.Models.Experiences;
-using IdentityItemModel = PortfolioApi.Models.IdentityItem;
 using System;
-using Microsoft.EntityFrameworkCore.ValueGeneration;
-using JetBrains.Annotations;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
-using System.Diagnostics.CodeAnalysis;
 
 namespace PortfolioApi.Repository.EntityFramework.Context
 {
@@ -37,11 +31,6 @@ namespace PortfolioApi.Repository.EntityFramework.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<IdentityItemModel>(entity =>
-            {
-                entity.HasKey(x => x.Id);
-                entity.Property(x => x.Id).UseIdentityColumn();
-            });
 
             // https://blogs.msdn.microsoft.com/dotnet/2017/05/12/announcing-ef-core-2-0-preview-1/
             // will need to wait till an update comes before these are columns and not tables
@@ -52,22 +41,37 @@ namespace PortfolioApi.Repository.EntityFramework.Context
 
             modelBuilder.Entity<ProfilesModel.Profile>(entity =>
             {
+                entity.HasKey(x => x.Id);
+                entity.Property(x => x.Id).UseIdentityColumn();
+
                 entity.OwnsOne(x => x.Info, inf =>
                 {
                     inf.HasIndex(x => new { x.LastName, x.FirstName });
                 });
+
+                entity.Property(p => p.UpdateDate).HasDefaultValue(DateTime.UtcNow);
+                entity.Property(p => p.AddDate).HasDefaultValue(DateTime.UtcNow);
             });
 
             modelBuilder.Entity<ContactsModel.Contact>(entity =>
             {
+                entity.HasKey(x => x.Id);
+                entity.Property(x => x.Id).UseIdentityColumn();
+
                 entity.OwnsOne(x => x.Info, inf =>
                 {
                     inf.HasIndex(x => x.Email);
                 });
+
+                entity.Property(p => p.UpdateDate).HasDefaultValue(DateTime.UtcNow);
+                entity.Property(p => p.AddDate).HasDefaultValue(DateTime.UtcNow);
             });
 
             modelBuilder.Entity<ExperiencseModel.Experience>(entity =>
             {
+                entity.HasKey(x => x.Id);
+                entity.Property(x => x.Id).UseIdentityColumn();
+
                 entity.HasIndex(x => x.Type);
                 entity.OwnsOne(x => x.Info, inf =>
                 {
@@ -77,10 +81,7 @@ namespace PortfolioApi.Repository.EntityFramework.Context
                     });
                     inf.HasIndex(x => x.Title);
                 });
-            });
 
-            modelBuilder.Entity<Models.Entity>(entity =>
-            {
                 entity.Property(p => p.UpdateDate).HasDefaultValue(DateTime.UtcNow);
                 entity.Property(p => p.AddDate).HasDefaultValue(DateTime.UtcNow);
             });
