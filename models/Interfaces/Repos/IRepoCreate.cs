@@ -6,6 +6,6 @@ namespace PortfolioApi.Models.Interfaces.Repos
     /// <typeparam name="T">An Entity</typeparam>
     public interface IRepoCreate<T> where T : Entity
     {
-        T Create(T input);
+        T Create(T input, RequestContext requestContext);
     }
 }

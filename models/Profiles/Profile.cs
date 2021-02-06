@@ -1,6 +1,6 @@
 ﻿namespace PortfolioApi.Models.Profiles
 {
-    public class Profile : Entity
+    public class Profile : OwnedEntity
     {
         public ProfileInfo Info { get; set; }
 

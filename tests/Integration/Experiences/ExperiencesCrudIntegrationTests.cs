@@ -11,10 +11,12 @@ namespace PortfolioApi.Tests.Integration.Experiences
     public class ExperiencesCrudIntegrationTests : IClassFixture<DatabaseFixture>
     {
         DatabaseFixture fixture;
-
+        private readonly Models.RequestContext requestContext;
         public ExperiencesCrudIntegrationTests(DatabaseFixture fixture)
         {
             this.fixture = fixture;
+            this.requestContext = new Models.RequestContext(
+                new List<System.Security.Claims.Claim>() { new System.Security.Claims.Claim("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier", "123") });
         }
 
         [Fact]
@@ -50,15 +52,15 @@ namespace PortfolioApi.Tests.Integration.Experiences
 
             //When
             var experienceId = new Experience { Id = 1 };
-            var rCreate = repo.Create(profile);
-            var rGetList = repo.Read(experienceId);
+            var rCreate = repo.Create(profile, requestContext);
+            var rGetList = repo.Read(experienceId, requestContext);
             var rGet = rGetList.First();
             var updatedValue = "The new TDD Pattern";
             rGet.Info.Title = updatedValue;
-            var rUpdate = repo.Update(experienceId, rGet.Info);
-            var rUpdateOutput = repo.Read(experienceId);
-            var rDelete = repo.Delete(experienceId);
-            var rDeleteOutput = repo.Read(experienceId);
+            var rUpdate = repo.Update(experienceId, rGet.Info, requestContext);
+            var rUpdateOutput = repo.Read(experienceId, requestContext);
+            var rDelete = repo.Delete(experienceId, requestContext);
+            var rDeleteOutput = repo.Read(experienceId, requestContext);
 
             //Then
             Assert.Equal(profile, rCreate);

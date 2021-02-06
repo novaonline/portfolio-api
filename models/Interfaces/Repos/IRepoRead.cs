@@ -8,6 +8,6 @@ namespace PortfolioApi.Models.Interfaces.Repos
     /// <typeparam name="T"></typeparam>
     public interface IRepoRead<T> where T : Entity
     {
-        IEnumerable<T> Read(T input);
+        IEnumerable<T> Read(T input, RequestContext requestContext);
     }
 }

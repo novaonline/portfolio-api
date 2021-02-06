@@ -59,5 +59,28 @@ namespace PortfolioApi.Core.Builder
             }
 
         }
+
+        public PortfolioContext Build()
+        {
+
+            // 1. Inject everything needed
+
+            // Inject Repo
+            switch (config.MainPersistenceSettings?.PersistenceType ?? config.DefaultPersistenceSettings.PersistenceType)
+            {
+                case PersistenceType.InMemorySqlSever:
+                    var opt = new DbContextOptionsBuilder<PortfolioContext>();
+                    var cs = config.MainPersistenceSettings?.ConnectionString ?? config.DefaultPersistenceSettings.ConnectionString;
+                    opt.UseSqlite(cs);
+                    return new PortfolioContext(opt.Options);
+                case PersistenceType.SqlServer:
+                    var optsql = new DbContextOptionsBuilder<PortfolioContext>();
+                    var cssql = config.MainPersistenceSettings?.ConnectionString ?? config.DefaultPersistenceSettings.ConnectionString;
+                    optsql.UseSqlServer(cssql);
+                    return new PortfolioContext(optsql.Options);
+                default:
+                    throw new ArgumentNullException(nameof(config.MainPersistenceSettings), "Main Persistence must have a setting");
+            }
+        }
     }
 }

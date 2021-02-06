@@ -1,6 +1,6 @@
 ﻿namespace PortfolioApi.Models.Contacts
 {
-    public class Contact : Entity
+    public class Contact : OwnedEntity
     {
         public int ProfileId { get; set; }
         public ContactInfo Info { get; set; }

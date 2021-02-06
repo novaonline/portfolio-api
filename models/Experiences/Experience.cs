@@ -1,6 +1,6 @@
 ﻿namespace PortfolioApi.Models.Experiences
 {
-    public class Experience : Entity
+    public class Experience : OwnedEntity
     {
         public string? Type { get; set; }
 

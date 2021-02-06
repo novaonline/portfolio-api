@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using PortfolioApi.Domains.Experiences.Interfaces;
 using PortfolioApi.Helpers.Templates;
 using PortfolioApi.Models.Experiences;
@@ -28,7 +29,7 @@ namespace PortfolioApi.Controllers
         /// <param name="searchTerm"></param>
         /// <returns></returns>
         [HttpGet, Produces(typeof(ServiceMessages<Experience>))]
-        public IActionResult Get(Experience searchTerm) => Respond(_experiencesService.Read(searchTerm));
+        public IActionResult Get(Experience searchTerm) => Respond(_experiencesService.Read(searchTerm, RequestContext));
 
         /// <summary>
         /// 
@@ -36,7 +37,7 @@ namespace PortfolioApi.Controllers
         /// <param name="Id"></param>
         /// <returns></returns>
         [HttpGet(RouteTemplates.Id), Produces(typeof(ServiceMessage<Experience>))]
-        public IActionResult Get(int Id) => Respond(_experiencesService.Read(new Experience(Id)));
+        public IActionResult Get(int Id) => Respond(_experiencesService.Read(new Experience(Id), RequestContext));
 
         /// <summary>
         /// 
@@ -44,7 +45,7 @@ namespace PortfolioApi.Controllers
         /// <param name="experience"></param>
         /// <returns></returns>
         [HttpPost, Produces(typeof(ServiceMessage<Experience>))]
-        public IActionResult Post([FromBody]Experience experience) => Respond(_experiencesService.Create(experience));
+        public IActionResult Post([FromBody]Experience experience) => Respond(_experiencesService.Create(experience, RequestContext));
 
         /// <summary>
         /// 
@@ -53,7 +54,7 @@ namespace PortfolioApi.Controllers
         /// <param name="experienceInfo"></param>
         /// <returns></returns>
         [HttpPut(RouteTemplates.Id), Produces(typeof(ServiceMessage<Experience>))]
-        public IActionResult Put(int Id, [FromBody]ExperienceInfo experienceInfo) => Respond(_experiencesService.Update(new Experience(Id), experienceInfo));
+        public IActionResult Put(int Id, [FromBody]ExperienceInfo experienceInfo) => Respond(_experiencesService.Update(new Experience(Id), experienceInfo, RequestContext));
 
         /// <summary>
         /// 
@@ -61,7 +62,7 @@ namespace PortfolioApi.Controllers
         /// <param name="Id"></param>
         /// <returns></returns>
         [HttpDelete(RouteTemplates.Id), Produces(typeof(ServiceMessage<Experience>))]
-        public IActionResult Delete(int Id) => Respond(_experiencesService.Delete(new Experience(Id)));
+        public IActionResult Delete(int Id) => Respond(_experiencesService.Delete(new Experience(Id), RequestContext));
 
     }
 }

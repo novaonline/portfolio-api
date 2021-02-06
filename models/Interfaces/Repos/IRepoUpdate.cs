@@ -6,6 +6,6 @@ namespace PortfolioApi.Models.Interfaces.Repos
     /// <typeparam name="T"></typeparam>
     public interface IRepoUpdate<T, O>  where O : Entity where T : IInfo<T>
     {
-        O Update(O search, T input);
+        O Update(O search, T input, RequestContext requestContext);
     }
 }

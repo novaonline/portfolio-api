@@ -6,6 +6,6 @@ namespace PortfolioApi.Models.Interfaces.Repos
     /// <typeparam name="T"></typeparam>
     public interface IRepoDelete<T> where T : Entity
     {
-        T Delete(T input);
+        T Delete(T input, RequestContext requestContext);
     }
 }

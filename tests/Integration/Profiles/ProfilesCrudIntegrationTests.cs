@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using PortfolioApi.Core.Domains.Profiles.Repository;
+using PortfolioApi.Models;
 using PortfolioApi.Models.Profiles;
 using Xunit;
 
@@ -10,10 +12,13 @@ namespace PortfolioApi.Tests.Integration.Profiles
     public class ProfilesCrudIntegrationTests : IClassFixture<DatabaseFixture>
     {
         DatabaseFixture fixture;
+		private readonly RequestContext requestContext;
 
-        public ProfilesCrudIntegrationTests(DatabaseFixture fixture)
+		public ProfilesCrudIntegrationTests(DatabaseFixture fixture)
         {
             this.fixture = fixture;
+            this.requestContext = new Models.RequestContext(
+              new List<System.Security.Claims.Claim>() { new System.Security.Claims.Claim("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier", "123") });
         }
 
         [Fact]
@@ -39,15 +44,15 @@ namespace PortfolioApi.Tests.Integration.Profiles
 
             //When
             var profileWithJustId = new Profile { Id = 1 };
-            var rCreate = repo.Create(profile);
-            var rGetList = repo.Read(profileWithJustId);
+            var rCreate = repo.Create(profile, requestContext);
+            var rGetList = repo.Read(profileWithJustId, requestContext);
             var rGet = rGetList.First();
             var aboutMeUpdateExpected = "I'm you";
             rGet.Info.AboutMe = aboutMeUpdateExpected;
-            var rUpdate = repo.Update(profileWithJustId, rGet.Info);
-            var rUpdateOutput = repo.Read(profileWithJustId);
-            var rDelete = repo.Delete(profileWithJustId);
-            var rDeleteOutput = repo.Read(profileWithJustId);
+            var rUpdate = repo.Update(profileWithJustId, rGet.Info, requestContext);
+            var rUpdateOutput = repo.Read(profileWithJustId, requestContext);
+            var rDelete = repo.Delete(profileWithJustId, requestContext);
+            var rDeleteOutput = repo.Read(profileWithJustId, requestContext);
 
             //Then
             Assert.Equal(profile, rCreate);

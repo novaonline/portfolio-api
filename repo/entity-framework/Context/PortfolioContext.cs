@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using ClientsModel = PortfolioApi.Models.Clients;
 using ContactsModel = PortfolioApi.Models.Contacts;
 using ProfilesModel = PortfolioApi.Models.Profiles;
 using ExperiencseModel = PortfolioApi.Models.Experiences;
@@ -17,7 +16,6 @@ namespace PortfolioApi.Repository.EntityFramework.Context
     {
         public DbSet<ProfilesModel.Profile> Profiles { get; set; }
         public DbSet<ContactsModel.Contact> Contacts { get; set; }
-        public DbSet<ClientsModel.Client> Clients { get; set; }
         public DbSet<ExperiencseModel.Experience> Experiences { get; set; }
 
         public PortfolioContext(DbContextOptions<PortfolioContext> options)
@@ -31,18 +29,14 @@ namespace PortfolioApi.Repository.EntityFramework.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-
-            // https://blogs.msdn.microsoft.com/dotnet/2017/05/12/announcing-ef-core-2-0-preview-1/
-            // will need to wait till an update comes before these are columns and not tables
-            modelBuilder.Entity<ClientsModel.Client>(entity =>
-            {
-                entity.HasIndex(x => new { x.Name, x.Secret }).IsUnique();
-            });
+            // TODO: Need to add entity conventions
 
             modelBuilder.Entity<ProfilesModel.Profile>(entity =>
             {
                 entity.HasKey(x => x.Id);
                 entity.Property(x => x.Id).UseIdentityColumn();
+                
+                entity.HasIndex(x => x.OwnerUserId);
 
                 entity.OwnsOne(x => x.Info, inf =>
                 {
@@ -57,6 +51,8 @@ namespace PortfolioApi.Repository.EntityFramework.Context
             {
                 entity.HasKey(x => x.Id);
                 entity.Property(x => x.Id).UseIdentityColumn();
+                
+                entity.HasIndex(x => x.OwnerUserId);
 
                 entity.OwnsOne(x => x.Info, inf =>
                 {
@@ -71,8 +67,10 @@ namespace PortfolioApi.Repository.EntityFramework.Context
             {
                 entity.HasKey(x => x.Id);
                 entity.Property(x => x.Id).UseIdentityColumn();
-
+                
+                entity.HasIndex(x => x.OwnerUserId);
                 entity.HasIndex(x => x.Type);
+                
                 entity.OwnsOne(x => x.Info, inf =>
                 {
                     inf.OwnsMany(x => x.Sections, s =>
