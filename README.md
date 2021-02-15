@@ -9,7 +9,6 @@ If you are running on visual studio, make sure to launch using `portfolio-api`.
 For any IDE, two environment variables are needed:
 
 * DefaultConnection: `[database connection string]`
-* TokenAuthentication_SecretKey: `[any secret string]`
 
 The variables have been provided.
 
