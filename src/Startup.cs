@@ -129,7 +129,6 @@ namespace PortfolioApi
 								{ $"{apiName}.read", "Read" },
 								{ $"{apiName}.write", "Write" },
 								{ $"{apiName}.delete", "Delete" },
-								{ $"{apiName}.manage", "Manage" }
 							}
 						},
 						AuthorizationCode = new OpenApiOAuthFlow
@@ -140,7 +139,6 @@ namespace PortfolioApi
 								{ $"{apiName}.read", "Read" },
 								{ $"{apiName}.write", "Write" },
 								{ $"{apiName}.delete", "Delete" },
-								{ $"{apiName}.manage", "Manage" },
 							}
 						}
 					}

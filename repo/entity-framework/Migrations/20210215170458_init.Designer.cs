@@ -10,13 +10,14 @@ using PortfolioApi.Repository.EntityFramework.Context;
 namespace PortfolioApi.Repository.EntityFramework.Migrations
 {
     [DbContext(typeof(PortfolioContext))]
-    [Migration("20210206033517_Init")]
-    partial class Init
+    [Migration("20210215170458_init")]
+    partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
+                .HasDefaultSchema("Portfolio")
                 .HasAnnotation("ProductVersion", "3.1.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
@@ -33,7 +34,7 @@ namespace PortfolioApi.Repository.EntityFramework.Migrations
                     b.Property<DateTime?>("AddDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2021, 2, 6, 3, 35, 17, 74, DateTimeKind.Utc).AddTicks(9846));
+                        .HasDefaultValue(new DateTime(2021, 2, 15, 17, 4, 58, 416, DateTimeKind.Utc).AddTicks(5627));
 
                     b.Property<string>("OwnerUserId")
                         .HasColumnType("nvarchar(450)");
@@ -44,7 +45,7 @@ namespace PortfolioApi.Repository.EntityFramework.Migrations
                     b.Property<DateTime?>("UpdateDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2021, 2, 6, 3, 35, 17, 74, DateTimeKind.Utc).AddTicks(9590));
+                        .HasDefaultValue(new DateTime(2021, 2, 15, 17, 4, 58, 416, DateTimeKind.Utc).AddTicks(5311));
 
                     b.HasKey("Id");
 
@@ -65,7 +66,7 @@ namespace PortfolioApi.Repository.EntityFramework.Migrations
                     b.Property<DateTime?>("AddDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2021, 2, 6, 3, 35, 17, 83, DateTimeKind.Utc).AddTicks(7737));
+                        .HasDefaultValue(new DateTime(2021, 2, 15, 17, 4, 58, 427, DateTimeKind.Utc).AddTicks(7379));
 
                     b.Property<string>("OwnerUserId")
                         .HasColumnType("nvarchar(450)");
@@ -76,7 +77,7 @@ namespace PortfolioApi.Repository.EntityFramework.Migrations
                     b.Property<DateTime?>("UpdateDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2021, 2, 6, 3, 35, 17, 83, DateTimeKind.Utc).AddTicks(7459));
+                        .HasDefaultValue(new DateTime(2021, 2, 15, 17, 4, 58, 427, DateTimeKind.Utc).AddTicks(6826));
 
                     b.HasKey("Id");
 
@@ -99,7 +100,7 @@ namespace PortfolioApi.Repository.EntityFramework.Migrations
                     b.Property<DateTime?>("AddDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2021, 2, 6, 3, 35, 17, 73, DateTimeKind.Utc).AddTicks(3));
+                        .HasDefaultValue(new DateTime(2021, 2, 15, 17, 4, 58, 414, DateTimeKind.Utc).AddTicks(5963));
 
                     b.Property<string>("OwnerUserId")
                         .HasColumnType("nvarchar(450)");
@@ -107,7 +108,7 @@ namespace PortfolioApi.Repository.EntityFramework.Migrations
                     b.Property<DateTime?>("UpdateDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2021, 2, 6, 3, 35, 17, 71, DateTimeKind.Utc).AddTicks(8418));
+                        .HasDefaultValue(new DateTime(2021, 2, 15, 17, 4, 58, 413, DateTimeKind.Utc).AddTicks(4702));
 
                     b.HasKey("Id");
 

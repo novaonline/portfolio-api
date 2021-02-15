@@ -51,13 +51,17 @@ namespace PortfolioApi.Core.Domains.Profiles.Repository
 			{
 				return baseQuery.Where(x => x.Info.LastName == input.Info.LastName);
 			}
-			else
+			else if (input.Id != default)
 			{
 				var result = new List<Profile>();
 				var item = _portfolioContext.Profiles.Find(input.Id);
 				OwnershipPrecondition(item, requestContext);
 				if (item != null) result.Add(item);
 				return result;
+			}
+			else
+			{
+				return baseQuery;
 			}
 		}
 

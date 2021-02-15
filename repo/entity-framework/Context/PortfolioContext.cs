@@ -30,6 +30,7 @@ namespace PortfolioApi.Repository.EntityFramework.Context
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // TODO: Need to add entity conventions
+            modelBuilder.HasDefaultSchema("Portfolio");
 
             modelBuilder.Entity<ProfilesModel.Profile>(entity =>
             {

@@ -50,13 +50,17 @@ namespace PortfolioApi.Core.Domains.Experiences.Repository
             {
                 return baseRequest.Where(x => x.Type == input.Type);
             }
-            else
-            {
+            else if (input.Id != default)
+			{
                 var result = new List<Experience>();
                 var item = _portfolioContext.Experiences.Find(input.Id);
                 OwnershipPrecondition(item, requestContext);
                 if (item != null) result.Add(item);
                 return result;
+            }
+            else
+            {
+                return baseRequest;
             }
         }
 
