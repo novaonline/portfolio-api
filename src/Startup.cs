@@ -1,163 +1,206 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
-using Swashbuckle.AspNetCore.Swagger;
-using PortfolioApi.Services;
-using Microsoft.EntityFrameworkCore;
-using PortfolioApi.Helpers.Swashbuckle.Filters;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.OpenApi.Models;
+using PortfolioApi.Core.Builder;
+using PortfolioApi.Helpers.Authorization;
+using PortfolioApi.Helpers.Swagger;
+using PortfolioApi.Models.Helpers.Builder;
+using PortfolioApi.Repository.EntityFramework.Context;
+using Swashbuckle.AspNetCore.Filters;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Net.Http;
+using System.Reflection;
 
 namespace PortfolioApi
 {
-    public partial class Startup
-    {
-        ILogger _logger;
-        public Startup(IHostingEnvironment env, ILoggerFactory loggerFactory)
-        {
-            var builder = new ConfigurationBuilder()
-                .SetBasePath(env.ContentRootPath)
-                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
-                .AddEnvironmentVariables();
-            Configuration = builder.Build();
-            _logger = loggerFactory.CreateLogger<Startup>();
-        }
+	/// <summary>
+	/// 
+	/// </summary>
+	public partial class Startup
+	{
+		ILogger _logger;
 
-        public IConfigurationRoot Configuration { get; }
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="env"></param>
+		/// <param name="loggerFactory"></param>
+		public Startup(IWebHostEnvironment env, ILoggerFactory loggerFactory)
+		{
+			var builder = new ConfigurationBuilder()
+				.SetBasePath(env.ContentRootPath)
+				.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+				.AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
+				.AddEnvironmentVariables();
+			Configuration = builder.Build();
+			_logger = loggerFactory.CreateLogger<Startup>();
+		}
 
-        // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
-        {
-            services.AddCors(options =>
-            {
-                options.AddPolicy("CorsPolicy", builder =>
-                {
-                    builder.AllowAnyOrigin()
-                                    .AllowAnyMethod()
-                                    .AllowAnyHeader()
-                                    .AllowCredentials();
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <value></value>
+		public IConfigurationRoot Configuration { get; }
 
-                });
+		/// <summary>
+		/// This method gets called by the runtime. Use this method to add services to the container.
+		/// </summary>
+		public void ConfigureServices(IServiceCollection services)
+		{
+			var apiName = Configuration["IdentityServer:ApiName"];
+			services.AddCors(options =>
+			{
+				options.AddPolicy("CorsPolicy", builder =>
+				{
+					builder
+									.AllowAnyMethod()
+									.AllowAnyHeader()
+									.AllowCredentials();
+				});
 
-            });
-            // Add framework services.
-            services.AddMvc(options =>
-            {
-                options.CacheProfiles.Add("Default", new CacheProfile() { Duration = 60 });
-                options.CacheProfiles.Add("ContentCache", new CacheProfile() { Duration = 86400 });
+			});
 
-            });
-            services.AddAuthorization(options =>
-            {
-                options.DefaultPolicy = new AuthorizationPolicyBuilder(JwtBearerDefaults.AuthenticationScheme)
-                .RequireAuthenticatedUser()
-                .Build();
-            });
+			services.AddLogging(options =>
+			{
+				options.AddConsole();
+			});
 
-            services.AddAuthentication(o =>
-            {
-                o.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                o.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            });
+			// Add framework services.
+			services.AddControllers(options =>
+			{
+				options.CacheProfiles.Add("Default", new CacheProfile() { Duration = 60 });
+				options.CacheProfiles.Add("ContentCache", new CacheProfile() { Duration = 86400 });
 
-            services.AddJwtBearerAuthentication(options =>
-            {
-                options.RequireHttpsMetadata = false;
-                options.TokenValidationParameters = new TokenValidationParameters
-                {
-                    // The signing key must match!
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = signingKey,
-                    // Validate the JWT Issuer (iss) claim
-                    ValidateIssuer = true,
-                    ValidIssuer = Configuration.GetSection("TokenAuthentication:Issuer").Value,
-                    // Validate the JWT Audience (aud) claim
-                    ValidateAudience = true,
-                    ValidAudience = Configuration.GetSection("TokenAuthentication:Audience").Value,
-                    // Validate the token expiry
-                    ValidateLifetime = true,
-                    // If you want to allow a certain amount of clock drift, set that here:
-                    ClockSkew = TimeSpan.Zero
-                };
-            });
+			})
+			.AddJsonOptions(options =>
+			{
+				options.JsonSerializerOptions.WriteIndented = true;
+				options.JsonSerializerOptions.IgnoreNullValues = true;
+				//options.JsonSerializerOptions.Converters.Add(new StringEnumConverter()); 
+			});
 
-            // Register the Swagger generator, defining one or more Swagger documents
-            // https://docs.microsoft.com/en-us/aspnet/core/tutorials/web-api-help-pages-using-swagger
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new Info { Title = "Portfolio API", Version = "v1" });
-                c.OperationFilter<AuthorizationHeaderOperationFilter>();
-                c.CustomSchemaIds(x => x.FullName);
-            });
+			services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+				.AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, o =>
+				{
+					o.Authority = Configuration["IdentityServer:Authority"];
 
-            // // https://www.hanselman.com/blog/ASPNETCoreRESTfulWebAPIVersioningMadeEasy.aspx
-            // services.AddApiVersioning(o =>
-            // {
-            //     o.AssumeDefaultVersionWhenUnspecified = true;
-            //     o.DefaultApiVersion = new ApiVersion(1, 0);
-            // });
+					// https://identityserver4.readthedocs.io/en/latest/topics/resources.html#refresources
+					o.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters { ValidateAudience = false };
+				});
+			services.AddSingleton<IAuthorizationHandler, IdentityServerPermissionAuthorizationHandler>();
+			services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+			services.AddAuthorization(options =>
+			{
+				options.AddPolicy("IdentityServerPermissionsPolicy", policy => policy.Requirements.Add(new IdentityServerAuthorizationPermissionRequirement(apiName)));
+				options.AddPolicy("AuthorizeAsReadPolicy", policy => policy.Requirements.Add(new IdentityServerAuthorizationPermissionRequirement(apiName, authorizeAsRead: true)));
+			});
 
-            // Add framework services.
-            services.AddDbContext<PortfolioContext>(options =>
-                options.UseSqlServer(Environment.GetEnvironmentVariable("DefaultConnection") ??
-                    Configuration.GetConnectionString("DefaultConnection"))
-                    );
 
-        }
+			// Register the Swagger generator, defining one or more Swagger documents
+			// https://docs.microsoft.com/en-us/aspnet/core/tutorials/web-api-help-pages-using-swagger
+			services.AddSwaggerGen(c =>
+			{
+				c.SwaggerDoc("v1", new OpenApiInfo { Title = "Portfolio API", Version = "v1" });
+				c.CustomSchemaIds(x => x.FullName);
+				var authServer = new Uri(Configuration["IdentityServer:Authority"]);
+				c.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
+				{
+					Type = SecuritySchemeType.OAuth2,
+					OpenIdConnectUrl = authServer,
+					Flows = new OpenApiOAuthFlows
+					{
+						ClientCredentials = new OpenApiOAuthFlow
+						{
+							AuthorizationUrl = new UriBuilder(authServer) { Path = "connect/authorize" }.Uri,
+							TokenUrl = new UriBuilder(authServer) { Path = "connect/token" }.Uri,
+							Scopes = new Dictionary<string, string> {
+								{ $"{apiName}.read", "Read" },
+								{ $"{apiName}.write", "Write" },
+								{ $"{apiName}.delete", "Delete" },
+							}
+						},
+						AuthorizationCode = new OpenApiOAuthFlow
+						{
+							AuthorizationUrl = new UriBuilder(authServer) { Path = "connect/authorize" }.Uri,
+							TokenUrl = new UriBuilder(authServer) { Path = "connect/token" }.Uri,
+							Scopes = new Dictionary<string, string> {
+								{ $"{apiName}.read", "Read" },
+								{ $"{apiName}.write", "Write" },
+								{ $"{apiName}.delete", "Delete" },
+							}
+						}
+					}
+				});
+				c.OperationFilter<AuthorizeCheckOperationFilter>();
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, PortfolioContext context)
-        {
-            //TODO
-            //'ConsoleLoggerExtensions.AddConsole(ILoggerFactory, IConfiguration)' is obsolete: 
-            //'This method is obsolete and will be removed in a future version. 
-            //The recommended alternative is to call the Microsoft.Extensions.Logging.AddConsole() extension method on the Microsoft.Extensions.Logging.LoggerFactory instance.' 
+				// Set the comments path for the Swagger JSON and UI.
+				var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+				var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+				c.IncludeXmlComments(xmlPath);
+			});
 
-            // global policy - assign here or on each controller
-            app.UseCors("CorsPolicy");
+			// // https://www.hanselman.com/blog/ASPNETCoreRESTfulWebAPIVersioningMadeEasy.aspx
+			services.AddApiVersioning(o =>
+			{
+				o.AssumeDefaultVersionWhenUnspecified = true;
+				o.DefaultApiVersion = new ApiVersion(1, 0);
+			});
 
-            ConfigureAuth(app);
+			PortfolioFactory.NewFactory.SetDefaultPersistence(o =>
+			{
+				o.ConnectionString = Configuration.GetConnectionString("DefaultConnection");
+				o.PersistenceType = PersistenceType.SqlServer;
+			}).Build(services);
 
-            // Enable middleware to serve generated Swagger as a JSON endpoint.
-            app.UseSwagger();
+		}
 
-            // Enable middleware to serve swagger-ui (HTML, JS, CSS etc.), specifying the Swagger JSON endpoint.
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Portfolio API V1");
-            });
 
-            app.UseMvc();
+		/// <summary>
+		/// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+		/// </summary>
+		/// <param name="app"></param>
+		/// <param name="env"></param>
+		/// <param name="context"></param>
+		public void Configure(IApplicationBuilder app, IWebHostEnvironment env, PortfolioContext context)
+		{
+			app.UseStaticFiles();
 
-            // Migrate and seed the database during startup. Must be synchronous.
-            try
-            {
-                //http://benjii.me/2017/05/enable-entity-framework-core-migrations-visual-studio-2017/
-                using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>()
-                    .CreateScope())
-                {
-                    serviceScope.ServiceProvider.GetService<PortfolioContext>().Database.Migrate();
-                    _logger.LogInformation("Database Migration passed");
+			// global policy - assign here or on each controller
+			app.UseCors("CorsPolicy");
 
-                    //serviceScope.ServiceProvider.GetService<ISeedService>().SeedDatabase().Wait();
-                }
-            }
-            catch (Exception ex)
-            {
-                //http://ardalis.com/logging-and-using-services-in-startup-in-aspnet-core-apps
-                _logger.LogError(0, ex, "Failed to migrate or seed database");
-            }
+			// Enable middleware to serve generated Swagger as a JSON endpoint.
+			app.UseSwagger();
 
-            //Helpers.PortfolioInitializer.Init(context); // used to seed. This file is ignored in git
-        }
-    }
+			// Enable middleware to serve swagger-ui (HTML, JS, CSS etc.), specifying the Swagger JSON endpoint.
+			app.UseSwaggerUI(c =>
+			{
+				c.SwaggerEndpoint("/swagger/v1/swagger.json", "Portfolio API V1");
+				c.RoutePrefix = string.Empty;  // Set Swagger UI at apps root
+				c.OAuthClientId(Configuration["IdentityServer:Defaults:ClientId"]);
+				c.OAuthClientSecret(Configuration["IdentityServer:Defaults:ClientSecret"]);
+				c.OAuthAppName("Portfolio API");
+				c.OAuthUsePkce();
+			});
+
+			app.UseRouting();
+			app.UseAuthentication();
+			app.UseAuthorization();
+			app.UseEndpoints(endpoints =>
+			{
+				endpoints.MapControllers();
+			});
+		}
+	}
 }

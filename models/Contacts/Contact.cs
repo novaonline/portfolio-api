@@ -1,7 +1,18 @@
 ﻿namespace PortfolioApi.Models.Contacts
 {
-    public class Contact : DateAware
+    public class Contact : OwnedEntity
     {
-        public Info Info { get; set; }
+        public int ProfileId { get; set; }
+        public ContactInfo Info { get; set; }
+
+        public Contact()
+        {
+            this.Info = new ContactInfo();
+        }
+
+        public Contact(int Id) : this()
+        {
+            this.Id = Id;
+        }
     }
 }

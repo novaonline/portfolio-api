@@ -1,7 +1,17 @@
 ﻿namespace PortfolioApi.Models.Profiles
 {
-    public class Profile: DateAware
+    public class Profile : OwnedEntity
     {
-        public Info Info { get; set; }
+        public ProfileInfo Info { get; set; }
+
+        public Profile()
+        {
+            this.Info = new ProfileInfo();
+        }
+
+        public Profile(int Id) : this()
+        {
+            this.Id = Id;
+        }
     }
 }

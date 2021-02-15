@@ -1,16 +1,68 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using PortfolioApi.Services;
+using PortfolioApi.Models;
+using PortfolioApi.Models.Helpers;
 namespace PortfolioApi.Controllers
 {
 
-    [Authorize, ResponseCache(CacheProfileName = "Default")]
-    public class PortfolioController : Controller
-    {
-        protected readonly PortfolioContext _context;
-        public PortfolioController(PortfolioContext context)
-        {
-            _context = context;
-        }
-    }
+	/// <summary>
+	/// TODO: API Level Authorization on Db Context 
+	/// https://github.com/domaindrivendev/Swashbuckle.AspNetCore
+	///  https://github.com/Microsoft/api-guidelines/blob/master/Guidelines.md
+	/// </summary>
+	[ResponseCache(CacheProfileName = "Default")]
+	[Route("api/[controller]")]
+	[Produces("application/json")]
+	[Authorize(Policy = "IdentityServerPermissionsPolicy")]
+	public class PortfolioController : Controller
+	{
+		/// <summary>
+		/// 
+		/// </summary>
+		public PortfolioController()
+		{
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="result"></param>
+		/// <typeparam name="T"></typeparam>
+		/// <returns></returns>
+		protected ActionResult Respond<T>(ServiceMessage<T> result) where T : Entity, new()
+		{
+			if (!result.Validation.IsValid)
+			{
+				return BadRequest(result);
+			}
+			else
+			{
+				return Ok(result);
+			}
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="result"></param>
+		/// <typeparam name="T"></typeparam>
+		/// <returns></returns>
+		protected ActionResult Respond<T>(ServiceMessages<T> result) where T : Entity, new()
+		{
+			if (result.Validation != null && !result.Validation.IsValid)
+			{
+				return BadRequest(result);
+			}
+			else
+			{
+				return Ok(result);
+			}
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <returns></returns>
+		protected RequestContext RequestContext => new RequestContext(User.Claims);
+	}
 }
