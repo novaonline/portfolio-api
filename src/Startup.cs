@@ -60,14 +60,16 @@ namespace PortfolioApi
 		public void ConfigureServices(IServiceCollection services)
 		{
 			var apiName = Configuration["IdentityServer:ApiName"];
+			var authority = Configuration["IdentityServer:Authority"];
 			services.AddCors(options =>
 			{
 				options.AddPolicy("CorsPolicy", builder =>
 				{
 					builder
-									.AllowAnyMethod()
-									.AllowAnyHeader()
-									.AllowCredentials();
+					.WithOrigins(authority)
+					.AllowAnyMethod()
+					.AllowAnyHeader()
+					.AllowCredentials();
 				});
 
 			});
@@ -94,7 +96,7 @@ namespace PortfolioApi
 			services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 				.AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, o =>
 				{
-					o.Authority = Configuration["IdentityServer:Authority"];
+					o.Authority = authority;
 
 					// https://identityserver4.readthedocs.io/en/latest/topics/resources.html#refresources
 					o.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters { ValidateAudience = false };
