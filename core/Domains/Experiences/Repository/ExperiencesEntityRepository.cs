@@ -3,15 +3,14 @@ using System.Linq;
 using PortfolioApi.Core.Domains.Common;
 using PortfolioApi.Models;
 using PortfolioApi.Models.Experiences;
-using PortfolioApi.Models.Interfaces.Repos;
 using PortfolioApi.Repository.EntityFramework.Context;
 
 namespace PortfolioApi.Core.Domains.Experiences.Repository
 {
-    /// <summary>
-    /// Repository Implementation to access the Experience Entities
-    /// </summary>
-    public class ExperiencesEntityRepository : BaseRepo<Experience, ExperienceInfo>
+	/// <summary>
+	/// Repository Implementation to access the Experience Entities
+	/// </summary>
+	public class ExperiencesEntityRepository : BaseRepo<Experience, ExperienceInfo>
     {
         private readonly PortfolioContext _portfolioContext;
 
@@ -39,29 +38,28 @@ namespace PortfolioApi.Core.Domains.Experiences.Repository
 
         public override IEnumerable<Experience> Read(Experience input, RequestContext requestContext)
         {
-            var baseRequest = _portfolioContext.Experiences.Where(x => x.OwnerUserId.Equals(requestContext.RequestedUserId));
-            if (input.Info != null && !string.IsNullOrEmpty(input.Type) && !string.IsNullOrEmpty(input.Info.Title))
+            if (input.Id != default)
             {
-                return baseRequest.Where(
-                    x => x.Type == input.Type
-                    && x.Info.Title == input.Info.Title);
-            }
-            else if (!string.IsNullOrEmpty(input.Type))
-            {
-                return baseRequest.Where(x => x.Type == input.Type);
-            }
-            else if (input.Id != default)
-			{
                 var result = new List<Experience>();
                 var item = _portfolioContext.Experiences.Find(input.Id);
-                OwnershipPrecondition(item, requestContext);
                 if (item != null) result.Add(item);
                 return result;
             }
-            else
-            {
-                return baseRequest;
+
+            var baseRequest = _portfolioContext.Experiences.AsQueryable();
+            if (input.ProfileId != default)
+			{
+                baseRequest = baseRequest.Where(x => x.ProfileId == input.ProfileId);
             }
+            if (input.Info != null && !string.IsNullOrEmpty(input.Type))
+            {
+                baseRequest = baseRequest.Where(x => x.Type == input.Type);
+            }
+            if (input.Info != null && !string.IsNullOrEmpty(input.Info.Title))
+            {
+                baseRequest = baseRequest.Where(x => x.Info.Title == input.Info.Title);
+            }
+            return baseRequest.ToList();
         }
 
         public override Experience Update(Experience search, ExperienceInfo input, RequestContext requestContext)

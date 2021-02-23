@@ -36,7 +36,7 @@ namespace PortfolioApi.Core.Domains.Experiences.Validation
     {
         public ExperiencesCreateFluentValidatorModel()
         {
-            //RuleFor(p => p.Id).NotEmpty();
+            RuleFor(p => p.ProfileId).NotEmpty();
             RuleFor(p => p.Type).NotEmpty();
             RuleFor(x => x.Info.Title)
             .NotEmpty()
@@ -57,8 +57,7 @@ namespace PortfolioApi.Core.Domains.Experiences.Validation
     public class ExperiencesInfoCreateFluentValidatorModel : AbstractValidator<ExperienceInfo>
     {
         public ExperiencesInfoCreateFluentValidatorModel()
-        {
-                    }
+        {}
     }
 
     public class ExperienceSectionCreateAbstractValidator : AbstractValidator<ExperienceSection>

@@ -2,7 +2,8 @@
 {
     public class Experience : OwnedEntity
     {
-        public string? Type { get; set; }
+		public int ProfileId { get; set; }
+		public string? Type { get; set; }
 
         public ExperienceInfo Info { get; set; }
 

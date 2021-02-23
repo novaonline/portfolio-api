@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using ContactsModel = PortfolioApi.Models.Contacts;
 using ProfilesModel = PortfolioApi.Models.Profiles;
 using ExperiencseModel = PortfolioApi.Models.Experiences;
 using System;
@@ -15,7 +14,6 @@ namespace PortfolioApi.Repository.EntityFramework.Context
     public class PortfolioContext : DbContext
     {
         public DbSet<ProfilesModel.Profile> Profiles { get; set; }
-        public DbSet<ContactsModel.Contact> Contacts { get; set; }
         public DbSet<ExperiencseModel.Experience> Experiences { get; set; }
 
         public PortfolioContext(DbContextOptions<PortfolioContext> options)
@@ -44,21 +42,6 @@ namespace PortfolioApi.Repository.EntityFramework.Context
                     inf.HasIndex(x => new { x.LastName, x.FirstName });
                 });
 
-                entity.Property(p => p.UpdateDate).HasDefaultValue(DateTime.UtcNow);
-                entity.Property(p => p.AddDate).HasDefaultValue(DateTime.UtcNow);
-            });
-
-            modelBuilder.Entity<ContactsModel.Contact>(entity =>
-            {
-                entity.HasKey(x => x.Id);
-                entity.Property(x => x.Id).UseIdentityColumn();
-                
-                entity.HasIndex(x => x.OwnerUserId);
-
-                entity.OwnsOne(x => x.Info, inf =>
-                {
-                    inf.HasIndex(x => x.Email);
-                });
 
                 entity.Property(p => p.UpdateDate).HasDefaultValue(DateTime.UtcNow);
                 entity.Property(p => p.AddDate).HasDefaultValue(DateTime.UtcNow);
@@ -68,6 +51,9 @@ namespace PortfolioApi.Repository.EntityFramework.Context
             {
                 entity.HasKey(x => x.Id);
                 entity.Property(x => x.Id).UseIdentityColumn();
+
+                entity.HasIndex(x => x.ProfileId);
+                entity.Property(x => x.ProfileId).IsRequired(true).HasDefaultValue(0);
                 
                 entity.HasIndex(x => x.OwnerUserId);
                 entity.HasIndex(x => x.Type);

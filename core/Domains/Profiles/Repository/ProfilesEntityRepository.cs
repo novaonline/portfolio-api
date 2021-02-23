@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Linq;
 using PortfolioApi.Core.Domains.Common;
 using PortfolioApi.Models;
-using PortfolioApi.Models.Interfaces.Repos;
 using PortfolioApi.Models.Profiles;
 using PortfolioApi.Repository.EntityFramework.Context;
 
@@ -39,30 +38,23 @@ namespace PortfolioApi.Core.Domains.Profiles.Repository
 
 		public override IEnumerable<Profile> Read(Profile input, RequestContext requestContext)
 		{
-			IQueryable<Profile> baseQuery = _portfolioContext.Profiles
-				.Where(x => x.OwnerUserId.Equals(requestContext.RequestedUserId));
-			if (input.Info != null && !string.IsNullOrEmpty(input.Info.LastName) && !string.IsNullOrEmpty(input.Info.FirstName))
-			{
-				return baseQuery.Where(
-					x => x.Info.LastName == input.Info.LastName
-					&& x.Info.FirstName == input.Info.FirstName);
-			}
-			else if (input.Info != null && !string.IsNullOrEmpty(input.Info.LastName))
-			{
-				return baseQuery.Where(x => x.Info.LastName == input.Info.LastName);
-			}
-			else if (input.Id != default)
+			if (input.Id != default)
 			{
 				var result = new List<Profile>();
 				var item = _portfolioContext.Profiles.Find(input.Id);
-				OwnershipPrecondition(item, requestContext);
 				if (item != null) result.Add(item);
 				return result;
 			}
-			else
+			IQueryable<Profile> baseQuery = _portfolioContext.Profiles;
+			if (input.Info != null && !string.IsNullOrEmpty(input.Info.LastName))
 			{
-				return baseQuery;
+				baseQuery = baseQuery.Where(x => x.Info.LastName == input.Info.LastName);
 			}
+			if(input.Info != null && !string.IsNullOrEmpty(input.Info.FirstName))
+			{
+				baseQuery = baseQuery.Where(x => x.Info.FirstName == input.Info.FirstName);
+			}
+			return baseQuery.ToList();
 		}
 
 		public override Profile Update(Profile search, ProfileInfo input, RequestContext requestContext)

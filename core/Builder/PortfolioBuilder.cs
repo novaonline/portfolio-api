@@ -4,7 +4,6 @@ using PortfolioApi.Models.Helpers.Builder;
 using PortfolioApi.Repository.EntityFramework.Context;
 using Microsoft.EntityFrameworkCore;
 using PortfolioApi.Models.Interfaces;
-using PortfolioApi.Core.Domains.Contacts;
 using PortfolioApi.Core.Domains.Experiences;
 using PortfolioApi.Core.Domains.Profiles;
 
@@ -48,7 +47,6 @@ namespace PortfolioApi.Core.Builder
             // Inject Domains
             IDependencyInjectionSetup[] domainsForInjection = new IDependencyInjectionSetup[]
             {
-                new ContactsDependencyInjectionSetup(),
                 new ExperiencesDependencyInjectionSetup(),
                 new ProfilesDependencyInjectionSetup()
             };
