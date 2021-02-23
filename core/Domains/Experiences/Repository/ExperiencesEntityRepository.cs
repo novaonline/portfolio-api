@@ -30,7 +30,7 @@ namespace PortfolioApi.Core.Domains.Experiences.Repository
         public override Experience Delete(Experience input, RequestContext requestContext)
         {
             var model = _portfolioContext.Experiences.Find(input.Id);
-            OwnershipPrecondition(input, requestContext);
+            OwnershipPrecondition(model, requestContext);
             _portfolioContext.Remove(model);
             _portfolioContext.SaveChanges();
             return model;

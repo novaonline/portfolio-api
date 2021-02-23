@@ -132,6 +132,8 @@ namespace PortfolioApi.Tests.Unit.ExperienFces
             var exp = new Experience
             {
                 Id = 1,
+                OwnerUserId = "123",
+                ProfileId = 1,
                 Type = "Skill",
                 Info = new ExperienceInfo
                 {

@@ -28,6 +28,7 @@ namespace PortfolioApi.Tests.Integration.Experiences
                 Id = 1,
                 AddDate = DateTime.UtcNow,
                 UpdateDate = DateTime.UtcNow,
+                OwnerUserId = "123",
                 Type = "Skill",
                 Info = new ExperienceInfo
                 {
