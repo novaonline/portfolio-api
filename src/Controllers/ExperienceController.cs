@@ -28,7 +28,7 @@ namespace PortfolioApi.Controllers
         /// </summary>
         /// <param name="searchTerm"></param>
         /// <returns></returns>
-        [HttpGet, Produces(typeof(ServiceMessages<Experience>))]
+        [HttpGet, AllowAnonymous, Produces(typeof(ServiceMessages<Experience>))]
         public IActionResult Get(Experience searchTerm) => Respond(_experiencesService.Read(searchTerm, RequestContext));
 
         /// <summary>
@@ -36,7 +36,7 @@ namespace PortfolioApi.Controllers
         /// </summary>
         /// <param name="Id"></param>
         /// <returns></returns>
-        [HttpGet(RouteTemplates.Id), Produces(typeof(ServiceMessage<Experience>))]
+        [HttpGet(RouteTemplates.Id), AllowAnonymous, Produces(typeof(ServiceMessage<Experience>))]
         public IActionResult Get(int Id) => Respond(_experiencesService.Read(new Experience(Id), RequestContext));
 
         /// <summary>
